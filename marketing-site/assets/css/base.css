@@ -1,0 +1,83 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+/* Custom CSS Variables for HeliconTrade branding */
+:root {
+  --primary-blue: #2563eb;
+  --primary-purple: #7c3aed;
+  --success-green: #10b981;
+  --warning-orange: #f59e0b;
+  --error-red: #ef4444;
+  
+  /* Gradients */
+  --gradient-primary: linear-gradient(135deg, var(--primary-blue), var(--primary-purple));
+  --gradient-secondary: linear-gradient(135deg, #f3f4f6, #e5e7eb);
+  
+  /* Color scheme */
+  color-scheme: light dark;
+}
+
+/* Dark mode variables */
+.dark {
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 10px 10px -5px rgba(0, 0, 0, 0.3);
+}
+
+/* Global Styles */
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  @apply antialiased;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+  @apply font-sans leading-relaxed;
+}
+
+/* RTL Support */
+html.rtl, html.rtl body {
+  direction: rtl;
+}
+
+/* Custom utility classes */
+.btn-primary {
+  @apply bg-blue-600 hover:bg-blue-700 text-white font-medium px-6 py-3 rounded-lg transition-all;
+  @apply shadow-md hover:shadow-lg transform hover:-translate-y-0.5;
+}
+
+.btn-secondary {
+  @apply border-2 border-blue-600 text-blue-600 hover:bg-blue-50 font-medium px-6 py-3 rounded-lg transition-colors;
+}
+
+.card {
+  @apply bg-white dark:bg-gray-800 rounded-xl shadow-lg hover:shadow-xl transition-shadow;
+}
+
+.form-input {
+  @apply w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg;
+  @apply focus:ring-2 focus:ring-blue-500 focus:border-transparent;
+  @apply dark:bg-gray-700 dark:text-white transition-colors;
+}
+
+.gradient-text {
+  @apply bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent;
+}
+
+/* Animation utilities */
+.animate-fade-in {
+  animation: fadeIn 0.6s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
