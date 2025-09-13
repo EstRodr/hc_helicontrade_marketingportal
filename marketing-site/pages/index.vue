@@ -12,8 +12,9 @@ useHead({
 
 // Search functionality
 const searchQuery = ref('')
+const showSearchDropdown = ref(false)
 const searchResults = ref([])
-const showSearchResults = ref(false)
+const selectedIndex = ref(-1)
 
 // Popular searches similar to TradingView
 const popularSymbols = ['AAPL', 'TSLA', 'NVDA', 'MSFT', 'GOOGL', 'AMZN', 'META', 'BTC', 'ETH', 'SPY']
@@ -151,19 +152,83 @@ const filteredMarketData = computed(() => {
   })
 })
 
-// Search functionality
+// Search functionality with dropdown
+function performSearch() {
+  const query = searchQuery.value.trim().toLowerCase()
+  if (query.length === 0) {
+    searchResults.value = []
+    showSearchDropdown.value = false
+    selectedIndex.value = -1
+    return
+  }
+  
+  // Filter symbols based on query (symbol or name)
+  const filtered = allMockSymbols.value.filter(symbol => 
+    symbol.symbol.toLowerCase().includes(query) ||
+    symbol.name.toLowerCase().includes(query)
+  )
+  
+  searchResults.value = filtered.slice(0, 8) // Show top 8 matches
+  showSearchDropdown.value = filtered.length > 0
+  selectedIndex.value = -1
+}
+
+function onSearchInput() {
+  performSearch()
+}
+
 function handleSearch() {
-  if (searchQuery.value.trim()) {
-    // Simulate search - in real app would call API
-    console.log('Searching for:', searchQuery.value)
-    // Could redirect to app with search query
-    window.location.href = `${config.public.appUrl}/search?q=${encodeURIComponent(searchQuery.value)}`
+  if (selectedIndex.value >= 0 && searchResults.value[selectedIndex.value]) {
+    // User selected item with keyboard
+    selectSearchResult(searchResults.value[selectedIndex.value])
+  } else if (searchResults.value.length === 1) {
+    // Only one result, select it
+    selectSearchResult(searchResults.value[0])
+  } else if (searchQuery.value.trim()) {
+    // Try exact match
+    const symbol = searchQuery.value.trim().toUpperCase()
+    if (validSymbols.value.has(symbol)) {
+      navigateToSymbol(symbol)
+    }
+  }
+  hideSearchDropdown()
+}
+
+function selectSearchResult(result) {
+  navigateToSymbol(result.symbol)
+  hideSearchDropdown()
+  searchQuery.value = result.symbol
+}
+
+function hideSearchDropdown() {
+  // Add small delay to allow click events to fire before hiding
+  setTimeout(() => {
+    showSearchDropdown.value = false
+    selectedIndex.value = -1
+  }, 150)
+}
+
+function onSearchKeydown(event) {
+  if (!showSearchDropdown.value || searchResults.value.length === 0) return
+  
+  switch (event.key) {
+    case 'ArrowDown':
+      event.preventDefault()
+      selectedIndex.value = Math.min(selectedIndex.value + 1, searchResults.value.length - 1)
+      break
+    case 'ArrowUp':
+      event.preventDefault()
+      selectedIndex.value = Math.max(selectedIndex.value - 1, -1)
+      break
+    case 'Escape':
+      event.preventDefault()
+      hideSearchDropdown()
+      break
   }
 }
 
 function selectPopularSymbol(symbol: string) {
-  searchQuery.value = symbol
-  handleSearch()
+  navigateToSymbol(symbol)
 }
 
 function setActiveCategory(categoryId: string) {
@@ -186,6 +251,91 @@ function onLocationDetected(location: any) {
   console.log('User location detected:', location)
   // You could send this to analytics here
 }
+
+// Navigate to symbol page
+function navigateToSymbol(symbol: string) {
+  navigateTo(`/symbol/${symbol.toLowerCase()}`)
+}
+
+// Extended mock symbols for search (combining market data, popular symbols, and additional mocks)
+const allMockSymbols = computed(() => {
+  const symbolMap = new Map()
+  
+  // Add market data symbols first (highest priority)
+  marketData.value.forEach(item => {
+    symbolMap.set(item.symbol, {
+      symbol: item.symbol,
+      name: item.name,
+      price: item.price,
+      change: item.change,
+      changePercent: item.changePercent,
+      type: item.category
+    })
+  })
+  
+  // Add popular symbols (only if not already in market data)
+  popularSymbols.forEach(symbol => {
+    if (!symbolMap.has(symbol)) {
+      symbolMap.set(symbol, {
+        symbol,
+        name: getSymbolName(symbol),
+        price: Math.floor(Math.random() * 500) + 50,
+        change: (Math.random() - 0.5) * 10,
+        changePercent: (Math.random() - 0.5) * 5,
+        type: getSymbolType(symbol)
+      })
+    }
+  })
+  
+  // Add additional symbols for better search experience
+  const additionalSymbols = [
+    'NFLX', 'AMD', 'INTC', 'CRM', 'ADBE', 'PYPL', 'ZOOM', 'SQ',
+    'SHOP', 'UBER', 'LYFT', 'SNAP', 'TWTR', 'FB', 'PINS', 'ROKU', 'SPOT', 'ZM'
+  ]
+  
+  additionalSymbols.forEach(symbol => {
+    if (!symbolMap.has(symbol)) {
+      symbolMap.set(symbol, {
+        symbol,
+        name: getSymbolName(symbol),
+        price: Math.floor(Math.random() * 500) + 50,
+        change: (Math.random() - 0.5) * 10,
+        changePercent: (Math.random() - 0.5) * 5,
+        type: getSymbolType(symbol)
+      })
+    }
+  })
+  
+  return Array.from(symbolMap.values())
+})
+
+// Helper functions for mock data
+function getSymbolName(symbol) {
+  const names = {
+    'AAPL': 'Apple Inc.',
+    'GOOGL': 'Alphabet Inc.',
+    'MSFT': 'Microsoft Corporation',
+    'AMZN': 'Amazon.com Inc.',
+    'TSLA': 'Tesla Inc.',
+    'BTC': 'Bitcoin',
+    'ETH': 'Ethereum',
+    'NFLX': 'Netflix Inc.',
+    'AMD': 'Advanced Micro Devices',
+    'NVDA': 'NVIDIA Corporation'
+  }
+  return names[symbol] || `${symbol} Corporation`
+}
+
+function getSymbolType(symbol) {
+  if (['BTC', 'ETH'].includes(symbol)) return 'crypto'
+  if (['SPY', 'QQQ', 'DIA'].includes(symbol)) return 'etf'
+  return 'stock'
+}
+
+// Valid symbols set
+const validSymbols = computed(() => {
+  return new Set(allMockSymbols.value.map(s => s.symbol.toUpperCase()))
+})
 
 
 // Auto-update market data (simulate real-time updates)
@@ -214,7 +364,7 @@ onMounted(() => {
     <!-- Hero Section - TradingView Style with Personalization -->
     <section class="relative pt-20 pb-12 bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-900 dark:to-blue-900/20 overflow-hidden">
       <!-- Animated Background Particles -->
-      <div class="absolute inset-0 overflow-hidden">
+      <div class="absolute inset-0 overflow-hidden pointer-events-none">
         <div class="particle particle-1"></div>
         <div class="particle particle-2"></div>
         <div class="particle particle-3"></div>
@@ -223,7 +373,7 @@ onMounted(() => {
       </div>
       
       <!-- Grid Pattern Overlay -->
-      <div class="absolute inset-0 opacity-20 dark:opacity-10">
+      <div class="absolute inset-0 opacity-20 dark:opacity-10 pointer-events-none">
         <div class="grid-pattern"></div>
       </div>
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -239,9 +389,13 @@ onMounted(() => {
             <div class="flex">
               <input
                 v-model="searchQuery"
+                @input="onSearchInput"
+                @keydown="onSearchKeydown"
                 @keyup.enter="handleSearch"
+                @focus="performSearch"
+                @blur="hideSearchDropdown"
                 type="text"
-                placeholder="Search stocks, crypto, forex..."
+                placeholder="Try: AAPL, BTC, TSLA, SPY, GOOGL..."
                 class="flex-1 px-6 py-4 text-lg border-2 border-gray-200 dark:border-gray-600 rounded-l-xl focus:border-blue-500 focus:ring-0 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
               >
               <button
@@ -253,6 +407,46 @@ onMounted(() => {
                 </svg>
               </button>
             </div>
+            
+            <!-- Search Dropdown -->
+            <div v-if="showSearchDropdown && searchResults.length > 0" class="absolute top-full left-0 right-8 mt-2 bg-white dark:bg-gray-800 rounded-xl shadow-2xl border border-gray-200 dark:border-gray-600 z-50 max-h-80 overflow-y-auto">
+              <div class="p-2">
+                <div
+                  v-for="(result, index) in searchResults"
+                  :key="result.symbol"
+                  @mousedown="selectSearchResult(result)"
+                  class="flex items-center justify-between p-3 rounded-lg cursor-pointer transition-colors"
+                  :class="{
+                    'bg-blue-50 dark:bg-blue-900/30': index === selectedIndex,
+                    'hover:bg-gray-50 dark:hover:bg-gray-700': index !== selectedIndex
+                  }"
+                >
+                  <div class="flex items-center space-x-3">
+                    <div class="flex-shrink-0">
+                      <div class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold"
+                           :class="{
+                             'bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300': result.type === 'stock',
+                             'bg-orange-100 dark:bg-orange-900 text-orange-700 dark:text-orange-300': result.type === 'crypto',
+                             'bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300': result.type === 'etf'
+                           }">
+                        {{ result.type === 'crypto' ? '₿' : result.type === 'etf' ? 'ETF' : '$' }}
+                      </div>
+                    </div>
+                    <div>
+                      <div class="font-semibold text-gray-900 dark:text-white">{{ result.symbol }}</div>
+                      <div class="text-sm text-gray-500 dark:text-gray-400 truncate max-w-48">{{ result.name }}</div>
+                    </div>
+                  </div>
+                  <div class="text-right">
+                    <div class="font-medium text-gray-900 dark:text-white">${{ result.price.toFixed(2) }}</div>
+                    <div class="text-sm"
+                         :class="result.changePercent >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'">
+                      {{ result.changePercent >= 0 ? '+' : '' }}{{ result.changePercent.toFixed(2) }}%
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
           
           <!-- Popular searches -->
@@ -263,7 +457,7 @@ onMounted(() => {
                 v-for="symbol in popularSymbols.slice(0, 8)"
                 :key="symbol"
                 @click="selectPopularSymbol(symbol)"
-                class="px-4 py-2 text-sm bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg transition-colors"
+                class="px-4 py-2 text-sm bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg transition-colors cursor-pointer"
               >
                 {{ symbol }}
               </button>
@@ -286,7 +480,7 @@ onMounted(() => {
           </div>
 
           <!-- Value indicators -->
-          <div class="text-sm text-gray-500 dark:text-gray-400">
+          <div class="text-sm text-gray-500 dark:text-gray-400 text-center">
             <p class="mb-2">Start free — No credit card required</p>
             <div class="flex flex-wrap justify-center gap-6">
               <span>✓ AI-powered opportunity discovery</span>
@@ -467,6 +661,7 @@ onMounted(() => {
           <div
             v-for="item in filteredMarketData"
             :key="item.symbol"
+            @click="navigateToSymbol(item.symbol)"
             class="market-card bg-white dark:bg-gray-900 p-4 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer group hover:scale-105 border border-gray-200/50 dark:border-gray-800/50 hover:border-blue-200 dark:hover:border-blue-800"
           >
             <div class="flex items-center justify-between mb-2">
