@@ -70,7 +70,7 @@ export default defineNuxtConfig({
       link: [
         { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
         { rel: 'canonical', href: process.env.NUXT_PUBLIC_SITE_URL || 'http://helicontrade.local:3002' }
-      ],
+      ]
     },
   },
   
@@ -88,6 +88,7 @@ export default defineNuxtConfig({
       
       // Analytics configuration
       gaMeasurementId: process.env.NUXT_PUBLIC_GA_MEASUREMENT_ID,
+      gtmId: process.env.NUXT_PUBLIC_GTM_ID || 'GTM-PMKX7G46',
       posthogPublicKey: process.env.NUXT_PUBLIC_POSTHOG_PUBLIC_KEY,
       posthogHost: process.env.NUXT_PUBLIC_POSTHOG_HOST || 'https://app.posthog.com',
       posthogRecordingEnabled: process.env.NUXT_PUBLIC_POSTHOG_RECORDING === 'true',

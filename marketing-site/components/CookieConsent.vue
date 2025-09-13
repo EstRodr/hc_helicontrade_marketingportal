@@ -92,192 +92,175 @@ defineExpose({
 </script>
 
 <template>
-  <!-- Cookie Consent Banner -->
+  <!-- Minimalistic Cookie Consent Banner -->
   <Transition
-    enter-active-class="transition ease-out duration-300"
-    enter-from-class="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-    enter-to-class="opacity-100 translate-y-0 sm:scale-100"
-    leave-active-class="transition ease-in duration-200"
-    leave-from-class="opacity-100 translate-y-0 sm:scale-100"
-    leave-to-class="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+    enter-active-class="transition ease-out duration-500 transform"
+    enter-from-class="opacity-0 translate-y-full"
+    enter-to-class="opacity-100 translate-y-0"
+    leave-active-class="transition ease-in duration-300 transform"
+    leave-from-class="opacity-100 translate-y-0"
+    leave-to-class="opacity-0 translate-y-full"
   >
     <div
       v-if="isVisible"
-      class="fixed inset-x-0 bottom-0 z-50 p-4"
+      class="fixed inset-x-0 bottom-0 z-50 backdrop-blur-md bg-white/95 dark:bg-gray-900/95 border-t border-gray-200/50 dark:border-gray-700/50 shadow-2xl"
       role="dialog"
       aria-labelledby="cookie-consent-title"
       aria-describedby="cookie-consent-description"
     >
-      <div class="mx-auto max-w-7xl">
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-2xl border border-gray-200 dark:border-gray-700 p-6">
-          <!-- Basic Consent View -->
-          <div v-if="!showPreferences">
-            <div class="flex items-start space-x-4">
-              <div class="flex-shrink-0">
-                <span class="text-2xl">🍪</span>
-              </div>
-              <div class="flex-1">
-                <h3 id="cookie-consent-title" class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-                  We value your privacy
-                </h3>
-                <p id="cookie-consent-description" class="text-sm text-gray-600 dark:text-gray-300 mb-4">
-                  We use cookies to enhance your experience, analyze site traffic, and personalize content. 
-                  You can choose which cookies to accept below.
-                </p>
-                
-                <div class="flex flex-col sm:flex-row gap-3">
-                  <button
-                    @click="acceptAll"
-                    class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors"
-                  >
-                    Accept All
-                  </button>
-                  <button
-                    @click="rejectAll"
-                    class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg font-medium transition-colors"
-                  >
-                    Reject All
-                  </button>
-                  <button
-                    @click="togglePreferences"
-                    class="border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 px-4 py-2 rounded-lg font-medium transition-colors"
-                  >
-                    Customize
-                  </button>
+      <div class="max-w-7xl mx-auto p-4 sm:p-6">
+        <!-- Minimalistic Consent View -->
+        <div v-if="!showPreferences">
+          <div class="flex items-center justify-between gap-4">
+            <div class="flex items-center gap-4 flex-1">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 flex items-center justify-center">
+                  <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+                  </svg>
                 </div>
-                
-                <p class="text-xs text-gray-500 dark:text-gray-400 mt-3">
-                  By continuing to use our site, you consent to our 
-                  <NuxtLink to="/legal/privacy" class="text-blue-600 dark:text-blue-400 hover:underline">Privacy Policy</NuxtLink>
-                  and 
-                  <NuxtLink to="/legal/cookies" class="text-blue-600 dark:text-blue-400 hover:underline">Cookie Policy</NuxtLink>.
+                <div>
+                  <h3 id="cookie-consent-title" class="font-semibold text-gray-900 dark:text-white text-sm sm:text-base">
+                    We use cookies to improve your experience
+                  </h3>
+                  <p id="cookie-consent-description" class="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mt-1">
+                    Accept all cookies for the best experience or customize your preferences.
+                  </p>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Action Buttons - Prominent Accept All -->
+            <div class="flex items-center gap-2 sm:gap-3">
+              <button
+                @click="togglePreferences"
+                class="text-xs sm:text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
+              >
+                Settings
+              </button>
+              <button
+                @click="acceptAll"
+                class="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-4 sm:px-6 py-2 rounded-lg font-medium text-sm transition-all hover:scale-105 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+              >
+                Accept All
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Detailed Preferences View -->
+        <div v-else class="space-y-4">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+              Cookie Preferences
+            </h3>
+            <button
+              @click="togglePreferences"
+              class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 p-1"
+              aria-label="Close preferences"
+            >
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+              </svg>
+            </button>
+          </div>
+
+          <!-- Cookie Categories - Compact Design -->
+          <div class="space-y-3">
+            <!-- Necessary Cookies -->
+            <div class="flex items-center justify-between p-3 rounded-lg bg-gray-50/50 dark:bg-gray-800/50 border border-gray-200/50 dark:border-gray-700/50">
+              <div>
+                <h4 class="font-medium text-gray-900 dark:text-white text-sm flex items-center gap-2">
+                  <span class="w-2 h-2 bg-green-500 rounded-full"></span>
+                  Necessary
+                </h4>
+                <p class="text-xs text-gray-600 dark:text-gray-400 mt-1">
+                  Essential for website functionality
                 </p>
               </div>
-              
+              <div class="w-10 h-6 bg-green-100 dark:bg-green-900 rounded-full relative opacity-75">
+                <div class="w-4 h-4 bg-green-500 rounded-full absolute top-1 right-1 transition-all"></div>
+              </div>
+            </div>
+
+            <!-- Analytics Cookies -->
+            <div class="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50/50 dark:hover:bg-gray-800/50 border border-gray-200/50 dark:border-gray-700/50 transition-colors">
+              <div>
+                <h4 class="font-medium text-gray-900 dark:text-white text-sm flex items-center gap-2">
+                  <span class="w-2 h-2 bg-blue-500 rounded-full"></span>
+                  Analytics
+                </h4>
+                <p class="text-xs text-gray-600 dark:text-gray-400 mt-1">
+                  Help us improve your experience
+                </p>
+              </div>
               <button
-                @click="isVisible = false"
-                class="flex-shrink-0 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
-                aria-label="Close cookie consent"
+                @click="preferences.analytics = !preferences.analytics"
+                class="w-10 h-6 rounded-full relative transition-all focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                :class="preferences.analytics ? 'bg-blue-600' : 'bg-gray-300 dark:bg-gray-600'"
               >
-                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                  <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
-                </svg>
+                <div class="w-4 h-4 bg-white rounded-full absolute top-1 transition-all"
+                     :class="preferences.analytics ? 'right-1' : 'left-1'"></div>
+              </button>
+            </div>
+
+            <!-- Marketing Cookies -->
+            <div class="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50/50 dark:hover:bg-gray-800/50 border border-gray-200/50 dark:border-gray-700/50 transition-colors">
+              <div>
+                <h4 class="font-medium text-gray-900 dark:text-white text-sm flex items-center gap-2">
+                  <span class="w-2 h-2 bg-purple-500 rounded-full"></span>
+                  Marketing
+                </h4>
+                <p class="text-xs text-gray-600 dark:text-gray-400 mt-1">
+                  Personalized ads and content
+                </p>
+              </div>
+              <button
+                @click="preferences.marketing = !preferences.marketing"
+                class="w-10 h-6 rounded-full relative transition-all focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
+                :class="preferences.marketing ? 'bg-purple-600' : 'bg-gray-300 dark:bg-gray-600'"
+              >
+                <div class="w-4 h-4 bg-white rounded-full absolute top-1 transition-all"
+                     :class="preferences.marketing ? 'right-1' : 'left-1'"></div>
+              </button>
+            </div>
+
+            <!-- Functional Cookies -->
+            <div class="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50/50 dark:hover:bg-gray-800/50 border border-gray-200/50 dark:border-gray-700/50 transition-colors">
+              <div>
+                <h4 class="font-medium text-gray-900 dark:text-white text-sm flex items-center gap-2">
+                  <span class="w-2 h-2 bg-orange-500 rounded-full"></span>
+                  Functional
+                </h4>
+                <p class="text-xs text-gray-600 dark:text-gray-400 mt-1">
+                  Enhanced features and personalization
+                </p>
+              </div>
+              <button
+                @click="preferences.functional = !preferences.functional"
+                class="w-10 h-6 rounded-full relative transition-all focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2"
+                :class="preferences.functional ? 'bg-orange-600' : 'bg-gray-300 dark:bg-gray-600'"
+              >
+                <div class="w-4 h-4 bg-white rounded-full absolute top-1 transition-all"
+                     :class="preferences.functional ? 'right-1' : 'left-1'"></div>
               </button>
             </div>
           </div>
 
-          <!-- Detailed Preferences View -->
-          <div v-else class="space-y-6">
-            <div>
-              <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-                Cookie Preferences
-              </h3>
-              <p class="text-sm text-gray-600 dark:text-gray-300 mb-6">
-                Manage your cookie preferences. You can enable or disable different categories below.
-              </p>
-            </div>
-
-            <!-- Cookie Categories -->
-            <div class="space-y-4">
-              <!-- Necessary Cookies -->
-              <div class="flex items-start justify-between p-4 border border-gray-200 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700">
-                <div class="flex-1">
-                  <h4 class="font-semibold text-gray-900 dark:text-white mb-1">
-                    Necessary Cookies
-                  </h4>
-                  <p class="text-sm text-gray-600 dark:text-gray-300">
-                    Essential for the website to function properly. Cannot be disabled.
-                  </p>
-                </div>
-                <div class="ml-4">
-                  <input
-                    type="checkbox"
-                    :checked="preferences.necessary"
-                    disabled
-                    class="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500 opacity-50"
-                  >
-                </div>
-              </div>
-
-              <!-- Analytics Cookies -->
-              <div class="flex items-start justify-between p-4 border border-gray-200 dark:border-gray-600 rounded-lg">
-                <div class="flex-1">
-                  <h4 class="font-semibold text-gray-900 dark:text-white mb-1">
-                    Analytics Cookies
-                  </h4>
-                  <p class="text-sm text-gray-600 dark:text-gray-300">
-                    Help us understand how visitors interact with our website (Google Analytics, PostHog).
-                  </p>
-                </div>
-                <div class="ml-4">
-                  <input
-                    v-model="preferences.analytics"
-                    type="checkbox"
-                    class="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2"
-                  >
-                </div>
-              </div>
-
-              <!-- Marketing Cookies -->
-              <div class="flex items-start justify-between p-4 border border-gray-200 dark:border-gray-600 rounded-lg">
-                <div class="flex-1">
-                  <h4 class="font-semibold text-gray-900 dark:text-white mb-1">
-                    Marketing Cookies
-                  </h4>
-                  <p class="text-sm text-gray-600 dark:text-gray-300">
-                    Used to deliver personalized advertisements and measure campaign effectiveness.
-                  </p>
-                </div>
-                <div class="ml-4">
-                  <input
-                    v-model="preferences.marketing"
-                    type="checkbox"
-                    class="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2"
-                  >
-                </div>
-              </div>
-
-              <!-- Functional Cookies -->
-              <div class="flex items-start justify-between p-4 border border-gray-200 dark:border-gray-600 rounded-lg">
-                <div class="flex-1">
-                  <h4 class="font-semibold text-gray-900 dark:text-white mb-1">
-                    Functional Cookies
-                  </h4>
-                  <p class="text-sm text-gray-600 dark:text-gray-300">
-                    Enable enhanced functionality like chat widgets and personalized content.
-                  </p>
-                </div>
-                <div class="ml-4">
-                  <input
-                    v-model="preferences.functional"
-                    type="checkbox"
-                    class="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2"
-                  >
-                </div>
-              </div>
-            </div>
-
-            <!-- Action Buttons -->
-            <div class="flex flex-col sm:flex-row gap-3 pt-4 border-t border-gray-200 dark:border-gray-700">
-              <button
-                @click="acceptSelected"
-                class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition-colors"
-              >
-                Save Preferences
-              </button>
-              <button
-                @click="acceptAll"
-                class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-medium transition-colors"
-              >
-                Accept All
-              </button>
-              <button
-                @click="togglePreferences"
-                class="border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 px-6 py-2 rounded-lg font-medium transition-colors"
-              >
-                Back
-              </button>
-            </div>
+          <!-- Action Buttons - Prominent Accept All -->
+          <div class="flex flex-col-reverse sm:flex-row gap-2 pt-4 border-t border-gray-200/50 dark:border-gray-700/50">
+            <button
+              @click="acceptSelected"
+              class="px-4 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
+            >
+              Save Selected
+            </button>
+            <button
+              @click="acceptAll"
+              class="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-6 py-2 rounded-lg font-medium text-sm transition-all hover:scale-105 shadow-lg"
+            >
+              Accept All Cookies
+            </button>
           </div>
         </div>
       </div>

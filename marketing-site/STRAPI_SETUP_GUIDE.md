@@ -2,7 +2,33 @@
 
 ## 🎯 **Overview**
 
-This guide will help you set up Strapi CMS for managing HeliconTrade marketing site content. We recommend self-hosting on your remote server to keep costs low during development.
+This guide will help you set up Strapi CMS for managing HeliconTrade marketing site content. Your Strapi is currently running on a remote server but tunneled to localhost for development.
+
+## 🚀 **IMMEDIATE SETUP (Your Current Environment)**
+
+Your Strapi is accessible at: **http://localhost:1337**
+Admin login:
+- **Email**: `admin@helicontrade.com`
+- **Password**: `Helicon12345!`
+
+### **Step 1: Create API Token**
+1. Go to **http://localhost:1337/admin**
+2. Login with the credentials above
+3. Go to **Settings > API Tokens**
+4. Click **"Create new API Token"**
+5. Fill in:
+   - **Name**: `marketing-site-readonly`
+   - **Description**: `Read-only token for marketing site`
+   - **Token duration**: `Unlimited`
+   - **Token type**: `Read-only`
+6. Click **Save** and copy the token
+7. Add to your marketing site `.env`:
+   ```
+   NUXT_PUBLIC_STRAPI_TOKEN=your_token_here
+   ```
+
+### **Step 2: Create Content Types & Add Sample Data**
+Follow the content type instructions below, then test at: **http://helicontrade.local:3000/strapi-test**
 
 ---
 

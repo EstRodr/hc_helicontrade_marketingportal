@@ -3,6 +3,9 @@ export const useStrapi = () => {
   const config = useRuntimeConfig()
   const strapiUrl = config.public.strapiUrl
   const strapiToken = config.public.strapiToken
+  
+  // Import mock data for fallback when Strapi is not available
+  const { fetchArticles: fetchMockArticles } = useMockStrapi()
 
   // Generic function to fetch from Strapi API
   const fetchFromStrapi = async <T = any>(
@@ -210,9 +213,24 @@ export const useStrapi = () => {
     })
   }
 
+  // Simple fetchArticles method for compatibility with strapi-test page
+  const fetchArticles = async () => {
+    try {
+      const response = await getArticles()
+      return response?.data || []
+    } catch (error) {
+      console.warn('Strapi API not available, using mock data:', error)
+      // Fallback to mock data when Strapi is not available
+      return await fetchMockArticles()
+    }
+  }
+
   return {
     // Core API function
     fetchFromStrapi,
+    
+    // Simple compatibility method
+    fetchArticles,
     
     // Content fetchers
     getArticles,
