@@ -639,45 +639,66 @@ onMounted(() => {
     </section>
 
     <!-- Mid-Page CTA - Visual Break -->
-    <section class="py-20 bg-gradient-to-r from-blue-600 via-purple-600 to-blue-800">
-      <div class="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
-        <h2 class="text-4xl font-bold text-white mb-6">
-          Start sleeping better tonight
+    <section class="py-16 bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 relative overflow-hidden">
+      <!-- Subtle background pattern -->
+      <div class="absolute inset-0 opacity-10">
+        <div class="grid-pattern"></div>
+      </div>
+      
+      <div class="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8 relative">
+        <div class="inline-flex items-center px-4 py-2 rounded-full bg-blue-500/20 text-blue-200 text-sm font-medium mb-6 border border-blue-400/30">
+          <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+          </svg>
+          Ready to Transform Your Trading?
+        </div>
+        
+        <h2 class="text-3xl sm:text-4xl font-bold text-white mb-4">
+          Your strategy everywhere,
+          <br>
+          <span class="text-blue-300">your life anywhere</span>
         </h2>
-        <p class="text-xl text-blue-100 mb-8">
-          Let our AI watch the markets while you focus on what matters most. 
-          Wake up to opportunities, not regrets.
+        <p class="text-lg text-blue-200 mb-8 leading-relaxed">
+          AI executes your trading strategy across global markets 24/7. 
+          No more staring at screens — live your life while opportunities find you.
         </p>
         
         <div class="flex flex-col sm:flex-row gap-4 justify-center mb-6">
           <button
             @click="startTrading"
-            class="modern-button bg-white text-blue-600 px-8 py-4 rounded-xl text-lg font-semibold hover:bg-gray-50 transition-all hover:scale-105 shadow-xl hover:shadow-2xl transform hover:-translate-y-1"
+            class="modern-button bg-white text-slate-900 px-8 py-4 rounded-xl text-lg font-semibold hover:bg-gray-100 transition-all hover:scale-105 shadow-xl hover:shadow-2xl transform hover:-translate-y-1"
           >
             Start free trial
           </button>
           <button
-            class="modern-button glass-effect border-2 border-white/30 text-white hover:bg-white/10 hover:text-white px-8 py-4 rounded-xl text-lg font-semibold transition-all hover:scale-105 backdrop-blur-sm"
+            class="modern-button bg-transparent border-2 border-white/40 text-white hover:bg-white/10 hover:border-white/60 px-8 py-4 rounded-xl text-lg font-semibold transition-all hover:scale-105 backdrop-blur-sm"
           >
             Watch demo
           </button>
         </div>
         
-        <p class="text-blue-100 text-sm">
+        <p class="text-blue-200/80 text-sm">
           No credit card required • AI-powered alerts • 24/7 monitoring
         </p>
       </div>
     </section>
 
     <!-- Everything You Need to Trade Smarter -->
-    <section class="py-20 bg-gray-50 dark:bg-gray-800/50">
+    <section class="py-20 bg-gradient-to-br from-blue-50 via-white to-indigo-50 dark:from-gray-800 dark:via-gray-900 dark:to-blue-900/20">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-16">
+          <div class="inline-flex items-center px-4 py-2 rounded-full bg-gradient-to-r from-blue-100 to-purple-100 dark:from-blue-900/30 dark:to-purple-900/30 text-blue-700 dark:text-blue-300 text-sm font-medium mb-6 border border-blue-200/50 dark:border-blue-700/50">
+            <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"></path>
+            </svg>
+            Complete Trading Platform
+          </div>
+          
           <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-4">
             Everything You Need to 
             <span class="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Trade Smarter</span>
           </h2>
-          <p class="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+          <p class="text-lg text-gray-700 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
             Beyond AI-powered insights, get access to a complete trading ecosystem designed for serious traders.
           </p>
         </div>
@@ -687,7 +708,7 @@ onMounted(() => {
           <div
             v-for="feature in additionalFeatures"
             :key="feature.title"
-            class="group bg-white dark:bg-gray-900 rounded-2xl p-6 border border-gray-200 dark:border-gray-700 hover:border-blue-200 dark:hover:border-blue-700 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/10"
+            class="group bg-white dark:bg-gray-800/80 rounded-2xl p-6 border border-gray-200 dark:border-gray-600 hover:border-blue-300 dark:hover:border-blue-500 transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/20 hover:-translate-y-1 backdrop-blur-sm"
           >
             <!-- Icon -->
             <div class="w-12 h-12 mb-4 mx-auto rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300"
@@ -731,7 +752,7 @@ onMounted(() => {
               <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
                 {{ feature.title }}
               </h3>
-              <p class="text-sm text-gray-600 dark:text-gray-400 mb-3 leading-relaxed">
+              <p class="text-sm text-gray-700 dark:text-gray-300 mb-3 leading-relaxed">
                 {{ feature.description }}
               </p>
               <div class="text-xs font-medium"

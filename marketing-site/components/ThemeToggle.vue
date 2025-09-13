@@ -54,7 +54,7 @@ onMounted(() => {
 
     <div 
       v-show="showDropdown"
-      class="absolute right-0 z-10 mt-2 w-32 origin-top-right rounded-md bg-white dark:bg-gray-800 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+      class="absolute right-0 z-10 bottom-full mb-2 w-32 origin-bottom-right rounded-md bg-white dark:bg-gray-800 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
     >
       <div class="py-1">
         <button
