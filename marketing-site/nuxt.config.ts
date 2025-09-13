@@ -79,6 +79,13 @@ export default defineNuxtConfig({
   ],
   
   runtimeConfig: {
+    // Private runtime config (server-side only)
+    gaApiSecret: process.env.NUXT_GA_API_SECRET,
+    trackingEnabled: process.env.NUXT_TRACKING_ENABLED !== 'false',
+    trackingDebug: process.env.NUXT_TRACKING_DEBUG === 'true',
+    trackingBatchSize: parseInt(process.env.NUXT_TRACKING_BATCH_SIZE || '10'),
+    trackingMaxRetries: parseInt(process.env.NUXT_TRACKING_MAX_RETRIES || '3'),
+
     public: {
       // Environment-specific URLs
       appUrl: process.env.NUXT_PUBLIC_APP_URL || (isProduction ? 'https://app.helicontrade.com' : 'http://app.helicontrade.local:5173'),
@@ -92,6 +99,9 @@ export default defineNuxtConfig({
       posthogPublicKey: process.env.NUXT_PUBLIC_POSTHOG_PUBLIC_KEY,
       posthogHost: process.env.NUXT_PUBLIC_POSTHOG_HOST || 'https://app.posthog.com',
       posthogRecordingEnabled: process.env.NUXT_PUBLIC_POSTHOG_RECORDING === 'true',
+      
+      // Tracking configuration
+      trackingFeatureFlags: process.env.NUXT_PUBLIC_TRACKING_FEATURE_FLAGS === 'true',
       
       // Strapi CMS configuration
       strapiUrl: process.env.NUXT_PUBLIC_STRAPI_URL || 'http://cms.helicontrade.local:1337',
