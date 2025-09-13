@@ -9,8 +9,9 @@ pnpm run build:cloudflare
 
 # Deploy to Cloudflare Pages
 echo "Deploying to Cloudflare Pages..."
-wrangler pages deploy dist --project-name=helicontrade-marketing-portal
+wrangler pages deploy dist --project-name=www-iris-admintrade
 
 echo "Deployment complete!"
-echo "Site URL: https://helicontrade-marketing-portal.pages.dev"
-echo "Latest deployment: https://$(cd dist && ls -1t | head -1).helicontrade-marketing-portal.pages.dev"
+echo "Site URL: https://www-iris-admintrade.pages.dev"
+echo "Custom domain: https://www.iris.thetradingcat.com (if configured)"
+echo "You may need to manually add the custom domain in Cloudflare dashboard"
