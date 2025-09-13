@@ -1,16 +1,14 @@
 // @ts-nocheck
+// Cloudflare Pages specific configuration
 // https://nuxt.com/docs/api/configuration/nuxt-config
 
-// Detect if we're building for production/static deployment
-const isProduction = process.env.NODE_ENV === 'production'
-const isStaticBuild = process.env.NUXT_STATIC === 'true' || process.argv.includes('generate')
-
 export default defineNuxtConfig({
-  // Enable SSR for development, disable for static builds
-  ssr: !isStaticBuild,
-  devtools: { enabled: true },
+  // Disable SSR for static generation
+  ssr: false,
   
-  // Local development configuration
+  devtools: { enabled: false },
+  
+  // Local development configuration - not used in CF but kept for consistency
   devServer: {
     port: 3002,
     host: 'helicontrade.local'
@@ -69,7 +67,7 @@ export default defineNuxtConfig({
       ],
       link: [
         { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
-        { rel: 'canonical', href: process.env.NUXT_PUBLIC_SITE_URL || 'http://helicontrade.local:3002' }
+        { rel: 'canonical', href: 'https://helicontrade-marketing-portal.pages.dev' }
       ],
     },
   },
@@ -80,11 +78,11 @@ export default defineNuxtConfig({
   
   runtimeConfig: {
     public: {
-      // Environment-specific URLs
-      appUrl: process.env.NUXT_PUBLIC_APP_URL || (isProduction ? 'https://app.helicontrade.com' : 'http://app.helicontrade.local:5173'),
-      apiBase: process.env.NUXT_PUBLIC_API_BASE || (isProduction ? 'https://api.helicontrade.com' : 'http://api.helicontrade.local:8000'),
-      siteUrl: process.env.NUXT_PUBLIC_SITE_URL || (isProduction ? 'https://helicontrade-marketing-portal.pages.dev' : 'http://helicontrade.local:3002'),
-      cmsBase: process.env.NUXT_PUBLIC_CMS_BASE || (isProduction ? 'https://cms.helicontrade.com' : 'http://cms.helicontrade.local:1337'),
+      // Production URLs for Cloudflare deployment
+      appUrl: process.env.NUXT_PUBLIC_APP_URL || 'https://app.helicontrade.com',
+      apiBase: process.env.NUXT_PUBLIC_API_BASE || 'https://api.helicontrade.com',
+      siteUrl: process.env.NUXT_PUBLIC_SITE_URL || 'https://helicontrade-marketing-portal.pages.dev',
+      cmsBase: process.env.NUXT_PUBLIC_CMS_BASE || 'https://cms.helicontrade.com',
       
       // Analytics configuration
       gaMeasurementId: process.env.NUXT_PUBLIC_GA_MEASUREMENT_ID,
@@ -93,15 +91,14 @@ export default defineNuxtConfig({
       posthogRecordingEnabled: process.env.NUXT_PUBLIC_POSTHOG_RECORDING === 'true',
       
       // Strapi CMS configuration
-      strapiUrl: process.env.NUXT_PUBLIC_STRAPI_URL || 'http://cms.helicontrade.local:1337',
+      strapiUrl: process.env.NUXT_PUBLIC_STRAPI_URL || 'https://cms.helicontrade.com',
       strapiToken: process.env.NUXT_PUBLIC_STRAPI_TOKEN,
     },
   },
   
   nitro: {
-    // Use different presets based on build type
-    preset: isStaticBuild ? 'cloudflare-pages' : 'node-server',
+    preset: 'cloudflare-pages',
     // Silence Nitro warning and lock features for this date
     compatibilityDate: '2025-08-26',
-  },
+  }
 })

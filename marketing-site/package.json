@@ -8,6 +8,8 @@
     "dev": "nuxt dev --host helicontrade.local --port 3002",
     "build": "nuxt build",
     "generate": "nuxt generate",
+    "build:cloudflare": "NODE_ENV=production NUXT_STATIC=true nuxt generate",
+    "build:cloudflare-config": "nuxt generate --config-file nuxt.config.cloudflare.ts",
     "preview": "nuxt preview",
     "analyze": "nuxt analyze",
     "lint": "eslint .",
