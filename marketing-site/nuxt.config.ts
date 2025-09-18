@@ -55,7 +55,11 @@ export default defineNuxtConfig({
     head: {
       title: 'HeliconTrade — Learn & Trade',
       meta: [
-        { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+        { name: 'viewport', content: 'width=device-width, initial-scale=1, maximum-scale=5, user-scalable=yes, shrink-to-fit=no' },
+        { name: 'format-detection', content: 'telephone=no' },
+        { name: 'apple-mobile-web-app-capable', content: 'yes' },
+        { name: 'apple-mobile-web-app-status-bar-style', content: 'default' },
+        { name: 'apple-mobile-web-app-title', content: 'HeliconTrade' },
         { name: 'description', content: 'Gen‑Z financial education and trading platform.' },
         { name: 'keywords', content: 'trading, finance, education, crypto, stocks, investment' },
         { name: 'author', content: 'HeliconTrade' },

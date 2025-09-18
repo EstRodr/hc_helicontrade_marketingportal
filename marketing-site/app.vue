@@ -11,7 +11,7 @@ useHead({
 </script>
 
 <template>
-  <div class="min-h-screen">
+  <div class="mobile-vh-fix mobile-container prevent-scroll">
     <NuxtPage />
     
     <!-- Cookie Consent Banner -->

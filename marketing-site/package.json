@@ -25,7 +25,8 @@
     "@unhead/ssr": "2.0.14",
     "@unhead/vue": "2.0.14",
     "nuxt": "3.18.1",
-    "posthog-js": "^1.261.0"
+    "posthog-js": "^1.261.0",
+    "posthog-node": "^4.0.0"
   },
   "devDependencies": {
     "@nuxt/devtools": "2.6.3",
@@ -39,5 +40,11 @@
   "engines": {
     "node": ">=18"
   },
-  "packageManager": "pnpm@8"
+  "packageManager": "pnpm@8",
+  "imports": {
+    "#internal/nuxt/paths": {
+      "import": "./.nuxt/paths.mjs"
+    },
+    "#build/*": "./.nuxt/*"
+  }
 }

@@ -1,4 +1,5 @@
 import { defineEventHandler, getRequestHeaders, getRequestURL } from 'h3'
+import { useRuntimeConfig } from '#imports'
 import { TrackingService } from '../tracking/service'
 import type { TrackingConfig } from '../tracking/types'
 
@@ -14,7 +15,7 @@ export default defineEventHandler(async (event) => {
       googleAnalytics: {
         measurementId: config.public.gaMeasurementId,
         apiSecret: config.gaApiSecret,
-        debug: process.dev
+        debug: process.env.NODE_ENV === 'development'
       },
       postHog: {
         apiKey: config.public.posthogPublicKey,
@@ -24,7 +25,7 @@ export default defineEventHandler(async (event) => {
       options: {
         batchSize: 10,
         maxRetries: 3,
-        debug: process.dev
+        debug: process.env.NODE_ENV === 'development'
       }
     }
 
@@ -46,8 +47,8 @@ export default defineEventHandler(async (event) => {
   const userId = headers['x-user-id']
 
   try {
-    // Track page view
-    await trackingService.track({
+    // Track page view (fire-and-forget to avoid blocking the request)
+    trackingService.track({
       eventId: crypto.randomUUID(),
       timestamp: new Date().toISOString(),
       eventName: 'page_view',
@@ -63,32 +64,12 @@ export default defineEventHandler(async (event) => {
         query: Object.fromEntries(url.searchParams),
         utm: extractUtmParams(url.searchParams)
       }
+    }).catch((err) => {
+      console.error('Tracking error:', err)
     })
-
-    // Handle response
-    const response = await event.handle()
-    
-    // Track response metrics
-    const duration = Date.now() - startTime
-    await trackingService.track({
-      eventId: crypto.randomUUID(),
-      timestamp: new Date().toISOString(),
-      eventName: 'performance',
-      sessionId,
-      userId,
-      source: 'system',
-      properties: {
-        metric: 'server_response_time',
-        value: duration,
-        unit: 'ms',
-        status: response.status
-      }
-    })
-
-    return response
   } catch (error) {
-    // Track error
-    await trackingService.track({
+    // Track error (fire-and-forget)
+    trackingService?.track({
       eventId: crypto.randomUUID(),
       timestamp: new Date().toISOString(),
       eventName: 'error',
@@ -96,15 +77,18 @@ export default defineEventHandler(async (event) => {
       userId,
       source: 'system',
       properties: {
-        errorType: error.name,
+        errorType: error.constructor.name,
         message: error.message,
-        stack: process.dev ? error.stack : undefined,
+        stack: process.env.NODE_ENV === 'development' ? error.stack : undefined,
         path: url.pathname
       }
+    }).catch((trackingErr) => {
+      console.error('Tracking error:', trackingErr)
     })
-
-    throw error
   }
+
+  // Don't interfere with the normal request flow
+  // Just let the middleware pass through
 })
 
 /**

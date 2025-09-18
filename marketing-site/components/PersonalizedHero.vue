@@ -40,6 +40,9 @@ const handleCtaClick = () => {
   })
 }
 
+// Simple way to control personalization in development
+// Change ENABLE_PERSONALIZATION in composables/usePersonalization.ts
+
 // Get market status styling
 const getMarketStatusStyling = computed(() => {
   if (userContext.value.market.marketHours.isOpen) {
@@ -55,65 +58,80 @@ const getMarketStatusStyling = computed(() => {
 
 <template>
   <div class="text-center">
-    <!-- Subtle Location Badge (only if enabled) -->
-    <div v-if="props.showLocationBadge && userContext.location.city && !isLoading" 
-         class="flex justify-center mb-4"
-         :class="{ 'animate-fade-in': props.animate }">
-      <div class="inline-flex items-center px-3 py-1 bg-gray-100/80 dark:bg-gray-800/80 rounded-full text-xs text-gray-600 dark:text-gray-400 backdrop-blur-sm">
-        <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
-          <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path>
-        </svg>
-        {{ personalizedContent.greeting }}
+    <!-- Dynamic Content (Client-only to prevent hydration mismatch) -->
+    <ClientOnly>
+      <!-- Subtle Location Badge (only if enabled) -->
+      <div v-if="props.showLocationBadge && userContext.location.city && !isLoading" 
+           class="flex justify-center mb-4"
+           :class="{ 'animate-fade-in': props.animate }">
+        <div class="inline-flex items-center px-3 py-1 bg-gray-100/80 dark:bg-gray-800/80 rounded-full text-xs text-gray-600 dark:text-gray-400 backdrop-blur-sm">
+          <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path>
+          </svg>
+          {{ personalizedContent.greeting }}
+        </div>
       </div>
-    </div>
 
-    <!-- Market Status Alert (subtle) -->
-    <div v-if="props.showMarketStatus && personalizedContent.marketStatus && !isLoading" 
-         class="flex justify-center mb-6"
-         :class="{ 'animate-fade-in-delay': props.animate }">
-      <div :class="`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium border ${getMarketStatusStyling} transition-all duration-300`">
-        <div class="w-1.5 h-1.5 rounded-full mr-2 animate-pulse"
-             :class="{
-               'bg-green-500': userContext.market.marketHours.isOpen,
-               'bg-blue-500': userContext.timing.marketSession === 'pre-market',
-               'bg-purple-500': userContext.timing.marketSession === 'after-hours',
-               'bg-gray-500': userContext.timing.marketSession === 'closed'
-             }"></div>
-        {{ personalizedContent.marketStatus }}
+      <!-- Market Status Alert (subtle) -->
+      <div v-if="props.showMarketStatus && personalizedContent.marketStatus && !isLoading" 
+           class="flex justify-center mb-6"
+           :class="{ 'animate-fade-in-delay': props.animate }">
+        <div :class="`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium border ${getMarketStatusStyling} transition-all duration-300`">
+          <div class="w-1.5 h-1.5 rounded-full mr-2 animate-pulse"
+               :class="{
+                 'bg-green-500': userContext.market.marketHours.isOpen,
+                 'bg-blue-500': userContext.timing.marketSession === 'pre-market',
+                 'bg-purple-500': userContext.timing.marketSession === 'after-hours',
+                 'bg-gray-500': userContext.timing.marketSession === 'closed'
+               }"></div>
+          {{ personalizedContent.marketStatus }}
+        </div>
       </div>
-    </div>
+    </ClientOnly>
 
     <!-- Enhanced Headline (dynamic based on personalization with styling) -->
     <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white mb-6 leading-tight"
         :class="{ 'animate-slide-up': props.animate }">
-      <!-- Markets are LIVE headline -->
-      <span v-if="!isLoading && personalizedContent.headline.includes('Markets are LIVE')">
-        <span class="text-green-600 dark:text-green-400">Markets are LIVE</span> — AI is watching 
-        <span class="text-blue-600 dark:text-blue-400">{{ userContext.location.currency }}</span> 
-        <span class="text-purple-600 dark:text-purple-400">opportunities</span>
-      </span>
-      
-      <!-- Pre-market headline -->
-      <span v-else-if="!isLoading && personalizedContent.headline.includes('Pre-market')">
-        <span class="text-blue-600 dark:text-blue-400">Pre-market</span> is heating up — 
-        <br>
-        Get ready for the <span class="text-purple-600 dark:text-purple-400">open</span>
-      </span>
-      
-      <!-- After-hours headline -->
-      <span v-else-if="!isLoading && personalizedContent.headline.includes('After-hours')">
-        <span class="text-purple-600 dark:text-purple-400">After-hours</span> action continues — 
-        <br>
-        <span class="text-blue-600 dark:text-blue-400">AI never stops</span>
-      </span>
-      
-      <!-- Default/fallback headline with original styling -->
-      <span v-else>
-        AI finds the opportunities,
-        <br>
-        <span class="text-blue-600 dark:text-blue-400">you make</span> the 
-        <span class="text-purple-600 dark:text-purple-400">decisions</span>
-      </span>
+      <ClientOnly>
+        <!-- Markets are LIVE headline -->
+        <span v-if="!isLoading && personalizedContent.headline.includes('Markets are LIVE')">
+          <span class="text-green-600 dark:text-green-400">Markets are LIVE</span> — AI is watching for 
+          <span class="text-blue-600 dark:text-blue-400">{{ userContext.location.currency }}</span> 
+          <span class="text-purple-600 dark:text-purple-400">opportunities</span>
+        </span>
+        
+        <!-- Pre-market headline -->
+        <span v-else-if="!isLoading && personalizedContent.headline.includes('Pre-market')">
+          <span class="text-blue-600 dark:text-blue-400">Pre-market</span> is heating up — 
+          <br>
+          Get ready for the <span class="text-purple-600 dark:text-purple-400">open</span>
+        </span>
+        
+        <!-- After-hours headline -->
+        <span v-else-if="!isLoading && personalizedContent.headline.includes('After-hours')">
+          <span class="text-purple-600 dark:text-purple-400">After-hours</span> action continues — 
+          <br>
+          <span class="text-blue-600 dark:text-blue-400">AI never stops</span>
+        </span>
+        
+        <!-- Default/fallback headline with original styling -->
+        <span v-else>
+          AI finds the opportunities,
+          <br>
+          <span class="text-blue-600 dark:text-blue-400">you make</span> the 
+          <span class="text-purple-600 dark:text-purple-400">decisions</span>
+        </span>
+        
+        <!-- Fallback for server-side rendering -->
+        <template #fallback>
+          <span>
+            AI finds the opportunities,
+            <br>
+            <span class="text-blue-600 dark:text-blue-400">you make</span> the 
+            <span class="text-purple-600 dark:text-purple-400">decisions</span>
+          </span>
+        </template>
+      </ClientOnly>
     </h1>
     
     <p class="text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-3xl mx-auto"
