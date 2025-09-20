@@ -131,38 +131,38 @@ const startTrading = () => {
         </nav>
         
         <!-- Symbol Header -->
-        <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-8">
-          <div class="flex items-center space-x-4 mb-4 lg:mb-0">
+        <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-6 sm:mb-8">
+          <div class="flex items-start sm:items-center gap-3 sm:gap-4 mb-4 lg:mb-0">
             <!-- Symbol Icon -->
-            <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center text-white font-bold text-xl">
+            <div class="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center text-white font-bold text-lg sm:text-xl flex-shrink-0">
               {{ symbol.symbol.charAt(0) }}
             </div>
             
             <!-- Symbol Info -->
-            <div>
-              <div class="flex items-center space-x-3 mb-2">
-                <h1 class="text-3xl font-bold text-gray-900 dark:text-white">
+            <div class="flex-1 min-w-0">
+              <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-2">
+                <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
                   {{ symbol.symbol }}
                 </h1>
-                <span :class="`px-3 py-1 rounded-full text-sm font-medium ${getTypeColor(symbol.type)}`">
+                <span :class="`px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium ${getTypeColor(symbol.type)}`">
                   {{ symbol.type.toUpperCase() }}
                 </span>
               </div>
-              <p class="text-lg text-gray-600 dark:text-gray-300 mb-1">{{ symbol.name }}</p>
+              <p class="text-base sm:text-lg text-gray-600 dark:text-gray-300 mb-1 truncate">{{ symbol.name }}</p>
               <p class="text-sm text-gray-500 dark:text-gray-400">{{ symbol.exchange }}</p>
             </div>
           </div>
           
           <!-- Price Info -->
-          <div class="text-right">
-            <div class="text-4xl font-bold text-gray-900 dark:text-white mb-1">
+          <div class="text-left lg:text-right">
+            <div class="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-1">
               ${{ currentPrice.toLocaleString() }}
             </div>
-            <div class="flex items-center justify-end space-x-2">
-              <span :class="`text-lg font-semibold ${currentChange >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`">
+            <div class="flex items-center lg:justify-end gap-2">
+              <span :class="`text-base sm:text-lg font-semibold ${currentChange >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`">
                 {{ currentChange >= 0 ? '+' : '' }}{{ currentChange.toFixed(2) }}
               </span>
-              <span :class="`text-lg font-semibold ${currentChangePercent >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`">
+              <span :class="`text-base sm:text-lg font-semibold ${currentChangePercent >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`">
                 ({{ currentChangePercent >= 0 ? '+' : '' }}{{ currentChangePercent.toFixed(2) }}%)
               </span>
             </div>
@@ -177,23 +177,23 @@ const startTrading = () => {
     <!-- Main Content -->
     <section class="py-12">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="grid lg:grid-cols-3 gap-8">
+        <div class="grid lg:grid-cols-3 gap-6 lg:gap-8">
           <!-- Chart and Analysis -->
           <div class="lg:col-span-2 space-y-6">
             <!-- Price Chart -->
-            <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-800 p-6">
-              <div class="flex items-center justify-between mb-6">
-                <h2 class="text-xl font-bold text-gray-900 dark:text-white">Price Chart</h2>
-                <div class="flex space-x-2">
-                  <button class="px-3 py-1 bg-blue-600 text-white text-sm rounded">1D</button>
-                  <button class="px-3 py-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 text-sm rounded">1W</button>
-                  <button class="px-3 py-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 text-sm rounded">1M</button>
-                  <button class="px-3 py-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 text-sm rounded">1Y</button>
+            <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-800 p-4 sm:p-6">
+              <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+                <h2 class="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">Price Chart</h2>
+                <div class="flex space-x-1 sm:space-x-2">
+                  <button class="px-2 sm:px-3 py-1 bg-blue-600 text-white text-xs sm:text-sm rounded touch-target">1D</button>
+                  <button class="px-2 sm:px-3 py-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 text-xs sm:text-sm rounded touch-target">1W</button>
+                  <button class="px-2 sm:px-3 py-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 text-xs sm:text-sm rounded touch-target">1M</button>
+                  <button class="px-2 sm:px-3 py-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 text-xs sm:text-sm rounded touch-target">1Y</button>
                 </div>
               </div>
               
               <!-- Mock Chart -->
-              <div class="h-96 relative bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 rounded-lg p-4">
+              <div class="h-64 sm:h-80 lg:h-96 relative bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 rounded-lg p-2 sm:p-4">
                 <svg class="w-full h-full" viewBox="0 0 800 300">
                   <defs>
                     <linearGradient id="chartGradient" x1="0%" y1="0%" x2="0%" y2="100%">
@@ -243,8 +243,8 @@ const startTrading = () => {
             </div>
             
             <!-- AI Analysis -->
-            <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-800 p-6">
-              <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4">AI Analysis</h2>
+            <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-800 p-4 sm:p-6">
+              <h2 class="text-lg sm:text-xl font-bold text-gray-900 dark:text-white mb-4">AI Analysis</h2>
               <div class="space-y-4">
                 <div class="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
                   <div class="flex items-center justify-between mb-2">
@@ -272,8 +272,8 @@ const startTrading = () => {
           <!-- Sidebar -->
           <div class="space-y-6">
             <!-- Key Statistics -->
-            <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-800 p-6">
-              <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">Key Statistics</h3>
+            <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-800 p-4 sm:p-6">
+              <h3 class="text-base sm:text-lg font-bold text-gray-900 dark:text-white mb-4">Key Statistics</h3>
               <div class="space-y-3">
                 <div class="flex justify-between">
                   <span class="text-gray-600 dark:text-gray-400">Volume</span>
@@ -303,8 +303,8 @@ const startTrading = () => {
             </div>
             
             <!-- Description -->
-            <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-800 p-6">
-              <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">About {{ symbol.name }}</h3>
+            <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-800 p-4 sm:p-6">
+              <h3 class="text-base sm:text-lg font-bold text-gray-900 dark:text-white mb-4">About {{ symbol.name }}</h3>
               <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
                 {{ symbol.description }}
               </p>
@@ -322,14 +322,14 @@ const startTrading = () => {
             </div>
             
             <!-- CTA -->
-            <div class="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl shadow-lg p-6 text-white">
-              <h3 class="text-lg font-bold mb-2">Start Trading {{ symbol.symbol }}</h3>
+            <div class="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl shadow-lg p-4 sm:p-6 text-white">
+              <h3 class="text-base sm:text-lg font-bold mb-2">Start Trading {{ symbol.symbol }}</h3>
               <p class="text-blue-100 mb-4 text-sm">
                 Get AI-powered insights and alerts for {{ symbol.symbol }} on our trading platform.
               </p>
               <button 
                 @click="startTrading"
-                class="w-full bg-white text-blue-600 font-semibold py-3 px-4 rounded-xl hover:bg-gray-50 transition-colors"
+                class="w-full bg-white text-blue-600 font-semibold py-3 px-4 rounded-xl hover:bg-gray-50 transition-colors touch-target"
               >
                 Trade {{ symbol.symbol }} Now
               </button>

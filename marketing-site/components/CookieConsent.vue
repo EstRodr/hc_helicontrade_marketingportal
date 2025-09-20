@@ -111,36 +111,37 @@ defineExpose({
       <div class="max-w-7xl mx-auto p-4 sm:p-6">
         <!-- Minimalistic Consent View -->
         <div v-if="!showPreferences">
-          <div class="flex items-center justify-between gap-4">
-            <div class="flex items-center gap-4 flex-1">
-              <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 flex items-center justify-center">
-                  <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+          <!-- Mobile-first layout -->
+          <div class="flex flex-col sm:flex-row sm:items-center gap-4">
+            <div class="flex items-start gap-3 flex-1">
+              <div class="flex-shrink-0">
+                <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 flex items-center justify-center">
+                  <svg class="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
                   </svg>
                 </div>
-                <div>
-                  <h3 id="cookie-consent-title" class="font-semibold text-gray-900 dark:text-white text-sm sm:text-base">
-                    We use cookies to improve your experience
-                  </h3>
-                  <p id="cookie-consent-description" class="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mt-1">
-                    Accept all cookies for the best experience or customize your preferences.
-                  </p>
-                </div>
+              </div>
+              <div class="flex-1 min-w-0">
+                <h3 id="cookie-consent-title" class="font-semibold text-gray-900 dark:text-white text-sm sm:text-base leading-tight">
+                  We use cookies to improve your experience
+                </h3>
+                <p id="cookie-consent-description" class="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mt-1 leading-relaxed">
+                  Accept all cookies for the best experience or customize your preferences.
+                </p>
               </div>
             </div>
             
-            <!-- Action Buttons - Prominent Accept All -->
-            <div class="flex items-center gap-2 sm:gap-3">
+            <!-- Action Buttons - Mobile optimized -->
+            <div class="flex flex-row sm:flex-col lg:flex-row items-stretch sm:items-end lg:items-center gap-2 sm:gap-3">
               <button
                 @click="togglePreferences"
-                class="text-xs sm:text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
+                class="text-xs sm:text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 whitespace-nowrap touch-target"
               >
                 Settings
               </button>
               <button
                 @click="acceptAll"
-                class="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-4 sm:px-6 py-2 rounded-lg font-medium text-sm transition-all hover:scale-105 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+                class="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-4 sm:px-6 py-2 rounded-lg font-medium text-sm transition-all hover:scale-105 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 whitespace-nowrap touch-target"
               >
                 Accept All
               </button>
@@ -151,12 +152,12 @@ defineExpose({
         <!-- Detailed Preferences View -->
         <div v-else class="space-y-4">
           <div class="flex items-center justify-between mb-4">
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+            <h3 class="text-base sm:text-lg font-semibold text-gray-900 dark:text-white">
               Cookie Preferences
             </h3>
             <button
               @click="togglePreferences"
-              class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 p-1"
+              class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 touch-target"
               aria-label="Close preferences"
             >
               <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
@@ -247,17 +248,17 @@ defineExpose({
             </div>
           </div>
 
-          <!-- Action Buttons - Prominent Accept All -->
-          <div class="flex flex-col-reverse sm:flex-row gap-2 pt-4 border-t border-gray-200/50 dark:border-gray-700/50">
+          <!-- Action Buttons - Mobile optimized -->
+          <div class="flex flex-col sm:flex-row gap-3 pt-4 border-t border-gray-200/50 dark:border-gray-700/50">
             <button
               @click="acceptSelected"
-              class="px-4 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
+              class="w-full sm:w-auto px-4 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 touch-target order-2 sm:order-1"
             >
               Save Selected
             </button>
             <button
               @click="acceptAll"
-              class="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-6 py-2 rounded-lg font-medium text-sm transition-all hover:scale-105 shadow-lg"
+              class="w-full sm:w-auto bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-6 py-2 rounded-lg font-medium text-sm transition-all hover:scale-105 shadow-lg touch-target order-1 sm:order-2"
             >
               Accept All Cookies
             </button>
