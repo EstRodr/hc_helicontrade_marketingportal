@@ -362,7 +362,7 @@ onMounted(() => {
     <AppHeader />
 
     <!-- Hero Section - TradingView Style with Personalization -->
-    <section class="relative pt-20 pb-12 bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-900 dark:to-blue-900/20 overflow-hidden">
+    <section class="mobile-content relative pt-20 pb-12 bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-900 dark:to-blue-900/20 overflow-hidden">
       <!-- Animated Background Particles -->
       <div class="absolute inset-0 overflow-hidden pointer-events-none">
         <div class="particle particle-1"></div>
@@ -384,9 +384,9 @@ onMounted(() => {
         />
 
           <!-- Search Bar - TradingView style -->
-          <div class="max-w-2xl mx-auto mb-8">
+          <div class="max-w-2xl mx-auto mb-8 px-4 sm:px-0">
           <div class="relative">
-            <div class="flex">
+            <div class="flex flex-col sm:flex-row gap-3 sm:gap-0">
               <input
                 v-model="searchQuery"
                 @input="onSearchInput"
@@ -395,21 +395,21 @@ onMounted(() => {
                 @focus="performSearch"
                 @blur="hideSearchDropdown"
                 type="text"
-                placeholder="Try: AAPL, BTC, TSLA, SPY, GOOGL..."
-                class="flex-1 px-6 py-4 text-lg border-2 border-gray-200 dark:border-gray-600 rounded-l-xl focus:border-blue-500 focus:ring-0 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+                placeholder="Try: AAPL, BTC, TSLA, SPY..."
+                class="flex-1 px-4 sm:px-6 py-3 sm:py-4 text-base sm:text-lg border-2 border-gray-200 dark:border-gray-600 rounded-xl sm:rounded-l-xl sm:rounded-r-none focus:border-blue-500 focus:ring-0 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
               >
               <button
                 @click="handleSearch"
-                class="px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-r-xl transition-colors"
+                class="px-6 sm:px-8 py-3 sm:py-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl sm:rounded-l-none sm:rounded-r-xl transition-colors touch-target"
               >
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                 </svg>
               </button>
             </div>
             
             <!-- Search Dropdown -->
-            <div v-if="showSearchDropdown && searchResults.length > 0" class="absolute top-full left-0 right-8 mt-2 bg-white dark:bg-gray-800 rounded-xl shadow-2xl border border-gray-200 dark:border-gray-600 z-50 max-h-80 overflow-y-auto">
+            <div v-if="showSearchDropdown && searchResults.length > 0" class="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-gray-800 rounded-xl shadow-2xl border border-gray-200 dark:border-gray-600 z-50 max-h-80 overflow-y-auto mx-4 sm:mx-0 sm:right-8">
               <div class="p-2">
                 <div
                   v-for="(result, index) in searchResults"
@@ -461,41 +461,43 @@ onMounted(() => {
               >
                 {{ symbol }}
               </button>
+            </div>
           </div>
           </div>
 
           <!-- CTAs -->
-          <div class="flex flex-col sm:flex-row gap-4 justify-center mb-12 mt-8">
+          <div class="mobile-buttons flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center mb-12 mt-8 px-4 sm:px-0">
             <button
               @click="startTrading"
-              class="modern-button bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-4 rounded-xl text-lg font-semibold transition-all hover:scale-105 shadow-xl hover:shadow-2xl transform hover:-translate-y-1"
+              class="mobile-button modern-button bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl text-base sm:text-lg font-semibold transition-all hover:scale-105 shadow-xl hover:shadow-2xl transform hover:-translate-y-1 touch-target"
             >
               Get started for free
             </button>
             <button
-              class="modern-button glass-effect border-2 border-white/20 hover:border-blue-500/50 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 px-8 py-4 rounded-xl text-lg font-semibold transition-all hover:scale-105 backdrop-blur-sm"
+              class="mobile-button modern-button glass-effect border-2 border-white/20 hover:border-blue-500/50 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 px-6 sm:px-8 py-3 sm:py-4 rounded-xl text-base sm:text-lg font-semibold transition-all hover:scale-105 backdrop-blur-sm touch-target"
             >
               View demo
             </button>
           </div>
 
           <!-- Value indicators -->
-          <div class="text-sm text-gray-500 dark:text-gray-400 text-center">
-            <p class="mb-2">Start free — No credit card required</p>
-            <div class="flex flex-wrap justify-center gap-6">
-              <span>✓ AI-powered opportunity discovery</span>
-              <span>✓ 24/7 market scanning</span>
-              <span>✓ Personalized to your strategy</span>
+          <div class="text-sm text-gray-500 dark:text-gray-400 text-center px-4 sm:px-0">
+            <p class="mb-3 sm:mb-2">Start free — No credit card required</p>
+            <div class="flex flex-col sm:flex-row sm:flex-wrap justify-center gap-3 sm:gap-6 max-w-2xl mx-auto">
+              <span class="flex items-center justify-center">✓ AI-powered opportunity discovery</span>
+              <span class="flex items-center justify-center">✓ 24/7 market scanning</span>
+              <span class="flex items-center justify-center">✓ Personalized to your strategy</span>
             </div>
           </div>
         </div>
         
         <!-- Hero Dashboard Mockup with AI Insights -->
-        <div class="relative z-10 mt-16">
-          <div class="grid lg:grid-cols-3 gap-8 items-start">
-            <!-- Main Dashboard Mockup -->
-            <div class="lg:col-span-2 flex justify-center">
-              <div class="dashboard-mockup bg-gray-900 rounded-2xl p-6 shadow-2xl border border-gray-700 max-w-4xl w-full">
+        <div class="relative z-10 mt-8 sm:mt-16">
+          <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid lg:grid-cols-3 gap-6 lg:gap-8 items-start">
+              <!-- Main Dashboard Mockup -->
+              <div class="lg:col-span-2 flex justify-center">
+                <div class="mobile-dashboard dashboard-mockup bg-gray-900 rounded-2xl p-3 sm:p-6 shadow-2xl border border-gray-700 max-w-4xl w-full overflow-hidden">
             <!-- Dashboard Header -->
             <div class="flex items-center justify-between mb-6">
               <div class="flex items-center space-x-3">
@@ -510,23 +512,23 @@ onMounted(() => {
               </div>
             </div>
             
-            <div class="grid md:grid-cols-3 gap-6">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-3 sm:gap-6 min-w-0">
               <!-- Main Chart Area -->
-              <div class="md:col-span-2">
-                <div class="bg-gray-800 rounded-xl p-4">
-                  <div class="flex items-center justify-between mb-4">
-                    <div class="flex items-center space-x-3">
-                      <span class="text-white font-bold text-lg">BTC/USD</span>
-                      <span class="text-green-400 text-sm">+2.45% ($67,234)</span>
+              <div class="lg:col-span-2 min-w-0">
+                <div class="bg-gray-800 rounded-xl p-2 sm:p-4 min-w-0">
+                  <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-3 sm:mb-4 gap-2 sm:gap-0">
+                    <div class="flex items-center space-x-2 sm:space-x-3">
+                      <span class="text-white font-bold text-base sm:text-lg">BTC/USD</span>
+                      <span class="text-green-400 text-xs sm:text-sm">+2.45% ($67,234)</span>
                     </div>
-                    <div class="flex space-x-2">
-                      <button class="px-3 py-1 bg-blue-600 text-white text-xs rounded">1D</button>
-                      <button class="px-3 py-1 text-gray-400 hover:text-white text-xs rounded">1W</button>
-                      <button class="px-3 py-1 text-gray-400 hover:text-white text-xs rounded">1M</button>
+                    <div class="flex space-x-1 sm:space-x-2">
+                      <button class="px-2 sm:px-3 py-1 bg-blue-600 text-white text-xs rounded">1D</button>
+                      <button class="px-2 sm:px-3 py-1 text-gray-400 hover:text-white text-xs rounded">1W</button>
+                      <button class="px-2 sm:px-3 py-1 text-gray-400 hover:text-white text-xs rounded">1M</button>
                     </div>
                   </div>
                   <!-- Enhanced Mock Chart -->
-                  <div class="h-48 relative bg-gradient-to-br from-gray-900 to-gray-800 rounded-lg p-4">
+                  <div class="h-32 sm:h-48 relative bg-gradient-to-br from-gray-900 to-gray-800 rounded-lg p-2 sm:p-4">
                     <svg class="w-full h-full" viewBox="0 0 400 150">
                       <defs>
                         <linearGradient id="chartGradientHero" x1="0%" y1="0%" x2="0%" y2="100%">
@@ -619,15 +621,15 @@ onMounted(() => {
                 </div>
               </div>
             </div>
+                </div>
+              </div>
+            
+              <!-- AI Insights Feed -->
+              <div class="mobile-insights lg:col-span-1">
+                <AIInsightsFeed />
               </div>
             </div>
-            
-            <!-- AI Insights Feed -->
-            <div class="lg:col-span-1">
-              <AIInsightsFeed />
-            </div>
           </div>
-        </div>
       </div>
     </section>
 
@@ -635,13 +637,13 @@ onMounted(() => {
     <section class="py-8 bg-gray-50 dark:bg-gray-800 border-t border-b border-gray-200 dark:border-gray-700">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <!-- Market Category Tabs -->
-        <div class="flex justify-center mb-6">
-          <div class="flex bg-white dark:bg-gray-900 rounded-lg p-1 shadow-sm">
+        <div class="flex justify-center mb-6 px-4">
+          <div class="flex bg-white dark:bg-gray-900 rounded-lg p-1 shadow-sm overflow-x-auto">
             <button
               v-for="category in marketCategories"
               :key="category.id"
               @click="setActiveCategory(category.id)"
-              class="px-4 py-2 text-sm font-medium rounded-md transition-all"
+              class="px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium rounded-md transition-all whitespace-nowrap flex-shrink-0"
               :class="category.active 
                 ? 'bg-blue-600 text-white shadow-sm' 
                 : 'text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400'"
@@ -657,16 +659,16 @@ onMounted(() => {
           <p class="text-gray-600 dark:text-gray-300 live-data">Live data • Updates every second</p>
         </div>
 
-        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 px-4">
           <div
             v-for="item in filteredMarketData"
             :key="item.symbol"
             @click="navigateToSymbol(item.symbol)"
-            class="market-card bg-white dark:bg-gray-900 p-4 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer group hover:scale-105 border border-gray-200/50 dark:border-gray-800/50 hover:border-blue-200 dark:hover:border-blue-800"
+            class="market-card bg-white dark:bg-gray-900 p-3 sm:p-4 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer group hover:scale-105 border border-gray-200/50 dark:border-gray-800/50 hover:border-blue-200 dark:hover:border-blue-800"
           >
             <div class="flex items-center justify-between mb-2">
-              <div>
-                <div class="font-bold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+              <div class="flex-1 min-w-0">
+                <div class="font-bold text-sm sm:text-base text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
                   {{ item.symbol }}
                 </div>
                 <div class="text-xs text-gray-500 dark:text-gray-400 truncate">{{ item.name }}</div>
@@ -688,10 +690,10 @@ onMounted(() => {
             </div>
             
             <div class="text-right">
-              <div class="font-semibold text-gray-900 dark:text-white">
+              <div class="font-semibold text-sm sm:text-base text-gray-900 dark:text-white">
                 ${{ item.price.toLocaleString() }}
               </div>
-              <div class="text-sm font-medium"
+              <div class="text-xs sm:text-sm font-medium"
                    :class="item.change >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'">
                 {{ item.change >= 0 ? '+' : '' }}{{ item.change.toFixed(2) }} ({{ item.changePercent >= 0 ? '+' : '' }}{{ item.changePercent.toFixed(2) }}%)
               </div>

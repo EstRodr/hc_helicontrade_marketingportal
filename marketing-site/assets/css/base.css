@@ -171,6 +171,34 @@ select {
   .responsive-subheading {
     font-size: clamp(1rem, 4vw, 1.25rem);
   }
+  
+  /* Mobile-specific hero improvements */
+  .hero-title {
+    font-size: clamp(2rem, 8vw, 3rem) !important;
+    line-height: 1.1;
+  }
+  
+  .hero-subtitle {
+    font-size: clamp(1rem, 4vw, 1.25rem) !important;
+    line-height: 1.4;
+  }
+  
+  /* Better mobile spacing */
+  .mobile-section-padding {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+  }
+  
+  /* Mobile card improvements */
+  .market-card {
+    min-height: 120px;
+  }
+  
+  /* Mobile dashboard adjustments */
+  .dashboard-mockup {
+    margin-left: -0.5rem;
+    margin-right: -0.5rem;
+  }
 }
 
 /* Fix horizontal scrolling issues */
@@ -212,6 +240,123 @@ button:focus,
 
 .mobile-menu.open {
   transform: translateX(0);
+}
+
+/* Mobile header dropdown animation */
+.mobile-header-menu {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-in-out;
+}
+
+.mobile-header-menu.open {
+  max-height: 400px;
+}
+
+/* Better mobile button spacing */
+@media (max-width: 640px) {
+  .mobile-buttons {
+    padding: 0.5rem;
+    gap: 0.75rem;
+  }
+  
+  .mobile-button {
+    min-height: 44px;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+  }
+  
+  /* Mobile search improvements */
+  .mobile-search-container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  
+  .mobile-search-input {
+    font-size: 16px; /* Prevent iOS zoom */
+    min-height: 44px;
+  }
+  
+  /* Mobile header fixes */
+  nav {
+    overflow-x: hidden;
+  }
+  
+  .mobile-header {
+    min-height: 64px;
+  }
+  
+  .mobile-logo {
+    max-width: calc(100vw - 120px); /* Reserve space for menu button */
+    overflow: hidden;
+  }
+  
+  .mobile-logo span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  /* Ensure mobile menu doesn't affect layout */
+  .mobile-menu-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 40;
+  }
+  
+  /* Mobile footer improvements */
+  footer {
+    overflow-x: hidden;
+  }
+  
+  .footer-newsletter {
+    min-width: 0; /* Prevent flex item overflow */
+  }
+  
+  .footer-newsletter input {
+    min-width: 0;
+    width: 100%;
+  }
+  
+  .footer-app-button {
+    max-width: 100%;
+    min-width: 200px;
+  }
+  
+  .footer-links {
+    text-align: center;
+  }
+  
+  .footer-links a {
+    white-space: nowrap;
+  }
+  
+  /* Mobile content width constraints */
+  .mobile-content {
+    max-width: 100vw;
+    overflow-x: hidden;
+  }
+  
+  .mobile-dashboard {
+    max-width: calc(100vw - 2rem);
+    overflow: hidden;
+  }
+  
+  .mobile-insights {
+    max-width: 100%;
+    min-width: 0;
+  }
+  
+  /* Prevent text overflow on mobile */
+  .mobile-text-container {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
+  }
 }
 
 /* Fix for touch scrolling momentum */

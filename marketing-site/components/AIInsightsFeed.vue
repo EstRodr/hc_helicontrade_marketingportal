@@ -159,30 +159,30 @@ function timeAgo(date: Date) {
 </script>
 
 <template>
-  <div class="ai-insights-feed bg-white dark:bg-gray-900 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-800 overflow-hidden">
+  <div class="ai-insights-feed bg-white dark:bg-gray-900 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-800 overflow-hidden max-w-full">
     <!-- Header -->
-    <div class="bg-gradient-to-r from-blue-600 to-purple-600 p-4 text-white">
-      <div class="flex items-center justify-between">
-        <div class="flex items-center gap-3">
-          <div class="relative">
+    <div class="bg-gradient-to-r from-blue-600 to-purple-600 p-3 sm:p-4 text-white">
+      <div class="flex items-center justify-between gap-2">
+        <div class="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
+          <div class="relative flex-shrink-0">
             <div class="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
             <div class="absolute inset-0 w-3 h-3 bg-green-400 rounded-full animate-ping"></div>
           </div>
-          <h3 class="font-bold text-lg">AI Insights Live Feed</h3>
+          <h3 class="font-bold text-base sm:text-lg truncate">AI Insights Live Feed</h3>
         </div>
         <button 
           @click="toggleFeed"
-          class="text-sm px-3 py-1 bg-white/20 hover:bg-white/30 rounded-lg transition-colors"
+          class="text-xs sm:text-sm px-2 sm:px-3 py-1 bg-white/20 hover:bg-white/30 rounded-lg transition-colors whitespace-nowrap flex-shrink-0"
         >
           {{ isPaused ? 'Resume' : 'Pause' }}
         </button>
       </div>
-      <p class="text-blue-100 text-sm mt-1">Real-time AI analysis • {{ insights.length }} active insights</p>
+      <p class="text-blue-100 text-xs sm:text-sm mt-1">Real-time AI analysis • {{ insights.length }} active insights</p>
     </div>
 
     <!-- Feed Container -->
-    <div class="h-96 overflow-y-auto scroll-smooth" :class="{ 'opacity-50': isPaused }">
-      <div class="p-4 space-y-3">
+    <div class="h-80 sm:h-96 overflow-y-auto scroll-smooth" :class="{ 'opacity-50': isPaused }">
+      <div class="p-3 sm:p-4 space-y-3">
         <!-- Insights List -->
         <TransitionGroup 
           name="insight"
@@ -196,34 +196,34 @@ function timeAgo(date: Date) {
           >
             <!-- Icon & Symbol -->
             <div class="flex-shrink-0">
-              <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-800 flex items-center justify-center text-lg">
+              <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-800 flex items-center justify-center text-sm sm:text-lg">
                 {{ insight.icon }}
               </div>
             </div>
             
             <!-- Content -->
             <div class="flex-1 min-w-0">
-              <div class="flex items-center gap-2 mb-1">
-                <span class="font-bold text-gray-900 dark:text-white">{{ insight.symbol }}</span>
-                <span class="text-xs px-2 py-0.5 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300">
+              <div class="flex flex-wrap items-center gap-1 sm:gap-2 mb-1">
+                <span class="font-bold text-sm sm:text-base text-gray-900 dark:text-white">{{ insight.symbol }}</span>
+                <span class="text-xs px-1 sm:px-2 py-0.5 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300">
                   {{ insight.type.toUpperCase() }}
                 </span>
                 <span :class="`text-xs font-semibold ${getConfidenceColor(insight.confidence)}`">
                   {{ insight.confidence }}% confident
                 </span>
               </div>
-              <p class="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
+              <p class="text-xs sm:text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
                 {{ insight.message }}
               </p>
-              <div class="flex items-center justify-between mt-2">
+              <div class="flex items-center justify-between mt-2 gap-2">
                 <span class="text-xs text-gray-500 dark:text-gray-400">
                   {{ timeAgo(insight.timestamp) }}
                 </span>
                 <div class="flex items-center gap-1 text-xs text-gray-400">
-                  <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                  <svg class="w-3 h-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
                   </svg>
-                  AI Verified
+                  <span class="whitespace-nowrap">AI Verified</span>
                 </div>
               </div>
             </div>
