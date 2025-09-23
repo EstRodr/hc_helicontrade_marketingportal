@@ -19,8 +19,8 @@ export default defineNuxtConfig({
   // Import modules
   modules: [
     '@nuxtjs/color-mode',
-    '@nuxtjs/tailwindcss'
-    // '@nuxtjs/i18n' // Temporarily disabled for testing
+    '@nuxtjs/tailwindcss',
+    '@nuxtjs/i18n'
   ],
   
   // Color mode configuration

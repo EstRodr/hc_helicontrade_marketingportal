@@ -106,7 +106,7 @@
           <div class="flex flex-col sm:flex-row items-center gap-4">
             <!-- Language Picker & Theme Toggle -->
             <div class="flex items-center gap-2 sm:border-r sm:border-gray-700 sm:pr-4">
-              <LanguagePicker />
+              <LanguageSelector />
               <ThemeToggle />
             </div>
             

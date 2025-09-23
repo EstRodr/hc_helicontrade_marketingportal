@@ -68,9 +68,8 @@ const plans = [
   }
 ]
 
-function redirectToRegister() {
-  window.location.href = `${config.public.appUrl}/auth/register`
-}
+// Use centralized redirect utilities
+const { redirectToRegister } = useAppRedirects()
 
 function contactSales() {
   // Redirect to contact form with enterprise inquiry
