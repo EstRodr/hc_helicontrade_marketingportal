@@ -95,8 +95,8 @@ export default defineNuxtConfig({
     trackingMaxRetries: parseInt(process.env.NUXT_TRACKING_MAX_RETRIES || '3'),
 
     public: {
-      // Environment-specific URLs
-      appUrl: process.env.NUXT_PUBLIC_APP_URL || (isProduction ? 'https://app.helicontrade.com' : 'http://app.helicontrade.local:5173'),
+      // Environment-specific URLs - Force localhost for development
+      appUrl: process.env.NUXT_PUBLIC_APP_URL || (isProduction ? 'https://app.helicontrade.com' : 'http://localhost:5173'),
       apiBase: process.env.NUXT_PUBLIC_API_BASE || (isProduction ? 'https://api.helicontrade.com' : 'http://api.helicontrade.local:8000'),
       siteUrl: process.env.NUXT_PUBLIC_SITE_URL || (isProduction ? 'https://helicontrade-marketing-portal.pages.dev' : 'http://helicontrade.local:3002'),
       cmsBase: process.env.NUXT_PUBLIC_CMS_BASE || (isProduction ? 'https://cms.helicontrade.com' : 'http://cms.helicontrade.local:1337'),

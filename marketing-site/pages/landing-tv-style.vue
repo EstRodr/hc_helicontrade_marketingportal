@@ -173,13 +173,8 @@ function setActiveCategory(categoryId: string) {
   })
 }
 
-function redirectToApp() {
-  window.location.href = `${config.public.appUrl}/auth/register`
-}
-
-function startTrading() {
-  window.location.href = `${config.public.appUrl}/auth/register`
-}
+// Use centralized redirect utilities
+const { redirectToApp, startTrading } = useAppRedirects()
 
 // Auto-update market data (simulate real-time updates)
 onMounted(() => {

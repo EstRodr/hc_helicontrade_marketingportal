@@ -187,15 +187,8 @@ const assetClasses = [
   { name: 'Options', description: 'Equity and index options strategies' }
 ]
 
-// Handle login redirect
-function redirectToLogin() {
-  window.location.href = `${config.public.appUrl}/auth/login`
-}
-
-// Handle registration redirect
-function redirectToRegister() {
-  window.location.href = `${config.public.appUrl}/auth/register`
-}
+// Use centralized redirect utilities
+const { redirectToLogin, redirectToRegister } = useAppRedirects()
 </script>
 
 <template>

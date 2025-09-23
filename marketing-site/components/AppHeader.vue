@@ -4,15 +4,8 @@ const config = useRuntimeConfig()
 // Mobile menu state
 const isMobileMenuOpen = ref(false)
 
-// Handle login redirect
-function redirectToLogin() {
-  window.location.href = `${config.public.appUrl}/auth/login`
-}
-
-// Handle registration redirect
-function redirectToRegister() {
-  window.location.href = `${config.public.appUrl}/auth/register`
-}
+// Use centralized redirect utilities
+const { redirectToLogin, redirectToRegister } = useAppRedirects()
 
 // Toggle mobile menu
 function toggleMobileMenu() {

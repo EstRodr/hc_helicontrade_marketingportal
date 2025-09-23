@@ -12,15 +12,17 @@ useHead({
 })
 
 // Redirect to app domain for registration
+const { getAppUrl } = useAppRedirects()
+
 onMounted(() => {
   // Preserve any query parameters (like referral codes)
   const queryString = new URLSearchParams(route.query as Record<string, string>).toString()
-  const redirectUrl = `${config.public.appUrl}/auth/register${queryString ? '?' + queryString : ''}`
+  const redirectUrl = `${getAppUrl()}/register${queryString ? '?' + queryString : ''}`
   
   // Add a small delay to show the redirect message
   setTimeout(() => {
     window.location.href = redirectUrl
-  }, 1500)
+  }, 2000)
 })
 </script>
 
@@ -51,7 +53,7 @@ onMounted(() => {
       <!-- Fallback Link -->
       <p class="text-sm text-gray-500 dark:text-gray-400 mt-8">
         Not redirected automatically? 
-        <a :href="`${config.public.appUrl}/auth/register`" class="text-blue-600 hover:text-blue-700 underline">
+        <a :href="`${getAppUrl()}/register`" class="text-blue-600 hover:text-blue-700 underline">
           Click here to register
         </a>
       </p>

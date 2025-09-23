@@ -56,9 +56,8 @@ const features = [
   }
 ]
 
-function redirectToApp() {
-  window.location.href = `${config.public.appUrl}/auth/register`
-}
+// Use centralized redirect utilities
+const { redirectToApp } = useAppRedirects()
 
 function startDemo() {
   // In production, this would open a demo modal or redirect to demo page

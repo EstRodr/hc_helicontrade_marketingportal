@@ -40,9 +40,8 @@ const stats = [
   { label: 'Support Rating', value: '4.9/5' }
 ]
 
-function redirectToRegister() {
-  window.location.href = `${config.public.appUrl}/auth/register`
-}
+// Use centralized redirect utilities
+const { redirectToRegister } = useAppRedirects()
 </script>
 
 <template>

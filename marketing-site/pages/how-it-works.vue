@@ -90,10 +90,8 @@ const techFeatures = [
   }
 ]
 
-// Redirect functions
-function startTrading() {
-  window.location.href = `${config.public.appUrl}/auth/register`
-}
+// Use centralized redirect utilities
+const { startTrading } = useAppRedirects()
 </script>
 
 <template>

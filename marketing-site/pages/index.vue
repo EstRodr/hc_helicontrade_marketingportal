@@ -244,13 +244,8 @@ function navigateToSymbol(symbol: string) {
   navigateTo(`/symbol/${symbol.toLowerCase()}`)
 }
 
-function redirectToApp() {
-  window.location.href = `${config.public.appUrl}/auth/register`
-}
-
-function startTrading() {
-  window.location.href = `${config.public.appUrl}/auth/register`
-}
+// Use centralized redirect utilities
+const { redirectToApp, startTrading } = useAppRedirects()
 
 function setActiveCategory(categoryId: string) {
   activeCategory.value = categoryId
