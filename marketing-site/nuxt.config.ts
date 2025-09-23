@@ -72,7 +72,11 @@ export default defineNuxtConfig({
         { name: 'twitter:description', content: 'Gen‑Z financial education and trading platform.' }
       ],
       link: [
+        { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
         { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
+        { rel: 'icon', type: 'image/png', sizes: '32x32', href: '/favicon-32x32.png' },
+        { rel: 'icon', type: 'image/png', sizes: '16x16', href: '/favicon-16x16.png' },
+        { rel: 'apple-touch-icon', href: '/favicon-32x32.png' },
         { rel: 'canonical', href: process.env.NUXT_PUBLIC_SITE_URL || 'http://helicontrade.local:3002' }
       ]
     },
@@ -108,8 +112,11 @@ export default defineNuxtConfig({
       trackingFeatureFlags: process.env.NUXT_PUBLIC_TRACKING_FEATURE_FLAGS === 'true',
       
       // Strapi CMS configuration
-      strapiUrl: process.env.NUXT_PUBLIC_STRAPI_URL || 'http://cms.helicontrade.local:1337',
+      strapiUrl: process.env.NUXT_PUBLIC_STRAPI_URL || 'http://142.132.205.187',
       strapiToken: process.env.NUXT_PUBLIC_STRAPI_TOKEN,
+      
+      // Personalization configuration
+      personalizationOption: process.env.NUXT_PUBLIC_PERSONALIZATION_OPTION || '0',
     },
   },
   

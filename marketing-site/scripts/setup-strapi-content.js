@@ -13,7 +13,7 @@
  */
 
 const STRAPI_URL = 'http://localhost:1337';
-const API_TOKEN = 'c4375317631dd92245d66c24a1a7d9ed380791fe15aa0ad3c5486890a28c3fd95498cb26dfcfd68ee6d5de52461cda8ebe6c3ba8f94b3e97e5122ffbf54efd5fccc3ee7e848bb9239d5926b62a26e455ef3e4f90e83abce7c69978e0a2967528a76893ced80403bf34fa48617baaef51b0afbf43814bb0850f9fcfcd6c3d3ee7';
+const API_TOKEN = '4dc624010b399c86e4c8c40d6e7f2a1435a643ccd3563ae51600a73acb69cecf949a319137bbc992692ec2fdda357212da6ebb359cedb479ad557f64d78fe731c2a1f2285f50f17023c817870ac44cdac6d0b94adb35dd4f7fe8a51c9e29f5c39bc34c0bbdf5c9477749a899a5646f114c4c99ff2d74a7392eec0773b0800787';
 
 async function createArticle(data) {
   const response = await fetch(`${STRAPI_URL}/api/articles`, {

@@ -24,6 +24,7 @@
     "@nuxtjs/tailwindcss": "^6.12.1",
     "@unhead/ssr": "2.0.14",
     "@unhead/vue": "2.0.14",
+    "marked": "^16.3.0",
     "nuxt": "3.18.1",
     "posthog-js": "^1.261.0",
     "posthog-node": "^4.0.0"

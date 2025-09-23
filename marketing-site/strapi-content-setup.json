@@ -1,0 +1,147 @@
+{
+  "personalization_configs": [
+    {
+      "variant": null,
+      "enabled": true,
+      "smooth_transitions": true,
+      "delay_seconds": 2,
+      "market_hours_override": false,
+      "posthog_integration": true,
+      "fallback_behavior": "intelligent"
+    }
+  ],
+  "content_variants": [
+    {
+      "variant_id": 0,
+      "name": "Global Insight",
+      "description": "Professional, data-focused messaging for established markets",
+      "headline_template": "Global insight, built for {country} markets",
+      "subheadline_template": "From {city} to Wall Street, turn real‑time moves in {index} into smarter decisions.",
+      "target_countries": ["Sweden", "Germany", "France", "Netherlands", "Switzerland"],
+      "market_sessions": ["market-open", "after-hours"],
+      "enabled": true,
+      "priority": 1,
+      "conversion_goal": "professional_traders",
+      "tone": "professional",
+      "target_audience": "experienced_traders"
+    },
+    {
+      "variant_id": 1,
+      "name": "AI Eyes",
+      "description": "Dynamic, always-watching messaging for active traders",
+      "headline_template": "AI eyes on {country} markets — opportunity never sleeps",
+      "subheadline_template": "From {city} to Wall Street, track every market pulse, 24/7.",
+      "target_countries": ["United States", "Canada", "Australia", "United Kingdom"],
+      "market_sessions": ["pre-market", "market-open"],
+      "enabled": true,
+      "priority": 2,
+      "conversion_goal": "active_traders",
+      "tone": "dynamic",
+      "target_audience": "day_traders"
+    },
+    {
+      "variant_id": 2,
+      "name": "Your Edge",
+      "description": "Personal empowerment messaging for individual investors",
+      "headline_template": "Your edge in {country}'s markets",
+      "subheadline_template": "With AI scanning {index} day and night, you focus on making confident moves.",
+      "target_countries": ["Sweden", "Norway", "Denmark", "Finland"],
+      "market_sessions": ["after-hours", "market-closed"],
+      "enabled": true,
+      "priority": 3,
+      "conversion_goal": "individual_investors",
+      "tone": "empowering",
+      "target_audience": "retail_investors"
+    },
+    {
+      "variant_id": 3,
+      "name": "Redefined Intelligence",
+      "description": "Modern, sophisticated messaging for tech-savvy users",
+      "headline_template": "{country} markets, redefined by intelligence",
+      "subheadline_template": "From {city} to Wall Street, stay connected to every swing in {index}.",
+      "target_countries": ["Japan", "South Korea", "Singapore", "Hong Kong"],
+      "market_sessions": ["market-open", "pre-market"],
+      "enabled": true,
+      "priority": 4,
+      "conversion_goal": "tech_savvy_traders",
+      "tone": "sophisticated",
+      "target_audience": "tech_professionals"
+    },
+    {
+      "variant_id": 4,
+      "name": "Global AI Power",
+      "description": "Tech-forward, powerful messaging for younger demographics",
+      "headline_template": "Trade {country} markets with global AI power",
+      "subheadline_template": "From {city} to Wall Street, our AI keeps an eye on {index} so you don't miss a beat.",
+      "target_countries": ["United States", "Canada", "Australia", "New Zealand"],
+      "market_sessions": ["pre-market", "after-hours"],
+      "enabled": true,
+      "priority": 5,
+      "conversion_goal": "young_traders",
+      "tone": "energetic",
+      "target_audience": "millennials_gen_z"
+    }
+  ],
+  "market_configs": [
+    {
+      "country": "Sweden",
+      "country_code": "SE",
+      "primary_index": "OMXS30",
+      "market_open_time": "09:00",
+      "market_close_time": "17:30",
+      "timezone": "Europe/Stockholm",
+      "default_variant": 0,
+      "enabled": true,
+      "currency": "SEK",
+      "market_name": "Nasdaq Stockholm"
+    },
+    {
+      "country": "United States",
+      "country_code": "US",
+      "primary_index": "SPY",
+      "market_open_time": "09:30",
+      "market_close_time": "16:00",
+      "timezone": "America/New_York",
+      "default_variant": 1,
+      "enabled": true,
+      "currency": "USD",
+      "market_name": "NYSE/NASDAQ"
+    },
+    {
+      "country": "Germany",
+      "country_code": "DE",
+      "primary_index": "DAX",
+      "market_open_time": "09:00",
+      "market_close_time": "17:30",
+      "timezone": "Europe/Berlin",
+      "default_variant": 3,
+      "enabled": true,
+      "currency": "EUR",
+      "market_name": "Frankfurt Stock Exchange"
+    },
+    {
+      "country": "Japan",
+      "country_code": "JP",
+      "primary_index": "N225",
+      "market_open_time": "09:00",
+      "market_close_time": "15:00",
+      "timezone": "Asia/Tokyo",
+      "default_variant": 3,
+      "enabled": true,
+      "currency": "JPY",
+      "market_name": "Tokyo Stock Exchange"
+    },
+    {
+      "country": "Australia",
+      "country_code": "AU",
+      "primary_index": "ASX200",
+      "market_open_time": "10:00",
+      "market_close_time": "16:00",
+      "timezone": "Australia/Sydney",
+      "default_variant": 1,
+      "enabled": true,
+      "currency": "AUD",
+      "market_name": "Australian Securities Exchange"
+    }
+  ]
+}

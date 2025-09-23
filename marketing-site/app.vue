@@ -14,7 +14,9 @@ useHead({
   <div class="mobile-vh-fix mobile-container prevent-scroll">
     <NuxtPage />
     
-    <!-- Cookie Consent Banner -->
-    <CookieConsent />
+    <!-- Cookie Consent Banner - Client-side only to prevent hydration issues -->
+    <ClientOnly>
+      <CookieConsent />
+    </ClientOnly>
   </div>
 </template>

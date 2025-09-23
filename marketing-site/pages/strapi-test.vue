@@ -51,14 +51,14 @@
         </h2>
         <div class="space-y-4">
           <div v-for="article in articles" :key="article.id" class="border-b border-gray-200 dark:border-gray-700 pb-4 last:border-b-0">
-            <h3 class="font-semibold text-gray-900 dark:text-white">{{ article.attributes.title }}</h3>
+            <h3 class="font-semibold text-gray-900 dark:text-white">{{ article.title }}</h3>
             <p class="text-gray-600 dark:text-gray-400 mt-1">
-              {{ article.attributes.excerpt || 'No excerpt available' }}
+              {{ article.excerpt || 'No excerpt available' }}
             </p>
             <div class="flex gap-4 mt-2 text-sm text-gray-500 dark:text-gray-400">
               <span>ID: {{ article.id }}</span>
-              <span v-if="article.attributes.author">Author: {{ article.attributes.author }}</span>
-              <span v-if="article.attributes.publish_date">Published: {{ formatDate(article.attributes.publish_date) }}</span>
+              <span v-if="article.author">Author: {{ article.author }}</span>
+              <span v-if="article.publishedAt">Published: {{ formatDate(article.publishedAt) }}</span>
             </div>
           </div>
         </div>
@@ -149,6 +149,14 @@ const testConnection = async () => {
     fullError.value = JSON.stringify(err, null, 2)
     connectionStatus.value = 'failed'
     console.error('Strapi connection error:', err)
+    console.error('Error details:', {
+      strapiUrl: config.public.strapiUrl,
+      hasToken: !!config.public.strapiToken,
+      tokenLength: config.public.strapiToken?.length || 0,
+      errorType: err.constructor.name,
+      errorMessage: err.message,
+      errorStatus: err.response?.status
+    })
   } finally {
     loading.value = false
   }

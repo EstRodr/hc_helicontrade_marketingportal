@@ -1,14 +1,21 @@
 <script setup lang="ts">
 const config = useRuntimeConfig()
 
-// Static SEO for faster loading - no reactive dependencies
-useHead({
-  title: 'HeliconTrade — Where Traders Research, Then Commit',
+// Dynamic SEO configuration
+const dynamicSEO = computed(() => ({
+  title: homepageContent.value.page_title || 'HeliconTrade — Where Traders Research, Then Commit',
+  description: homepageContent.value.meta_description || 'AI-powered trading platform that monitors global markets 24/7 to find opportunities matching your strategy. Sleep better while AI watches the markets for you.',
+  keywords: homepageContent.value.meta_keywords || 'trading platform, market analysis, charts, real-time data, trading community, financial markets'
+}))
+
+// SEO configuration (will be reactive to Strapi content)
+useHead(() => ({
+  title: dynamicSEO.value.title,
   meta: [
-    { name: 'description', content: 'AI-powered trading platform that monitors global markets 24/7 to find opportunities matching your strategy. Sleep better while AI watches the markets for you.' },
-    { name: 'keywords', content: 'trading platform, market analysis, charts, real-time data, trading community, financial markets' }
+    { name: 'description', content: dynamicSEO.value.description },
+    { name: 'keywords', content: dynamicSEO.value.keywords }
   ]
-})
+}))
 
 // Search functionality
 const searchQuery = ref('')
@@ -47,155 +54,57 @@ const platformStats = [
   { value: '<0.3ms', label: 'Alert Speed', subtext: 'lightning-fast notifications' }
 ]
 
-// Static content for faster loading
-const homepageContent = ref({
-  page_title: 'HeliconTrade — Where Traders Research, Then Commit',
-  meta_description: 'AI-powered trading platform that monitors global markets 24/7 to find opportunities matching your strategy.',
-  cta_primary: 'Get started for free',
-  cta_secondary: 'View demo',
-  cta_disclaimer: 'Start free — No credit card required',
-  value_prop_1: 'AI-powered opportunity discovery',
-  value_prop_2: '24/7 market scanning',
-  value_prop_3: 'Personalized to your strategy'
+// Dynamic features from Strapi (will be populated via useLazyAsyncData)
+const featuresLoading = ref(true)
+
+// Load features and homepage content from Strapi
+const { getFeatures, getHomepageContent } = useStrapi()
+
+// Use async data for SSR-compatible data fetching with navigation-friendly options
+const { data: homepageContent } = await useLazyAsyncData('homepage', async () => {
+  try {
+    return await getHomepageContent()
+  } catch (error) {
+    console.error('Failed to load homepage content:', error)
+    return {}
+  }
+}, {
+  default: () => ({}),
+  server: true,
+  client: false // Don't refetch on client-side navigation
 })
 
-// Static features for faster loading
-const featuresData = ref({
-  featured: [
-    {
-      title: 'Opportunity Discovery',
-      description: 'AI continuously scans markets to find setups that match your trading style and risk preferences. Never miss a profitable opportunity again.',
-      short_description: 'AI-powered market scanning',
-      category: 'Analysis'
-    },
-    {
-      title: 'Smart Alerts',
-      description: 'Get notified instantly when conditions align with your strategy — no more staring at screens all day.',
-      short_description: 'Sleep better with smart notifications',
-      category: 'Trading'
-    },
-    {
-      title: 'Everywhere Coverage',
-      description: 'We monitor global markets across all asset classes so you can focus on what matters most to your trading success.',
-      short_description: 'Global market monitoring',
-      category: 'Trading'
-    },
-    {
-      title: 'Personalized Intelligence',
-      description: 'Our AI learns your preferences and refines recommendations to match your unique trading style and risk tolerance.',
-      short_description: 'AI that learns your style',
-      category: 'Analysis'
-    }
-  ],
-  additional: [
-    {
-      title: 'Smart Alerts Pro',
-      description: 'Get notified instantly when your custom conditions are met across all your favorite instruments and setups.',
-      short_description: 'Real-time notifications',
-      category: 'Trading'
-    },
-    {
-      title: 'AI Trading Assistant',
-      description: 'Let our AI help you identify profitable trading opportunities with advanced pattern recognition and market analysis.',
-      short_description: 'AI-powered insights',
-      category: 'Analysis'
-    },
-    {
-      title: 'Market News Integration',
-      description: 'Stay ahead with real-time financial news and market updates integrated directly into your trading workflow.',
-      short_description: 'Real-time market news',
-      category: 'Analysis'
-    },
-    {
-      title: 'Precision Trading Tools',
-      description: 'Advanced algorithms and data analysis for more accurate trade timing and enhanced execution precision.',
-      short_description: 'Enhanced accuracy',
-      category: 'Trading'
-    },
-    {
-      title: 'Multi-Platform Integration',
-      description: 'Connect with your favorite brokers and trading platforms seamlessly for unified portfolio management.',
-      short_description: '20+ broker integrations',
-      category: 'Trading'
-    },
-    {
-      title: 'Educational Resources',
-      description: 'Learn from expert analysis, webinars, and comprehensive trading guides to improve your skills.',
-      short_description: 'Expert-led content',
-      category: 'Education'
-    }
-  ]
-})
-
-// Load CMS content server-side for immediate display
-const { getHomepageContent, getFeatures } = useStrapi()
-
-// Server-side data fetching with fallbacks
-try {
-  const [cmsContent, [featured, additional]] = await Promise.all([
-    getHomepageContent().catch(() => null),
-    Promise.all([
-      getFeatures(true).catch(() => []),
-      getFeatures(false).catch(() => [])
+const { data: featuresData } = await useLazyAsyncData('features', async () => {
+  try {
+    const [featured, additional] = await Promise.all([
+      getFeatures(true),
+      getFeatures(false)
     ])
-  ])
-  
-  // Update content if CMS data is available
-  if (cmsContent && Object.keys(cmsContent).length > 0) {
-    homepageContent.value = { ...homepageContent.value, ...cmsContent }
-    console.log('✅ Loaded homepage content from Strapi:', cmsContent.hero_headline_default)
-  }
-  // Only use CMS features if we have enough additional features (6), otherwise use static
-  if (featured?.length > 0 || (additional?.length > 0 && additional.length >= 6)) {
-    featuresData.value = {
-      featured: featured || featuresData.value.featured,
-      additional: additional?.length >= 6 ? additional : featuresData.value.additional
+    return {
+      featured: featured || [],
+      additional: additional || []
     }
-    console.log('✅ Using CMS features:', { featuredCount: featured?.length || 0, additionalCount: additional?.length || 0 })
-  } else {
-    console.log('📋 Using static features fallback - CMS has insufficient features')
+  } catch (error) {
+    console.error('Failed to load features:', error)
+    return {
+      featured: [],
+      additional: []
+    }
   }
-} catch (error) {
-  console.warn('CMS content loading failed (using static fallback):', error)
-}
+}, {
+  default: () => ({ featured: [], additional: [] }),
+  server: true,
+  client: false // Don't refetch on client-side navigation
+})
 
-// Extract features from data
+// Set loading state
+featuresLoading.value = false
+
+// Extract features from async data
 const platformFeatures = computed(() => featuresData.value?.featured || [])
 const additionalFeatures = computed(() => featuresData.value?.additional || [])
 
-// Helper functions for mapping
-function getIconName(iconField: any, title?: string): string {
-  const iconMap: Record<string, string> = {
-    'Opportunity Discovery': 'analytics',
-    'Smart Alerts': 'speed', 
-    'Smart Alerts Pro': 'bell',
-    'Everywhere Coverage': 'automation',
-    'Personalized Intelligence': 'social',
-    'AI Trading Assistant': 'brain',
-    'Market News Integration': 'news',
-    'Precision Trading Tools': 'target',
-    'Multi-Platform Integration': 'connect',
-    'Educational Resources': 'education'
-  }
-  
-  if (title && iconMap[title]) {
-    return iconMap[title]
-  }
-  
-  return 'analytics'
-}
-
-function getCategoryColor(category: string): string {
-  const colorMap: Record<string, string> = {
-    'Trading': 'blue',
-    'Analysis': 'purple', 
-    'Education': 'green',
-    'Security': 'orange'
-  }
-  return colorMap[category] || 'blue'
-}
-
-// Map features to template format
+// Map Strapi features to template format
 const mappedPlatformFeatures = computed(() => {
   return platformFeatures.value.map(feature => ({
     ...feature,
@@ -215,6 +124,46 @@ const mappedAdditionalFeatures = computed(() => {
   }))
 })
 
+// Helper functions for mapping
+function getIconName(iconField: any, title?: string): string {
+  // Map specific feature titles to appropriate icons
+  const iconMap: Record<string, string> = {
+    'Opportunity Discovery': 'analytics',
+    'Smart Alerts': 'speed', 
+    'Smart Alerts Pro': 'bell',
+    'Everywhere Coverage': 'automation',
+    'Personalized Intelligence': 'social',
+    'AI Trading Assistant': 'brain',
+    'Market News Integration': 'news',
+    'Precision Trading Tools': 'target',
+    'Multi-Platform Integration': 'connect',
+    'Educational Resources': 'education'
+  }
+  
+  // If we have a title match, use that icon
+  if (title && iconMap[title]) {
+    return iconMap[title]
+  }
+  
+  // Otherwise, try to extract from iconField or use default
+  if (typeof iconField === 'string') {
+    return iconField
+  }
+  
+  // Default fallback
+  return 'analytics'
+}
+
+function getCategoryColor(category: string): string {
+  const colorMap: Record<string, string> = {
+    'Trading': 'blue',
+    'Analysis': 'purple', 
+    'Education': 'green',
+    'Security': 'orange'
+  }
+  return colorMap[category] || 'blue'
+}
+
 // Market categories for filtering
 const marketCategories = [
   { id: 'all', name: 'All Markets', active: true },
@@ -228,7 +177,7 @@ const activeCategory = ref('all')
 // Computed filtered market data
 const filteredMarketData = computed(() => {
   if (activeCategory.value === 'all') {
-    return marketData.value.slice(0, 8)
+    return marketData.value.slice(0, 8) // Show top 8 for "all"
   }
   return marketData.value.filter(item => {
     if (activeCategory.value === 'indices') return item.category === 'index'
@@ -238,10 +187,90 @@ const filteredMarketData = computed(() => {
   })
 })
 
-// Rest of search and navigation functions (same as original)
-// ... [I'll keep the rest of the functions the same for brevity]
-function navigateToSymbol(symbol: string) {
-  navigateTo(`/symbol/${symbol.toLowerCase()}`)
+// Search functionality with dropdown
+function performSearch() {
+  const query = searchQuery.value.trim().toLowerCase()
+  if (query.length === 0) {
+    searchResults.value = []
+    showSearchDropdown.value = false
+    selectedIndex.value = -1
+    return
+  }
+  
+  // Filter symbols based on query (symbol or name)
+  const filtered = allMockSymbols.value.filter(symbol => 
+    symbol.symbol.toLowerCase().includes(query) ||
+    symbol.name.toLowerCase().includes(query)
+  )
+  
+  searchResults.value = filtered.slice(0, 8) // Show top 8 matches
+  showSearchDropdown.value = filtered.length > 0
+  selectedIndex.value = -1
+}
+
+function onSearchInput() {
+  performSearch()
+}
+
+function handleSearch() {
+  if (selectedIndex.value >= 0 && searchResults.value[selectedIndex.value]) {
+    // User selected item with keyboard
+    selectSearchResult(searchResults.value[selectedIndex.value])
+  } else if (searchResults.value.length === 1) {
+    // Only one result, select it
+    selectSearchResult(searchResults.value[0])
+  } else if (searchQuery.value.trim()) {
+    // Try exact match
+    const symbol = searchQuery.value.trim().toUpperCase()
+    if (validSymbols.value.has(symbol)) {
+      navigateToSymbol(symbol)
+    }
+  }
+  hideSearchDropdown()
+}
+
+function selectSearchResult(result) {
+  navigateToSymbol(result.symbol)
+  hideSearchDropdown()
+  searchQuery.value = result.symbol
+}
+
+function hideSearchDropdown() {
+  // Add small delay to allow click events to fire before hiding
+  setTimeout(() => {
+    showSearchDropdown.value = false
+    selectedIndex.value = -1
+  }, 150)
+}
+
+function onSearchKeydown(event) {
+  if (!showSearchDropdown.value || searchResults.value.length === 0) return
+  
+  switch (event.key) {
+    case 'ArrowDown':
+      event.preventDefault()
+      selectedIndex.value = Math.min(selectedIndex.value + 1, searchResults.value.length - 1)
+      break
+    case 'ArrowUp':
+      event.preventDefault()
+      selectedIndex.value = Math.max(selectedIndex.value - 1, -1)
+      break
+    case 'Escape':
+      event.preventDefault()
+      hideSearchDropdown()
+      break
+  }
+}
+
+function selectPopularSymbol(symbol: string) {
+  navigateToSymbol(symbol)
+}
+
+function setActiveCategory(categoryId: string) {
+  activeCategory.value = categoryId
+  marketCategories.forEach(cat => {
+    cat.active = cat.id === categoryId
+  })
 }
 
 function redirectToApp() {
@@ -252,18 +281,97 @@ function startTrading() {
   window.location.href = `${config.public.appUrl}/auth/register`
 }
 
-function setActiveCategory(categoryId: string) {
-  activeCategory.value = categoryId
-  marketCategories.forEach(cat => {
-    cat.active = cat.id === categoryId
-  })
-}
-
 // Handle location detection for analytics
 function onLocationDetected(location: any) {
   console.log('User location detected:', location)
   // You could send this to analytics here
 }
+
+// Navigate to symbol page
+function navigateToSymbol(symbol: string) {
+  navigateTo(`/symbol/${symbol.toLowerCase()}`)
+}
+
+// Extended mock symbols for search (combining market data, popular symbols, and additional mocks)
+const allMockSymbols = computed(() => {
+  const symbolMap = new Map()
+  
+  // Add market data symbols first (highest priority)
+  marketData.value.forEach(item => {
+    symbolMap.set(item.symbol, {
+      symbol: item.symbol,
+      name: item.name,
+      price: item.price,
+      change: item.change,
+      changePercent: item.changePercent,
+      type: item.category
+    })
+  })
+  
+  // Add popular symbols (only if not already in market data)
+  popularSymbols.forEach(symbol => {
+    if (!symbolMap.has(symbol)) {
+      symbolMap.set(symbol, {
+        symbol,
+        name: getSymbolName(symbol),
+        price: Math.floor(Math.random() * 500) + 50,
+        change: (Math.random() - 0.5) * 10,
+        changePercent: (Math.random() - 0.5) * 5,
+        type: getSymbolType(symbol)
+      })
+    }
+  })
+  
+  // Add additional symbols for better search experience
+  const additionalSymbols = [
+    'NFLX', 'AMD', 'INTC', 'CRM', 'ADBE', 'PYPL', 'ZOOM', 'SQ',
+    'SHOP', 'UBER', 'LYFT', 'SNAP', 'TWTR', 'FB', 'PINS', 'ROKU', 'SPOT', 'ZM'
+  ]
+  
+  additionalSymbols.forEach(symbol => {
+    if (!symbolMap.has(symbol)) {
+      symbolMap.set(symbol, {
+        symbol,
+        name: getSymbolName(symbol),
+        price: Math.floor(Math.random() * 500) + 50,
+        change: (Math.random() - 0.5) * 10,
+        changePercent: (Math.random() - 0.5) * 5,
+        type: getSymbolType(symbol)
+      })
+    }
+  })
+  
+  return Array.from(symbolMap.values())
+})
+
+// Helper functions for mock data
+function getSymbolName(symbol) {
+  const names = {
+    'AAPL': 'Apple Inc.',
+    'GOOGL': 'Alphabet Inc.',
+    'MSFT': 'Microsoft Corporation',
+    'AMZN': 'Amazon.com Inc.',
+    'TSLA': 'Tesla Inc.',
+    'BTC': 'Bitcoin',
+    'ETH': 'Ethereum',
+    'NFLX': 'Netflix Inc.',
+    'AMD': 'Advanced Micro Devices',
+    'NVDA': 'NVIDIA Corporation'
+  }
+  return names[symbol] || `${symbol} Corporation`
+}
+
+function getSymbolType(symbol) {
+  if (['BTC', 'ETH'].includes(symbol)) return 'crypto'
+  if (['SPY', 'QQQ', 'DIA'].includes(symbol)) return 'etf'
+  return 'stock'
+}
+
+// Valid symbols set
+const validSymbols = computed(() => {
+  return new Set(allMockSymbols.value.map(s => s.symbol.toUpperCase()))
+})
+
 
 // Auto-update market data (simulate real-time updates)
 onMounted(() => {
@@ -288,7 +396,7 @@ onMounted(() => {
     <!-- Standardized Header -->
     <AppHeader />
 
-    <!-- Hero Section - Simplified PersonalizedHero -->
+    <!-- Hero Section - TradingView Style with Personalization -->
     <section class="mobile-content relative pt-20 pb-12 bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-900 dark:to-blue-900/20 overflow-hidden">
       <!-- Animated Background Particles -->
       <div class="absolute inset-0 overflow-hidden pointer-events-none">
@@ -303,32 +411,76 @@ onMounted(() => {
       <div class="absolute inset-0 opacity-20 dark:opacity-10 pointer-events-none">
         <div class="grid-pattern"></div>
       </div>
-      
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <!-- Personalized Hero Content -->
         <PersonalizedHero 
-          :content="homepageContent"
           @cta-click="startTrading" 
           @location-detected="onLocationDetected"
         />
 
-        <!-- Search Bar - Same as original -->
-        <div class="max-w-2xl mx-auto mb-8 px-4 sm:px-0">
+          <!-- Search Bar - TradingView style -->
+          <div class="max-w-2xl mx-auto mb-8 px-4 sm:px-0">
           <div class="relative">
             <div class="flex flex-col sm:flex-row gap-3 sm:gap-0">
               <input
                 v-model="searchQuery"
+                @input="onSearchInput"
+                @keydown="onSearchKeydown"
+                @keyup.enter="handleSearch"
+                @focus="performSearch"
+                @blur="hideSearchDropdown"
                 type="text"
                 placeholder="Try: AAPL, BTC, TSLA, SPY..."
                 class="flex-1 px-4 sm:px-6 py-3 sm:py-4 text-base sm:text-lg border-2 border-gray-200 dark:border-gray-600 rounded-xl sm:rounded-l-xl sm:rounded-r-none focus:border-blue-500 focus:ring-0 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
               >
               <button
+                @click="handleSearch"
                 class="px-6 sm:px-8 py-3 sm:py-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl sm:rounded-l-none sm:rounded-r-xl transition-colors touch-target"
               >
                 <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                 </svg>
               </button>
+            </div>
+            
+            <!-- Search Dropdown -->
+            <div v-if="showSearchDropdown && searchResults.length > 0" class="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-gray-800 rounded-xl shadow-2xl border border-gray-200 dark:border-gray-600 z-50 max-h-80 overflow-y-auto mx-4 sm:mx-0 sm:right-8">
+              <div class="p-2">
+                <div
+                  v-for="(result, index) in searchResults"
+                  :key="result.symbol"
+                  @mousedown="selectSearchResult(result)"
+                  class="flex items-center justify-between p-3 rounded-lg cursor-pointer transition-colors"
+                  :class="{
+                    'bg-blue-50 dark:bg-blue-900/30': index === selectedIndex,
+                    'hover:bg-gray-50 dark:hover:bg-gray-700': index !== selectedIndex
+                  }"
+                >
+                  <div class="flex items-center space-x-3">
+                    <div class="flex-shrink-0">
+                      <div class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold"
+                           :class="{
+                             'bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300': result.type === 'stock',
+                             'bg-orange-100 dark:bg-orange-900 text-orange-700 dark:text-orange-300': result.type === 'crypto',
+                             'bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300': result.type === 'etf'
+                           }">
+                        {{ result.type === 'crypto' ? '₿' : result.type === 'etf' ? 'ETF' : '$' }}
+                      </div>
+                    </div>
+                    <div>
+                      <div class="font-semibold text-gray-900 dark:text-white">{{ result.symbol }}</div>
+                      <div class="text-sm text-gray-500 dark:text-gray-400 truncate max-w-48">{{ result.name }}</div>
+                    </div>
+                  </div>
+                  <div class="text-right">
+                    <div class="font-medium text-gray-900 dark:text-white">${{ result.price.toFixed(2) }}</div>
+                    <div class="text-sm"
+                         :class="result.changePercent >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'">
+                      {{ result.changePercent >= 0 ? '+' : '' }}{{ result.changePercent.toFixed(2) }}%
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
           
@@ -339,37 +491,38 @@ onMounted(() => {
               <button
                 v-for="symbol in popularSymbols.slice(0, 8)"
                 :key="symbol"
-                @click="navigateToSymbol(symbol)"
+                @click="selectPopularSymbol(symbol)"
                 class="px-4 py-2 text-sm bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg transition-colors cursor-pointer"
               >
                 {{ symbol }}
               </button>
             </div>
           </div>
-        </div>
+          </div>
 
-        <!-- CTAs -->
-        <div class="mobile-buttons flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center mb-12 mt-8 px-4 sm:px-0">
-          <button
-            @click="startTrading"
-            class="mobile-button modern-button bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl text-base sm:text-lg font-semibold transition-all hover:scale-105 shadow-xl hover:shadow-2xl transform hover:-translate-y-1 touch-target"
-          >
-            {{ homepageContent?.cta_primary || 'Get started for free' }}
-          </button>
-          <button
-            class="mobile-button modern-button glass-effect border-2 border-white/20 hover:border-blue-500/50 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 px-6 sm:px-8 py-3 sm:py-4 rounded-xl text-base sm:text-lg font-semibold transition-all hover:scale-105 backdrop-blur-sm touch-target"
-          >
-            {{ homepageContent?.cta_secondary || 'View demo' }}
-          </button>
-        </div>
+          <!-- CTAs -->
+          <div class="mobile-buttons flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center mb-12 mt-8 px-4 sm:px-0">
+            <button
+              @click="startTrading"
+              class="mobile-button modern-button bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl text-base sm:text-lg font-semibold transition-all hover:scale-105 shadow-xl hover:shadow-2xl transform hover:-translate-y-1 touch-target"
+            >
+              {{ homepageContent?.cta_primary || 'Get started for free' }}
+            </button>
+            <button
+              class="mobile-button modern-button glass-effect border-2 border-white/20 hover:border-blue-500/50 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 px-6 sm:px-8 py-3 sm:py-4 rounded-xl text-base sm:text-lg font-semibold transition-all hover:scale-105 backdrop-blur-sm touch-target"
+            >
+              {{ homepageContent?.cta_secondary || 'View demo' }}
+            </button>
+          </div>
 
-        <!-- Value indicators -->
-        <div class="text-sm text-gray-500 dark:text-gray-400 text-center px-4 sm:px-0">
-          <p class="mb-3 sm:mb-2">{{ homepageContent?.cta_disclaimer || 'Start free — No credit card required' }}</p>
-          <div class="flex flex-col sm:flex-row sm:flex-wrap justify-center gap-3 sm:gap-6 max-w-2xl mx-auto">
-            <span class="flex items-center justify-center">✓ {{ homepageContent?.value_prop_1 || 'AI-powered opportunity discovery' }}</span>
-            <span class="flex items-center justify-center">✓ {{ homepageContent?.value_prop_2 || '24/7 market scanning' }}</span>
-            <span class="flex items-center justify-center">✓ {{ homepageContent?.value_prop_3 || 'Personalized to your strategy' }}</span>
+          <!-- Value indicators -->
+          <div class="text-sm text-gray-500 dark:text-gray-400 text-center px-4 sm:px-0">
+            <p class="mb-3 sm:mb-2">{{ homepageContent?.cta_disclaimer || 'Start free — No credit card required' }}</p>
+            <div class="flex flex-col sm:flex-row sm:flex-wrap justify-center gap-3 sm:gap-6 max-w-2xl mx-auto">
+              <span class="flex items-center justify-center">✓ {{ homepageContent?.value_prop_1 || 'AI-powered opportunity discovery' }}</span>
+              <span class="flex items-center justify-center">✓ {{ homepageContent?.value_prop_2 || '24/7 market scanning' }}</span>
+              <span class="flex items-center justify-center">✓ {{ homepageContent?.value_prop_3 || 'Personalized to your strategy' }}</span>
+            </div>
           </div>
         </div>
         
@@ -513,7 +666,6 @@ onMounted(() => {
             </div>
           </div>
       </div>
-      </div>
     </section>
 
     <!-- Live Market Summary - TradingView Style -->
@@ -596,12 +748,13 @@ onMounted(() => {
       </div>
     </section>
 
-    <!-- Platform Stats Section -->
+
+    <!-- "Where the world does markets" - Community Section -->
     <section class="py-20 bg-white dark:bg-gray-900">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <h2 class="text-4xl sm:text-5xl font-bold text-gray-900 dark:text-white mb-6 animate-slide-up">
+        <h2 class="text-4xl sm:text-5xl font-bold text-gray-900 dark:text-white mb-6">
           Never miss an opportunity
-          <span class="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent glow-text">
+          <span class="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
             while you sleep
           </span>
         </h2>
@@ -611,7 +764,7 @@ onMounted(() => {
           that align with your trading style and preferences.
         </p>
 
-        <!-- Platform Stats -->
+        <!-- Community Stats -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
           <div
             v-for="stat in platformStats"
@@ -630,12 +783,12 @@ onMounted(() => {
           </div>
         </div>
 
-        <!-- Platform Features Grid -->
+        <!-- Modern Platform Features Grid -->
         <div class="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto">
           <div
             v-for="(feature, index) in mappedPlatformFeatures"
             :key="feature.title"
-            class="group relative bg-white dark:bg-gray-900 rounded-3xl p-8 border border-gray-200 dark:border-gray-800 hover:border-blue-200 dark:hover:border-blue-800 transition-all duration-500 hover:shadow-xl hover:shadow-blue-500/10 glow-border"
+            class="group relative bg-white dark:bg-gray-900 rounded-3xl p-8 border border-gray-200 dark:border-gray-800 hover:border-blue-200 dark:hover:border-blue-800 transition-all duration-500 hover:shadow-xl hover:shadow-blue-500/10"
           >
             <!-- Background Gradient -->
             <div class="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
@@ -656,16 +809,38 @@ onMounted(() => {
                      'bg-gradient-to-br from-purple-500 to-pink-500': feature.color === 'purple',
                      'bg-gradient-to-br from-orange-500 to-red-500': feature.color === 'orange'
                    }">
-                <!-- Modern SVG Icons -->
+                <!-- Modern SVG Icons with Enhanced Designs -->
                 <svg v-if="feature.svg === 'analytics'" class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                  <circle cx="18" cy="6" r="3" fill="currentColor"></circle>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M12 6l2 2-2 2" opacity="0.7"></path>
                 </svg>
-                <svg v-else-if="feature.svg === 'speed'" class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg v-if="feature.svg === 'speed'" class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M8 12h3m0 0h3" opacity="0.5"></path>
                 </svg>
-                <svg v-else class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                <svg v-if="feature.svg === 'automation'" class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                  <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2" fill="none"></circle>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M12 9v6m-3-3h6" opacity="0.7"></path>
                 </svg>
+                <svg v-if="feature.svg === 'social'" class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M12 14l2-2-2-2" opacity="0.5"></path>
+                </svg>
+              </div>
+              
+              <!-- Badge -->
+              <div class="mb-4">
+                <span class="inline-flex items-center px-3 py-1 text-xs font-medium rounded-full"
+                      :class="{
+                        'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300': feature.color === 'blue',
+                        'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300': feature.color === 'green',
+                        'bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300': feature.color === 'purple',
+                        'bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300': feature.color === 'orange'
+                      }">
+                  {{ feature.highlight }}
+                </span>
               </div>
               
               <!-- Title -->
@@ -692,13 +867,20 @@ onMounted(() => {
                 {{ feature.stats }}
               </div>
             </div>
+            
+            <!-- Hover Arrow -->
+            <div class="absolute top-8 right-8 opacity-0 group-hover:opacity-100 transform translate-x-2 group-hover:translate-x-0 transition-all duration-300">
+              <svg class="w-5 h-5 text-gray-400 group-hover:text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+              </svg>
+            </div>
           </div>
         </div>
       </div>
     </section>
 
     <!-- Mid-Page CTA - Visual Break -->
-    <section class="py-16 gradient-border relative overflow-hidden" style="background: linear-gradient(-45deg, #3B82F6, #06B6D4, #1E40AF, #0EA5E9); background-size: 400% 400%;">
+    <section class="py-16 bg-gradient-to-r from-blue-600 via-cyan-600 to-blue-800 relative overflow-hidden">
       <!-- Subtle background pattern -->
       <div class="absolute inset-0 opacity-10">
         <div class="grid-pattern"></div>
@@ -712,10 +894,10 @@ onMounted(() => {
           Ready to Transform Your Trading?
         </div>
         
-        <h2 class="text-3xl sm:text-4xl font-bold text-white mb-4 animate-slide-up">
+        <h2 class="text-3xl sm:text-4xl font-bold text-white mb-4">
           Your strategy everywhere,
           <br>
-          <span class="text-blue-300 glow-text">your life anywhere</span>
+          <span class="text-blue-300">your life anywhere</span>
         </h2>
         <p class="text-lg text-blue-200 mb-8 leading-relaxed">
           AI executes your trading strategy across global markets 24/7. 
@@ -753,9 +935,9 @@ onMounted(() => {
             Complete Trading Platform
           </div>
           
-          <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-4 animate-slide-up">
+          <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-4">
             Everything You Need to 
-            <span class="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent glow-text">Trade Smarter</span>
+            <span class="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Trade Smarter</span>
           </h2>
           <p class="text-lg text-gray-700 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
             Beyond AI-powered insights, get access to a complete trading ecosystem designed for serious traders.
@@ -784,28 +966,25 @@ onMounted(() => {
               <svg v-if="feature.svg === 'bell'" class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
               </svg>
-              <svg v-else-if="feature.svg === 'brain'" class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg v-if="feature.svg === 'brain'" class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
               </svg>
-              <svg v-else-if="feature.svg === 'news'" class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg v-if="feature.svg === 'news'" class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"></path>
               </svg>
-              <svg v-else-if="feature.svg === 'target'" class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg v-if="feature.svg === 'target'" class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"></circle>
                 <circle cx="12" cy="12" r="6" stroke="currentColor" stroke-width="2"></circle>
                 <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"></circle>
                 <circle cx="12" cy="12" r="1" fill="currentColor"></circle>
               </svg>
-              <svg v-else-if="feature.svg === 'connect'" class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg v-if="feature.svg === 'connect'" class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path>
               </svg>
-              <svg v-else-if="feature.svg === 'education'" class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg v-if="feature.svg === 'education'" class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z"></path>
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"></path>
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"></path>
-              </svg>
-              <svg v-else class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
               </svg>
             </div>
 
@@ -857,9 +1036,9 @@ onMounted(() => {
             </svg>
             AI-Powered Solution
           </div>
-          <h2 class="text-4xl sm:text-5xl font-bold text-gray-900 dark:text-white mb-6 animate-slide-up">
+          <h2 class="text-4xl sm:text-5xl font-bold text-gray-900 dark:text-white mb-6">
             Finally, an AI that
-            <span class="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent glow-text">works for you</span>
+            <span class="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">works for you</span>
           </h2>
           <p class="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto leading-relaxed">
             Stop staring at screens all day. Our AI monitors markets 24/7, 
@@ -1006,9 +1185,9 @@ onMounted(() => {
     </section>
 
     <!-- Final CTA Section -->
-    <section class="py-20 gradient-border" style="background: linear-gradient(-45deg, #3B82F6, #8B5CF6, #1E40AF, #7C3AED); background-size: 400% 400%;">
+    <section class="py-20 bg-gradient-to-r from-blue-600 via-purple-600 to-blue-800">
       <div class="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
-        <h2 class="text-4xl font-bold text-white mb-6 animate-slide-up glow-text">
+        <h2 class="text-4xl font-bold text-white mb-6">
           Start sleeping better tonight
         </h2>
         <p class="text-xl text-blue-100 mb-8">
@@ -1296,6 +1475,11 @@ onMounted(() => {
 }
 
 /* Enhanced button hover with ripple effect */
+.modern-button {
+  position: relative;
+  overflow: hidden;
+}
+
 .modern-button::after {
   content: '';
   position: absolute;
@@ -1314,4 +1498,5 @@ onMounted(() => {
   height: 300px;
   opacity: 0;
 }
+
 </style>

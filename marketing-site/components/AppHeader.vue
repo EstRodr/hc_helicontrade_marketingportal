@@ -51,6 +51,12 @@ function closeMobileMenu() {
           <NuxtLink to="/pricing" class="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
             Pricing
           </NuxtLink>
+          <NuxtLink to="/blog" class="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+            Blog
+          </NuxtLink>
+          <NuxtLink to="/news" class="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+            News
+          </NuxtLink>
           <NuxtLink to="/about" class="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
             About
           </NuxtLink>
@@ -114,6 +120,22 @@ function closeMobileMenu() {
           class="text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white block px-3 py-2 rounded-md text-base font-medium"
         >
           Pricing
+        </NuxtLink>
+        
+        <NuxtLink 
+          to="/blog" 
+          @click="closeMobileMenu"
+          class="text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+        >
+          Blog
+        </NuxtLink>
+        
+        <NuxtLink 
+          to="/news" 
+          @click="closeMobileMenu"
+          class="text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+        >
+          News
         </NuxtLink>
         
         <NuxtLink 

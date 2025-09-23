@@ -42,14 +42,16 @@ export const useStrapi = () => {
 
       const response = await $fetch<T>(url, {
         method,
-        headers: requestHeaders
+        headers: requestHeaders,
+        timeout: 5000, // 5 second timeout to prevent blocking
+        retry: 1 // Only retry once to avoid delays
       })
-
       return response
-    } catch (error) {
-      console.error(`Strapi API error for ${endpoint}:`, error)
-      throw error
-    }
+  } catch (error) {
+    console.warn(`Strapi API error for ${endpoint}:`, error)
+    // Don't throw error, let individual functions handle fallbacks
+    throw error
+  }
   }
 
   // Blog/Articles
@@ -124,13 +126,28 @@ export const useStrapi = () => {
     })
   }
 
-  // Homepage content
+  // Homepage content (single type)
   const getHomepageContent = async () => {
-    return fetchFromStrapi('/homepage', {
-      query: {
-        populate: 'deep'
+    try {
+      const response = await fetchFromStrapi('/homepage')
+      // For single types, return the data directly
+      return response?.data || response || {}
+    } catch (error) {
+      console.warn('Homepage content not available from Strapi, using fallback:', error)
+      // Return fallback content
+      return {
+        hero_headline_default: "AI finds the opportunities, you make the decisions",
+        hero_subline_default: "Sleep better, trade smarter with 24/7 AI market monitoring.",
+        cta_primary: "Get started for free",
+        cta_secondary: "View demo",
+        cta_disclaimer: "Start free — No credit card required",
+        value_prop_1: "AI-powered opportunity discovery",
+        value_prop_2: "24/7 market scanning",
+        value_prop_3: "Personalized to your strategy",
+        page_title: "HeliconTrade — Where Traders Research, Then Commit",
+        meta_description: "AI-powered trading platform that monitors global markets 24/7 to find opportunities matching your strategy. Sleep better while AI watches the markets for you."
       }
-    })
+    }
   }
 
   // Team members
@@ -170,13 +187,18 @@ export const useStrapi = () => {
   }
 
   // Features
-  const getFeatures = async () => {
-    return fetchFromStrapi('/features', {
-      query: {
-        populate: ['icon'],
-        sort: ['order:asc']
-      }
-    })
+  const getFeatures = async (featured?: boolean) => {
+    const query: Record<string, any> = {
+      populate: ['icon'],
+      sort: ['order:asc']
+    }
+    
+    if (featured !== undefined) {
+      query['filters[featured][$eq]'] = featured
+    }
+    
+    const response = await fetchFromStrapi('/nfeatures', { query })
+    return response?.data || response || []
   }
 
   // Pricing plans
@@ -225,6 +247,59 @@ export const useStrapi = () => {
     }
   }
 
+  // News functions
+  const getNews = async (options?: {
+    populate?: string[]
+    filters?: Record<string, any>
+    sort?: string[]
+    pagination?: { page?: number; pageSize?: number }
+    locale?: string
+  }) => {
+    const query: Record<string, any> = {
+      sort: ['publishedAt:desc'] // Default to newest first
+    }
+    
+    if (options?.populate) {
+      query['populate'] = options.populate.join(',')
+    }
+    
+    if (options?.filters) {
+      Object.entries(options.filters).forEach(([key, value]) => {
+        query[`filters[${key}]`] = value
+      })
+    }
+    
+    if (options?.sort) {
+      query['sort'] = options.sort.join(',')
+    }
+    
+    if (options?.pagination) {
+      if (options.pagination.page) query['pagination[page]'] = options.pagination.page
+      if (options.pagination.pageSize) query['pagination[pageSize]'] = options.pagination.pageSize
+    }
+    
+    if (options?.locale) {
+      query['locale'] = options.locale
+    }
+
+    const response = await fetchFromStrapi('/nnews', { query })
+    // Handle both Strapi v4 (response.data) and v5 (response.data) formats
+    return response?.data || response || []
+  }
+
+  const getNewsArticle = async (slug: string, populate: string[] = []) => {
+    const query: Record<string, any> = {
+      'filters[slug][$eq]': slug
+    }
+    
+    if (populate.length) {
+      query['populate'] = populate.join(',')
+    }
+
+    const response = await fetchFromStrapi('/nnews', { query })
+    return response?.data?.[0] || null
+  }
+
   return {
     // Core API function
     fetchFromStrapi,
@@ -235,6 +310,8 @@ export const useStrapi = () => {
     // Content fetchers
     getArticles,
     getArticle,
+    getNews,
+    getNewsArticle,
     getPage,
     getGlobalSettings,
     getHomepageContent,
