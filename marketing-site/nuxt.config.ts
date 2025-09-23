@@ -35,7 +35,7 @@ export default defineNuxtConfig({
   
   // Internationalization configuration
   i18n: {
-    strategy: 'no_prefix',
+    strategy: 'prefix_except_default',
     defaultLocale: 'en',
     locales: [
       { code: 'en', name: 'English', flag: '🇺🇸' },

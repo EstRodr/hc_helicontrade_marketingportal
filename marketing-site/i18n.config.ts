@@ -14,8 +14,13 @@ export default defineI18nConfig(() => ({
       hero: {
         title: "Market Research, Alerts & Trading Insights",
         subtitle: "Get powerful market research, custom alerts, and trading signals for stocks, crypto, indices, and commodities. Start with our free beta and be ready when trade execution launches.",
-        joinBeta: "Join Free Beta",
-        loginPlatform: "Login to Platform"
+        joinBeta: "Get started for free",
+        loginPlatform: "Login to Platform",
+        viewDemo: "View demo",
+        disclaimer: "Start free — No credit card required",
+        valueProp1: "AI-powered opportunity discovery",
+        valueProp2: "24/7 market scanning", 
+        valueProp3: "Personalized to your strategy"
       },
       trust: {
         secCompliant: "SEC Compliant",
@@ -88,8 +93,13 @@ export default defineI18nConfig(() => ({
       hero: {
         title: "Recherche de Marché, Alertes et Analyses de Trading",
         subtitle: "Obtenez une recherche de marché puissante, des alertes personnalisées et des signaux de trading pour les actions, crypto, indices et matières premières. Commencez avec notre bêta gratuite et soyez prêt quand l'exécution des trades sera lancée.",
-        joinBeta: "Rejoindre la Bêta Gratuite",
-        loginPlatform: "Se Connecter à la Plateforme"
+        joinBeta: "Commencer gratuitement",
+        loginPlatform: "Se Connecter à la Plateforme",
+        viewDemo: "Voir la démo",
+        disclaimer: "Gratuit — Aucune carte de crédit requise",
+        valueProp1: "Découverte d'opportunités par IA",
+        valueProp2: "Surveillance de marché 24h/7j",
+        valueProp3: "Personnalisé selon votre stratégie"
       },
       trust: {
         secCompliant: "Conforme SEC",
@@ -162,8 +172,13 @@ export default defineI18nConfig(() => ({
       hero: {
         title: "بحوث السوق والتنبيهات ورؤى التداول",
         subtitle: "احصل على بحوث السوق القوية والتنبيهات المخصصة وإشارات التداول للأسهم والعملات المشفرة والمؤشرات والسلع. ابدأ مع نسختنا التجريبية المجانية وكن مستعداً عند إطلاق تنفيذ الصفقات.",
-        joinBeta: "انضم للنسخة التجريبية المجانية",
-        loginPlatform: "تسجيل الدخول للمنصة"
+        joinBeta: "ابدأ مجاناً",
+        loginPlatform: "تسجيل الدخول للمنصة",
+        viewDemo: "عرض توضيحي",
+        disclaimer: "مجاني — لا حاجة لبطاقة ائتمان",
+        valueProp1: "اكتشاف الفرص بالذكاء الاصطناعي",
+        valueProp2: "مراقبة السوق على مدار الساعة",
+        valueProp3: "مخصص حسب استراتيجيتك"
       },
       trust: {
         secCompliant: "متوافق مع لجنة الأوراق المالية",
