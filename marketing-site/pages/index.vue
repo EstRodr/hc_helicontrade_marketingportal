@@ -359,17 +359,17 @@ onMounted(() => {
           <button
             class="mobile-button modern-button glass-effect border-2 border-white/20 hover:border-blue-500/50 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 px-6 sm:px-8 py-3 sm:py-4 rounded-xl text-base sm:text-lg font-semibold transition-all hover:scale-105 backdrop-blur-sm touch-target"
           >
-            {{ homepageContent?.cta_secondary || t('navigation.features') }}
+            {{ t('hero.viewDemo') }}
           </button>
         </div>
 
         <!-- Value indicators -->
         <div class="text-sm text-gray-500 dark:text-gray-400 text-center px-4 sm:px-0">
-          <p class="mb-3 sm:mb-2">{{ homepageContent?.cta_disclaimer || t('hero.disclaimer') }}</p>
+          <p class="mb-3 sm:mb-2">{{ t('hero.disclaimer') }}</p>
           <div class="flex flex-col sm:flex-row sm:flex-wrap justify-center gap-3 sm:gap-6 max-w-2xl mx-auto">
-            <span class="flex items-center justify-center">✓ {{ homepageContent?.value_prop_1 || t('hero.valueProp1') }}</span>
-            <span class="flex items-center justify-center">✓ {{ homepageContent?.value_prop_2 || t('hero.valueProp2') }}</span>
-            <span class="flex items-center justify-center">✓ {{ homepageContent?.value_prop_3 || t('hero.valueProp3') }}</span>
+            <span class="flex items-center justify-center">✓ {{ t('hero.valueProp1') }}</span>
+            <span class="flex items-center justify-center">✓ {{ t('hero.valueProp2') }}</span>
+            <span class="flex items-center justify-center">✓ {{ t('hero.valueProp3') }}</span>
           </div>
         </div>
         

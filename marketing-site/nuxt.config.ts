@@ -35,7 +35,7 @@ export default defineNuxtConfig({
   
   // Internationalization configuration
   i18n: {
-    strategy: 'prefix_except_default',
+    strategy: 'no_prefix',
     defaultLocale: 'en',
     locales: [
       { code: 'en', name: 'English', flag: '🇺🇸', file: 'en.json' },
@@ -48,6 +48,10 @@ export default defineNuxtConfig({
       cookieKey: 'helicontrade-i18n-locale',
       redirectOn: 'root',
       alwaysRedirect: false
+    },
+    // Ensure SSR works for all locales
+    precompile: {
+      strictMessage: false
     }
   },
   
