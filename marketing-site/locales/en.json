@@ -10,8 +10,13 @@
   "hero": {
     "title": "Market Research, Alerts & Trading Insights",
     "subtitle": "Get powerful market research, custom alerts, and trading signals for stocks, crypto, indices, and commodities. Start with our free beta and be ready when trade execution launches.",
-    "joinBeta": "Join Free Beta",
-    "loginPlatform": "Login to Platform"
+    "joinBeta": "Get started for free",
+    "loginPlatform": "Login to Platform",
+    "viewDemo": "View demo",
+    "disclaimer": "Start free — No credit card required",
+    "valueProp1": "AI-powered opportunity discovery",
+    "valueProp2": "24/7 market scanning",
+    "valueProp3": "Personalized to your strategy"
   },
   "trust": {
     "secCompliant": "SEC Compliant",

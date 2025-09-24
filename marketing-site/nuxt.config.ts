@@ -38,11 +38,11 @@ export default defineNuxtConfig({
     strategy: 'prefix_except_default',
     defaultLocale: 'en',
     locales: [
-      { code: 'en', name: 'English', flag: '🇺🇸' },
-      { code: 'fr', name: 'Français', flag: '🇫🇷' },
-      { code: 'ar', name: 'العربية', flag: '🇸🇦', dir: 'rtl' }
+      { code: 'en', name: 'English', flag: '🇺🇸', file: 'en.json' },
+      { code: 'fr', name: 'Français', flag: '🇫🇷', file: 'fr.json' },
+      { code: 'ar', name: 'العربية', flag: '🇸🇦', dir: 'rtl', file: 'ar.json' }
     ],
-    vueI18n: './i18n.config.ts',
+    langDir: 'locales/',
     detectBrowserLanguage: {
       useCookie: true,
       cookieKey: 'helicontrade-i18n-locale',
