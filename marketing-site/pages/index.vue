@@ -44,24 +44,24 @@ const marketData = ref([
   { symbol: 'ETH', name: 'Ethereum', price: 3456, change: -89, changePercent: -2.51, category: 'crypto' },
 ])
 
-// AI Platform stats
+// AI Platform stats (i18n)
 const platformStats = [
-  { value: '24/7', label: 'Market Monitoring', subtext: 'never stops watching' },
-  { value: '10,000+', label: 'Assets Scanned', subtext: 'across global markets' },
-  { value: '95%+', label: 'Pattern Accuracy', subtext: 'AI-powered detection' },
-  { value: '<0.3ms', label: 'Alert Speed', subtext: 'lightning-fast notifications' }
+  { value: '24/7', label: t('stats.marketMonitoring'), subtext: t('stats.neverStopsWatching') },
+  { value: '10,000+', label: t('stats.assetsScanned'), subtext: t('stats.acrossGlobalMarkets') },
+  { value: '95%+', label: t('stats.patternAccuracy'), subtext: t('stats.aiPoweredDetection') },
+  { value: '<0.3ms', label: t('stats.alertSpeed'), subtext: t('stats.lightningFastNotifications') }
 ]
 
-// Static content for faster loading
+// Static content for faster loading (i18n-backed defaults)
 const homepageContent = ref({
-  page_title: 'HeliconTrade — Where Traders Research, Then Commit',
-  meta_description: 'AI-powered trading platform that monitors global markets 24/7 to find opportunities matching your strategy.',
-  cta_primary: 'Get started for free',
-  cta_secondary: 'View demo',
-  cta_disclaimer: 'Start free — No credit card required',
-  value_prop_1: 'AI-powered opportunity discovery',
-  value_prop_2: '24/7 market scanning',
-  value_prop_3: 'Personalized to your strategy'
+  page_title: t('seo.title'),
+  meta_description: t('seo.description'),
+  cta_primary: t('hero.joinBeta'),
+  cta_secondary: t('hero.viewDemo'),
+  cta_disclaimer: t('hero.disclaimer'),
+  value_prop_1: t('hero.valueProp1'),
+  value_prop_2: t('hero.valueProp2'),
+  value_prop_3: t('hero.valueProp3')
 })
 
 // Static features for faster loading
@@ -220,12 +220,12 @@ const mappedAdditionalFeatures = computed(() => {
   }))
 })
 
-// Market categories for filtering
+// Market categories for filtering (i18n)
 const marketCategories = [
-  { id: 'all', name: 'All Markets', active: true },
-  { id: 'indices', name: 'Indices', active: false },
-  { id: 'stocks', name: 'Stocks', active: false },
-  { id: 'crypto', name: 'Crypto', active: false }
+  { id: 'all', name: t('markets.all'), active: true },
+  { id: 'indices', name: t('markets.indices'), active: false },
+  { id: 'stocks', name: t('markets.stocks'), active: false },
+  { id: 'crypto', name: t('markets.crypto'), active: false }
 ]
 
 const activeCategory = ref('all')
@@ -538,8 +538,8 @@ onMounted(() => {
 
         <!-- Market Summary Grid -->
         <div class="text-center mb-4">
-          <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">Market Summary</h2>
-          <p class="text-gray-600 dark:text-gray-300 live-data">Live data • Updates every second</p>
+          <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">{{ t('homepage.marketSummary') }}</h2>
+          <p class="text-gray-600 dark:text-gray-300 live-data">{{ t('homepage.liveData') }}</p>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 px-4">
@@ -590,7 +590,7 @@ onMounted(() => {
             @click="redirectToApp"
             class="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-semibold"
           >
-            View all markets →
+            {{ t('homepage.viewAllMarkets') }}
           </button>
         </div>
       </div>
@@ -600,15 +600,14 @@ onMounted(() => {
     <section class="py-20 bg-white dark:bg-gray-900">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <h2 class="text-4xl sm:text-5xl font-bold text-gray-900 dark:text-white mb-6 animate-slide-up">
-          Never miss an opportunity
+          {{ t('homepage.neverMissOpportunity') }}
           <span class="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent glow-text">
-            while you sleep
+            {{ t('homepage.whileYouSleep') }}
           </span>
         </h2>
         
         <p class="text-xl text-gray-600 dark:text-gray-300 mb-16 max-w-3xl mx-auto">
-          Our AI works around the clock, analyzing patterns and finding opportunities 
-          that align with your trading style and preferences.
+          {{ t('homepage.aiWorksAroundClock') }}
         </p>
 
         <!-- Platform Stats -->
@@ -709,17 +708,16 @@ onMounted(() => {
           <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
             <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
           </svg>
-          Ready to Transform Your Trading?
+          {{ t('homepage.readyToTransform') }}
         </div>
         
         <h2 class="text-3xl sm:text-4xl font-bold text-white mb-4 animate-slide-up">
-          Your strategy everywhere,
+          {{ t('homepage.yourStrategyEverywhere') }}
           <br>
-          <span class="text-blue-300 glow-text">your life anywhere</span>
+          <span class="text-blue-300 glow-text">{{ t('homepage.yourLifeAnywhere') }}</span>
         </h2>
         <p class="text-lg text-blue-200 mb-8 leading-relaxed">
-          AI executes your trading strategy across global markets 24/7. 
-          No more staring at screens — live your life while opportunities find you.
+          {{ t('homepage.aiExecutesStrategy') }}
         </p>
         
         <div class="flex flex-col sm:flex-row gap-4 justify-center mb-6">
@@ -727,17 +725,17 @@ onMounted(() => {
             @click="startTrading"
             class="modern-button bg-white text-slate-900 px-8 py-4 rounded-xl text-lg font-semibold hover:bg-gray-100 transition-all hover:scale-105 shadow-xl hover:shadow-2xl transform hover:-translate-y-1"
           >
-            Start free trial
+            {{ t('homepage.startFreeTrial') }}
           </button>
           <button
             class="modern-button bg-transparent border-2 border-white/40 text-white hover:bg-white/10 hover:border-white/60 px-8 py-4 rounded-xl text-lg font-semibold transition-all hover:scale-105 backdrop-blur-sm"
           >
-            Watch demo
+            {{ t('homepage.watchDemo') }}
           </button>
         </div>
         
         <p class="text-blue-200/80 text-sm">
-          No credit card required • AI-powered alerts • 24/7 monitoring
+          {{ t('homepage.noCreditCardAiPowered') }}
         </p>
       </div>
     </section>
@@ -750,15 +748,15 @@ onMounted(() => {
             <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
               <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"></path>
             </svg>
-            Complete Trading Platform
+            {{ t('homepage.completeTradingPlatform') }}
           </div>
           
           <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-4 animate-slide-up">
-            Everything You Need to 
-            <span class="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent glow-text">Trade Smarter</span>
+            {{ t('homepage.everythingYouNeed') }} 
+            <span class="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent glow-text">{{ t('homepage.tradeSmarter') }}</span>
           </h2>
           <p class="text-lg text-gray-700 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
-            Beyond AI-powered insights, get access to a complete trading ecosystem designed for serious traders.
+            {{ t('homepage.beyondAiInsights') }}
           </p>
         </div>
 
@@ -838,10 +836,10 @@ onMounted(() => {
             @click="startTrading"
             class="modern-button bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-xl text-lg font-semibold hover:from-blue-700 hover:to-purple-700 transition-all hover:scale-105 shadow-xl hover:shadow-2xl transform hover:-translate-y-1"
           >
-            Get Started Free
+            {{ t('homepage.getStartedFree') }}
           </button>
           <p class="text-sm text-gray-500 dark:text-gray-400 mt-3">
-            No credit card required • Full access to all features
+            {{ t('homepage.noCreditCardRequired') }}
           </p>
         </div>
       </div>
@@ -855,15 +853,14 @@ onMounted(() => {
             <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
               <path fill-rule="evenodd" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" clip-rule="evenodd"></path>
             </svg>
-            AI-Powered Solution
+            {{ t('homepage.aiPoweredSolution') }}
           </div>
           <h2 class="text-4xl sm:text-5xl font-bold text-gray-900 dark:text-white mb-6 animate-slide-up">
-            Finally, an AI that
-            <span class="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent glow-text">works for you</span>
+            {{ t('homepage.finallyAiThat') }}
+            <span class="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent glow-text">{{ t('homepage.worksForYou') }}</span>
           </h2>
           <p class="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto leading-relaxed">
-            Stop staring at screens all day. Our AI monitors markets 24/7, 
-            finds opportunities that match your style, and alerts you instantly.
+            {{ t('homepage.stopStaringScreens') }}
           </p>
         </div>
 
@@ -878,11 +875,10 @@ onMounted(() => {
                 </svg>
               </div>
               <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3">
-                Missing Great Setups
+                {{ t('problems.missingGreatSetups') }}
               </h3>
               <p class="text-gray-600 dark:text-gray-300 mb-6">
-                You can't watch every market, every timeframe, every symbol. 
-                The best opportunities happen when you're sleeping or busy.
+                {{ t('problems.cantWatchEveryMarket') }}
               </p>
             </div>
             <div class="border-t border-gray-200 dark:border-gray-700 pt-6">
@@ -890,10 +886,10 @@ onMounted(() => {
                 <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                   <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
                 </svg>
-                <span>AI Solution</span>
+                <span>{{ t('problems.aiSolution') }}</span>
               </div>
               <p class="text-gray-700 dark:text-gray-300">
-                <strong>24/7 Market Scanning</strong> — Our AI never sleeps, constantly monitoring 10,000+ instruments across all global markets.
+                {{ t('problems.marketScanning') }}
               </p>
             </div>
           </div>
@@ -907,11 +903,10 @@ onMounted(() => {
                 </svg>
               </div>
               <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3">
-                Too Much Noise
+                {{ t('problems.tooMuchNoise') }}
               </h3>
               <p class="text-gray-600 dark:text-gray-300 mb-6">
-                Endless news, alerts, and signals flood your feeds. 
-                You spend more time filtering information than trading.
+                {{ t('problems.endlessNewsAlerts') }}
               </p>
             </div>
             <div class="border-t border-gray-200 dark:border-gray-700 pt-6">
@@ -919,10 +914,10 @@ onMounted(() => {
                 <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                   <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
                 </svg>
-                <span>AI Solution</span>
+                <span>{{ t('problems.aiSolution') }}</span>
               </div>
               <p class="text-gray-700 dark:text-gray-300">
-                <strong>Smart Filtering</strong> — Only get alerts for setups that match your proven strategies and risk tolerance. No more noise.
+                {{ t('problems.smartFiltering') }}
               </p>
             </div>
           </div>
@@ -936,11 +931,10 @@ onMounted(() => {
                 </svg>
               </div>
               <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3">
-                Emotional Decisions
+                {{ t('problems.emotionalDecisions') }}
               </h3>
               <p class="text-gray-600 dark:text-gray-300 mb-6">
-                FOMO, fear, and stress lead to bad timing. 
-                You know what to do but emotions get in the way.
+                {{ t('problems.fomoFearStress') }}
               </p>
             </div>
             <div class="border-t border-gray-200 dark:border-gray-700 pt-6">
@@ -948,10 +942,10 @@ onMounted(() => {
                 <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                   <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
                 </svg>
-                <span>AI Solution</span>
+                <span>{{ t('problems.aiSolution') }}</span>
               </div>
               <p class="text-gray-700 dark:text-gray-300">
-                <strong>Objective Analysis</strong> — AI removes emotions from the equation, delivering purely data-driven opportunities when conditions align.
+                {{ t('problems.objectiveAnalysis') }}
               </p>
             </div>
           </div>
@@ -961,10 +955,10 @@ onMounted(() => {
         <div class="bg-white dark:bg-gray-900 rounded-3xl p-8 shadow-2xl shadow-blue-500/10 border border-gray-200 dark:border-gray-800">
           <div class="text-center mb-8">
             <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-3">
-              How Our AI Works for You
+              {{ t('howItWorks.title') }}
             </h3>
             <p class="text-gray-600 dark:text-gray-400">
-              Set it up once, then let AI do the heavy lifting
+              {{ t('howItWorks.subtitle') }}
             </p>
           </div>
           
@@ -973,32 +967,32 @@ onMounted(() => {
               <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-xl flex items-center justify-center mx-auto mb-4">
                 <span class="text-white font-bold">1</span>
               </div>
-              <h4 class="font-semibold text-gray-900 dark:text-white mb-2">Define Your Style</h4>
-              <p class="text-sm text-gray-600 dark:text-gray-400">Tell us your preferred assets, timeframes, and risk tolerance</p>
+              <h4 class="font-semibold text-gray-900 dark:text-white mb-2">{{ t('howItWorks.defineStyle') }}</h4>
+              <p class="text-sm text-gray-600 dark:text-gray-400">{{ t('howItWorks.defineStyleDesc') }}</p>
             </div>
             
             <div class="text-center">
               <div class="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-500 rounded-xl flex items-center justify-center mx-auto mb-4">
                 <span class="text-white font-bold">2</span>
               </div>
-              <h4 class="font-semibold text-gray-900 dark:text-white mb-2">AI Monitors</h4>
-              <p class="text-sm text-gray-600 dark:text-gray-400">Our AI scans global markets 24/7 for your specific setups</p>
+              <h4 class="font-semibold text-gray-900 dark:text-white mb-2">{{ t('howItWorks.aiMonitors') }}</h4>
+              <p class="text-sm text-gray-600 dark:text-gray-400">{{ t('howItWorks.aiMonitorsDesc') }}</p>
             </div>
             
             <div class="text-center">
               <div class="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center mx-auto mb-4">
                 <span class="text-white font-bold">3</span>
               </div>
-              <h4 class="font-semibold text-gray-900 dark:text-white mb-2">Get Alerted</h4>
-              <p class="text-sm text-gray-600 dark:text-gray-400">Receive instant notifications when conditions align perfectly</p>
+              <h4 class="font-semibold text-gray-900 dark:text-white mb-2">{{ t('howItWorks.getAlerted') }}</h4>
+              <p class="text-sm text-gray-600 dark:text-gray-400">{{ t('howItWorks.getAlertedDesc') }}</p>
             </div>
             
             <div class="text-center">
               <div class="w-12 h-12 bg-gradient-to-br from-orange-500 to-red-500 rounded-xl flex items-center justify-center mx-auto mb-4">
                 <span class="text-white font-bold">4</span>
               </div>
-              <h4 class="font-semibold text-gray-900 dark:text-white mb-2">Trade Smart</h4>
-              <p class="text-sm text-gray-600 dark:text-gray-400">Make informed decisions with confidence and better timing</p>
+              <h4 class="font-semibold text-gray-900 dark:text-white mb-2">{{ t('howItWorks.tradeSmart') }}</h4>
+              <p class="text-sm text-gray-600 dark:text-gray-400">{{ t('howItWorks.tradeSmartDesc') }}</p>
             </div>
           </div>
         </div>
@@ -1009,11 +1003,10 @@ onMounted(() => {
     <section class="py-20 gradient-border" style="background: linear-gradient(-45deg, #3B82F6, #8B5CF6, #1E40AF, #7C3AED); background-size: 400% 400%;">
       <div class="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
         <h2 class="text-4xl font-bold text-white mb-6 animate-slide-up glow-text">
-          Start sleeping better tonight
+          {{ t('homepage.startSleepingBetter') }}
         </h2>
         <p class="text-xl text-blue-100 mb-8">
-          Let our AI watch the markets while you focus on what matters most. 
-          Wake up to opportunities, not regrets.
+          {{ t('homepage.letAiWatch') }}
         </p>
         
         <div class="flex flex-col sm:flex-row gap-4 justify-center mb-6">
@@ -1021,17 +1014,17 @@ onMounted(() => {
             @click="startTrading"
             class="modern-button bg-white text-blue-600 px-8 py-4 rounded-xl text-lg font-semibold hover:bg-gray-50 transition-all hover:scale-105 shadow-xl hover:shadow-2xl transform hover:-translate-y-1"
           >
-            Start free trial
+            {{ t('homepage.startFreeTrial') }}
           </button>
           <button
             class="modern-button glass-effect border-2 border-white/30 text-white hover:bg-white/10 hover:text-white px-8 py-4 rounded-xl text-lg font-semibold transition-all hover:scale-105 backdrop-blur-sm"
           >
-            See how it works
+            {{ t('homepage.seeHowItWorks') }}
           </button>
         </div>
         
         <p class="text-blue-100 text-sm">
-          No credit card required • AI-powered alerts • 24/7 monitoring
+          {{ t('homepage.noCreditCardAiPowered') }}
         </p>
       </div>
     </section>

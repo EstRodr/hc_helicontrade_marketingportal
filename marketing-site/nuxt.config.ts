@@ -42,16 +42,12 @@ export default defineNuxtConfig({
       { code: 'fr', name: 'Français', flag: '🇫🇷', file: 'fr.json' },
       { code: 'ar', name: 'العربية', flag: '🇸🇦', dir: 'rtl', file: 'ar.json' }
     ],
-    langDir: 'locales/',
+    langDir: 'locales',
     detectBrowserLanguage: {
       useCookie: true,
       cookieKey: 'helicontrade-i18n-locale',
       redirectOn: 'root',
       alwaysRedirect: false
-    },
-    // Ensure SSR works for all locales
-    precompile: {
-      strictMessage: false
     }
   },
   

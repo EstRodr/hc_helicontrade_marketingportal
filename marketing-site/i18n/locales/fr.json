@@ -11,7 +11,12 @@
     "title": "Recherche de Marché, Alertes et Analyses de Trading",
     "subtitle": "Obtenez une recherche de marché puissante, des alertes personnalisées et des signaux de trading pour les actions, crypto, indices et matières premières. Commencez avec notre bêta gratuite et soyez prêt quand l'exécution des trades sera lancée.",
     "joinBeta": "Rejoindre la Bêta Gratuite",
-    "loginPlatform": "Se Connecter à la Plateforme"
+    "loginPlatform": "Se Connecter à la Plateforme",
+    "viewDemo": "Voir la démo",
+    "disclaimer": "Commencez gratuitement — Aucune carte requise",
+    "valueProp1": "Découverte d'opportunités alimentée par l'IA",
+    "valueProp2": "Analyse des marchés 24/7",
+    "valueProp3": "Personnalisé selon votre stratégie"
   },
   "trust": {
     "secCompliant": "Conforme SEC",
@@ -70,5 +75,57 @@
     "availableAtLaunch": "Disponible au Lancement",
     "comingSoon": "Bientôt Disponible", 
     "roadmap": "Feuille de Route"
+  },
+  "homepage": {
+    "marketSummary": "Résumé du marché",
+    "liveData": "Données en direct • Mise à jour chaque seconde",
+    "viewAllMarkets": "Voir tous les marchés →",
+    "neverMissOpportunity": "Ne ratez plus aucune opportunité",
+    "whileYouSleep": "pendant que vous dormez",
+    "aiWorksAroundClock": "Notre IA travaille en continu, analyse les schémas et trouve des opportunités alignées avec votre style et vos préférences de trading.",
+    "readyToTransform": "Prêt à transformer votre trading ?",
+    "yourStrategyEverywhere": "Votre stratégie partout,",
+    "yourLifeAnywhere": "votre vie n'importe où",
+    "aiExecutesStrategy": "L'IA exécute votre stratégie de trading sur les marchés mondiaux 24/7. Fini de rester devant les écrans — vivez votre vie pendant que les opportunités vous trouvent.",
+    "startFreeTrial": "Commencer l'essai gratuit",
+    "watchDemo": "Voir la démo",
+    "noCreditCardAiPowered": "Aucune carte requise • Alertes alimentées par l'IA • Surveillance 24/7",
+    "completeTradingPlatform": "Plateforme de trading complète",
+    "everythingYouNeed": "Tout ce dont vous avez besoin pour",
+    "tradeSmarter": "trader plus intelligemment",
+    "beyondAiInsights": "Au‑delà des insights IA, accédez à un écosystème de trading complet conçu pour les traders exigeants.",
+    "getStartedFree": "Commencer gratuitement",
+    "noCreditCardRequired": "Aucune carte requise • Accès complet à toutes les fonctionnalités",
+    "aiPoweredSolution": "Solution alimentée par l'IA",
+    "finallyAiThat": "Enfin, une IA qui",
+    "worksForYou": "travaille pour vous",
+    "stopStaringScreens": "Arrêtez de fixer les écrans toute la journée. Notre IA surveille les marchés 24/7, trouve des opportunités adaptées à votre style et vous alerte instantanément.",
+    "startSleepingBetter": "Dormez mieux dès ce soir",
+    "letAiWatch": "Laissez notre IA surveiller les marchés pendant que vous vous concentrez sur l'essentiel. Réveillez‑vous avec des opportunités, pas des regrets.",
+    "seeHowItWorks": "Voir comment ça marche"
+  },
+  "problems": {
+    "missingGreatSetups": "Manquer de belles configurations",
+    "cantWatchEveryMarket": "Vous ne pouvez pas surveiller chaque marché, chaque unité de temps, chaque symbole. Les meilleures opportunités arrivent quand vous dormez ou êtes occupé.",
+    "aiSolution": "Solution IA",
+    "marketScanning": "Analyse des marchés 24/7 — Notre IA ne dort jamais et surveille plus de 10 000 instruments à travers tous les marchés mondiaux.",
+    "tooMuchNoise": "Trop de bruit",
+    "endlessNewsAlerts": "Flux infinis d'actualités, d'alertes et de signaux. Vous passez plus de temps à filtrer qu'à trader.",
+    "smartFiltering": "Filtrage intelligent — Recevez uniquement des alertes pour des configurations alignées avec vos stratégies éprouvées et votre tolérance au risque. Plus de bruit.",
+    "emotionalDecisions": "Décisions émotionnelles",
+    "fomoFearStress": "FOMO, peur et stress mènent à un mauvais timing. Vous savez quoi faire mais les émotions s'en mêlent.",
+    "objectiveAnalysis": "Analyse objective — L'IA retire l'émotion de l'équation et délivre des opportunités purement data‑driven quand les conditions s'alignent."
+  },
+  "howItWorks": {
+    "title": "Comment notre IA travaille pour vous",
+    "subtitle": "Configurez une fois, laissez l'IA faire le reste",
+    "defineStyle": "Définissez votre style",
+    "defineStyleDesc": "Dites‑nous vos actifs, unités de temps et tolérance au risque préférés",
+    "aiMonitors": "L'IA surveille",
+    "aiMonitorsDesc": "Notre IA scanne les marchés mondiaux 24/7 pour vos configurations spécifiques",
+    "getAlerted": "Soyez alerté",
+    "getAlertedDesc": "Recevez des notifications instantanées lorsque les conditions s'alignent parfaitement",
+    "tradeSmart": "Tradez intelligemment",
+    "tradeSmartDesc": "Prenez des décisions éclairées avec confiance et meilleur timing"
   }
 }

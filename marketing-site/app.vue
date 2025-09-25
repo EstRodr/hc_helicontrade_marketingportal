@@ -1,10 +1,11 @@
 <script setup lang="ts">
 const colorMode = useColorMode()
+const { locale } = useI18n()
 
 // Set HTML attributes for proper theme support
 useHead({
   htmlAttrs: {
-    lang: 'en',
+    lang: computed(() => locale.value),
     class: computed(() => colorMode.value === 'dark' ? 'dark' : '')
   },
 })
