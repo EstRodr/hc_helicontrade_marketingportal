@@ -1,5 +1,5 @@
 <script setup lang="ts">
-// No additional logic needed for footer
+const { t } = useI18n()
 </script>
 
 <template>
@@ -13,7 +13,7 @@
             <div class="flex items-center space-x-2 mb-4">
               <img 
                 src="/logo.svg" 
-                alt="HeliconTrade Logo" 
+                :alt="t('brand.logoAlt')"
                 class="h-8 w-auto"
                 width="32"
                 height="32"
@@ -21,20 +21,20 @@
               <span class="text-xl font-bold">HeliconTrade</span>
             </div>
             <p class="text-gray-400 mb-6 max-w-md">
-              Empowering the next generation of traders with cutting-edge technology, research, and education. Join our beta for free access to all features.
+              {{ t('footer.description') }}
             </p>
             
             <!-- Newsletter Signup -->
             <div class="footer-newsletter mb-6">
-              <h4 class="font-semibold mb-2">Stay Updated</h4>
+              <h4 class="font-semibold mb-2">{{ t('footer.newsletter.stayUpdated') }}</h4>
               <div class="flex flex-col sm:flex-row gap-3 sm:gap-2">
                 <input 
                   type="email" 
-                  placeholder="Enter your email"
+                  :placeholder="t('footer.newsletter.emailPlaceholder')"
                   class="flex-1 px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 min-h-[44px] text-base w-full"
                 >
                 <button class="bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded-lg transition-colors whitespace-nowrap min-h-[44px] touch-target font-medium w-full sm:w-auto">
-                  Subscribe
+                  {{ t('footer.newsletter.subscribe') }}
                 </button>
               </div>
             </div>
@@ -42,18 +42,18 @@
           
           <!-- Services -->
           <div>
-            <h3 class="font-semibold mb-4">Services</h3>
+            <h3 class="font-semibold mb-4">{{ t('footer.services.title') }}</h3>
             <ul class="space-y-2 text-gray-400">
-              <li><a href="#" class="hover:text-white transition-colors">Trading Symbols</a></li>
-              <li><a href="#" class="hover:text-white transition-colors">Market Indicators</a></li>
-              <li><a href="#" class="hover:text-white transition-colors">Custom Alerts</a></li>
-              <li><a href="#" class="hover:text-white transition-colors">Trading Strategies</a></li>
+              <li><a href="#" class="hover:text-white transition-colors">{{ t('footer.services.tradingSymbols') }}</a></li>
+              <li><a href="#" class="hover:text-white transition-colors">{{ t('footer.services.marketIndicators') }}</a></li>
+              <li><a href="#" class="hover:text-white transition-colors">{{ t('footer.services.customAlerts') }}</a></li>
+              <li><a href="#" class="hover:text-white transition-colors">{{ t('footer.services.tradingStrategies') }}</a></li>
             </ul>
           </div>
           
           <!-- Download App -->
           <div>
-            <h3 class="font-semibold mb-4">Download App</h3>
+            <h3 class="font-semibold mb-4">{{ t('footer.download.title') }}</h3>
             <div class="space-y-3">
               <a href="#" class="footer-app-button flex items-center gap-3 p-3 bg-gray-700 rounded-lg hover:bg-gray-600 transition-colors min-h-[60px] touch-target">
                 <!-- Use SVG icons instead of potentially missing image files -->
@@ -63,8 +63,8 @@
                   </svg>
                 </div>
                 <div class="min-w-0 flex-1">
-                  <div class="text-xs text-gray-300">Download on the</div>
-                  <div class="text-sm font-medium">App Store</div>
+                  <div class="text-xs text-gray-300">{{ t('footer.download.appStoreLine1') }}</div>
+                  <div class="text-sm font-medium">{{ t('footer.download.appStoreLine2') }}</div>
                 </div>
               </a>
               <a href="#" class="footer-app-button flex items-center gap-3 p-3 bg-gray-700 rounded-lg hover:bg-gray-600 transition-colors min-h-[60px] touch-target">
@@ -75,8 +75,8 @@
                   </svg>
                 </div>
                 <div class="min-w-0 flex-1">
-                  <div class="text-xs text-gray-300">Get it on</div>
-                  <div class="text-sm font-medium">Google Play</div>
+                  <div class="text-xs text-gray-300">{{ t('footer.download.googlePlayLine1') }}</div>
+                  <div class="text-sm font-medium">{{ t('footer.download.googlePlayLine2') }}</div>
                 </div>
               </a>
             </div>
@@ -91,15 +91,15 @@
         <div class="flex flex-col lg:flex-row justify-between items-center gap-6">
           <!-- Left: Copyright -->
           <p class="text-gray-400 text-sm text-center lg:text-left">
-            &copy; 2024 HeliconTrade. All rights reserved.
+            {{ t('footer.copyright', { year: new Date().getFullYear() }) }}
           </p>
           
           <!-- Center: Legal Links -->
           <div class="footer-links flex flex-wrap justify-center gap-3 sm:gap-4 text-xs sm:text-sm text-gray-400">
-            <NuxtLink to="/legal/privacy" class="hover:text-white transition-colors touch-target px-1 py-1">Privacy Policy</NuxtLink>
-            <NuxtLink to="/legal/terms" class="hover:text-white transition-colors touch-target px-1 py-1">Terms of Service</NuxtLink>
-            <NuxtLink to="/legal/cookies" class="hover:text-white transition-colors touch-target px-1 py-1">Cookie Policy</NuxtLink>
-            <NuxtLink to="/about" class="hover:text-white transition-colors touch-target px-1 py-1">About Us</NuxtLink>
+            <NuxtLink to="/legal/privacy" class="hover:text-white transition-colors touch-target px-1 py-1">{{ t('footer.legal.privacy') }}</NuxtLink>
+            <NuxtLink to="/legal/terms" class="hover:text-white transition-colors touch-target px-1 py-1">{{ t('footer.legal.terms') }}</NuxtLink>
+            <NuxtLink to="/legal/cookies" class="hover:text-white transition-colors touch-target px-1 py-1">{{ t('footer.legal.cookies') }}</NuxtLink>
+            <NuxtLink to="/about" class="hover:text-white transition-colors touch-target px-1 py-1">{{ t('footer.legal.aboutUs') }}</NuxtLink>
           </div>
           
           <!-- Right: Theme Toggle, Language Picker & Social Links -->

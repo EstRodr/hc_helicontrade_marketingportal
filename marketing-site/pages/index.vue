@@ -2,16 +2,14 @@
 const config = useRuntimeConfig()
 const { t, locale } = useI18n()
 
-// Debug: Log current locale
-console.log('Current locale:', locale.value)
-console.log('Translation test:', t('hero.joinBeta'))
+// Debug logs removed for production cleanliness
 
 // Static SEO for faster loading - no reactive dependencies
 useHead({
-  title: 'HeliconTrade — Where Traders Research, Then Commit',
+  title: t('seo.title'),
   meta: [
-    { name: 'description', content: 'AI-powered trading platform that monitors global markets 24/7 to find opportunities matching your strategy. Sleep better while AI watches the markets for you.' },
-    { name: 'keywords', content: 'trading platform, market analysis, charts, real-time data, trading community, financial markets' }
+    { name: 'description', content: t('seo.description') },
+    { name: 'keywords', content: t('seo.keywords') }
   ]
 })
 
@@ -220,6 +218,31 @@ const mappedAdditionalFeatures = computed(() => {
   }))
 })
 
+// i18n feature key maps for static fallback content
+const featuredKeys = [
+  'featuresGrid.featured.opportunityDiscovery',
+  'featuresGrid.featured.smartAlerts',
+  'featuresGrid.featured.everywhereCoverage',
+  'featuresGrid.featured.personalizedIntelligence'
+]
+
+const additionalKeys = [
+  'featuresGrid.additional.smartAlertsPro',
+  'featuresGrid.additional.aiTradingAssistant',
+  'featuresGrid.additional.marketNewsIntegration',
+  'featuresGrid.additional.precisionTradingTools',
+  'featuresGrid.additional.multiPlatformIntegration',
+  'featuresGrid.additional.educationalResources'
+]
+
+function featuredKey(index: number) {
+  return featuredKeys[index] || featuredKeys[0]
+}
+
+function additionalKey(index: number) {
+  return additionalKeys[index] || additionalKeys[0]
+}
+
 // Market categories for filtering (i18n)
 const marketCategories = [
   { id: 'all', name: t('markets.all'), active: true },
@@ -319,7 +342,7 @@ onMounted(() => {
               <input
                 v-model="searchQuery"
                 type="text"
-                placeholder="Try: AAPL, BTC, TSLA, SPY..."
+                :placeholder="t('search.placeholder')"
                 class="flex-1 px-4 sm:px-6 py-3 sm:py-4 text-base sm:text-lg border-2 border-gray-200 dark:border-gray-600 rounded-xl sm:rounded-l-xl sm:rounded-r-none focus:border-blue-500 focus:ring-0 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
               >
               <button
@@ -334,7 +357,7 @@ onMounted(() => {
           
           <!-- Popular searches -->
           <div class="mt-4">
-            <p class="text-sm text-gray-500 dark:text-gray-400 mb-2">Popular:</p>
+            <p class="text-sm text-gray-500 dark:text-gray-400 mb-2">{{ t('search.popularLabel') }}</p>
             <div class="flex flex-wrap justify-center gap-2">
               <button
                 v-for="symbol in popularSymbols.slice(0, 8)"
@@ -386,11 +409,11 @@ onMounted(() => {
                 <div class="w-3 h-3 bg-red-400 rounded-full"></div>
                 <div class="w-3 h-3 bg-yellow-400 rounded-full"></div>
                 <div class="w-3 h-3 bg-green-400 rounded-full"></div>
-                <span class="text-gray-400 text-sm ml-4">HeliconTrade Platform</span>
+                <span class="text-gray-400 text-sm ml-4">{{ t('dashboard.windowTitle') }}</span>
               </div>
               <div class="text-green-400 text-sm font-medium flex items-center">
                 <div class="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></div>
-                LIVE TRADING
+                {{ t('dashboard.liveTrading') }}
               </div>
             </div>
             
@@ -404,9 +427,9 @@ onMounted(() => {
                       <span class="text-green-400 text-xs sm:text-sm">+2.45% ($67,234)</span>
                     </div>
                     <div class="flex space-x-1 sm:space-x-2">
-                      <button class="px-2 sm:px-3 py-1 bg-blue-600 text-white text-xs rounded">1D</button>
-                      <button class="px-2 sm:px-3 py-1 text-gray-400 hover:text-white text-xs rounded">1W</button>
-                      <button class="px-2 sm:px-3 py-1 text-gray-400 hover:text-white text-xs rounded">1M</button>
+                      <button class="px-2 sm:px-3 py-1 bg-blue-600 text-white text-xs rounded">{{ t('dashboard.timeframes.1D') }}</button>
+                      <button class="px-2 sm:px-3 py-1 text-gray-400 hover:text-white text-xs rounded">{{ t('dashboard.timeframes.1W') }}</button>
+                      <button class="px-2 sm:px-3 py-1 text-gray-400 hover:text-white text-xs rounded">{{ t('dashboard.timeframes.1M') }}</button>
                     </div>
                   </div>
                   <!-- Enhanced Mock Chart -->
@@ -441,7 +464,7 @@ onMounted(() => {
                     </svg>
                     <!-- Live price indicator -->
                     <div class="absolute top-2 right-2 bg-green-500/20 text-green-400 text-xs px-2 py-1 rounded-full border border-green-500/30">
-                      <span class="animate-pulse">● LIVE</span>
+                      <span class="animate-pulse">{{ t('dashboard.liveIndicator') }}</span>
                     </div>
                   </div>
                 </div>
@@ -451,18 +474,18 @@ onMounted(() => {
               <div class="space-y-4">
                 <!-- Portfolio Stats -->
                 <div class="bg-gray-800 rounded-xl p-4">
-                  <h4 class="text-white font-semibold mb-3 text-sm">Portfolio Overview</h4>
+                  <h4 class="text-white font-semibold mb-3 text-sm">{{ t('dashboard.portfolioOverview') }}</h4>
                   <div class="space-y-3">
                     <div class="flex justify-between items-center">
-                      <span class="text-gray-400 text-xs">Total Value</span>
+                      <span class="text-gray-400 text-xs">{{ t('dashboard.totalValue') }}</span>
                       <span class="text-white font-bold">$125,847</span>
                     </div>
                     <div class="flex justify-between items-center">
-                      <span class="text-gray-400 text-xs">Today's P&L</span>
+                      <span class="text-gray-400 text-xs">{{ t('dashboard.todaysPL') }}</span>
                       <span class="text-green-400 font-bold">+$3,247</span>
                     </div>
                     <div class="flex justify-between items-center">
-                      <span class="text-gray-400 text-xs">Win Rate</span>
+                      <span class="text-gray-400 text-xs">{{ t('dashboard.winRate') }}</span>
                       <span class="text-blue-400 font-bold">73.2%</span>
                     </div>
                   </div>
@@ -470,22 +493,22 @@ onMounted(() => {
                 
                 <!-- AI Insights -->
                 <div class="bg-gray-800 rounded-xl p-4">
-                  <h4 class="text-white font-semibold mb-3 text-sm">AI Insights</h4>
+                  <h4 class="text-white font-semibold mb-3 text-sm">{{ t('insights.title') }}</h4>
                   <div class="space-y-2">
                     <div class="p-2 bg-blue-900/30 rounded-lg border border-blue-500/30">
-                      <p class="text-blue-300 text-xs">🤖 BTC bullish pattern detected</p>
-                      <p class="text-gray-400 text-xs">Confidence: 87%</p>
+                      <p class="text-blue-300 text-xs">{{ t('insights.btcBullishPatternDetected') }}</p>
+                      <p class="text-gray-400 text-xs">{{ t('insights.confidence') }}: 87%</p>
                     </div>
                     <div class="p-2 bg-green-900/30 rounded-lg border border-green-500/30">
-                      <p class="text-green-300 text-xs">📈 Strong buying pressure</p>
-                      <p class="text-gray-400 text-xs">Volume: +45%</p>
+                      <p class="text-green-300 text-xs">{{ t('insights.strongBuyingPressure') }}</p>
+                      <p class="text-gray-400 text-xs">{{ t('insights.volume') }}: +45%</p>
                     </div>
                   </div>
                 </div>
                 
                 <!-- Top Movers -->
                 <div class="bg-gray-800 rounded-xl p-4">
-                  <h4 class="text-white font-semibold mb-3 text-sm">Top Movers</h4>
+                  <h4 class="text-white font-semibold mb-3 text-sm">{{ t('movers.title') }}</h4>
                   <div class="space-y-2">
                     <div class="flex justify-between items-center">
                       <span class="text-gray-300 text-xs">AAPL</span>
@@ -669,12 +692,12 @@ onMounted(() => {
               
               <!-- Title -->
               <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-4 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-                {{ feature.title }}
+                {{ feature.title || t(featuredKey(index) + '.title') }}
               </h3>
               
               <!-- Description -->
               <p class="text-gray-600 dark:text-gray-400 mb-4 leading-relaxed">
-                {{ feature.description }}
+                {{ feature.description || t(featuredKey(index) + '.description') }}
               </p>
               
               <!-- Stats -->
@@ -688,7 +711,7 @@ onMounted(() => {
                 <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
                   <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
                 </svg>
-                {{ feature.stats }}
+                {{ feature.stats || t(featuredKey(index) + '.short') }}
               </div>
             </div>
           </div>
@@ -763,8 +786,8 @@ onMounted(() => {
         <!-- Additional Features Grid (3x2 layout) -->
         <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
           <div
-            v-for="feature in mappedAdditionalFeatures"
-            :key="feature.title"
+            v-for="(feature, index) in mappedAdditionalFeatures"
+            :key="feature.title || index"
             class="group bg-white dark:bg-gray-800/80 rounded-2xl p-6 border border-gray-200 dark:border-gray-600 hover:border-blue-300 dark:hover:border-blue-500 transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/20 hover:-translate-y-1 backdrop-blur-sm"
           >
             <!-- Icon -->
@@ -810,10 +833,10 @@ onMounted(() => {
             <!-- Content -->
             <div class="text-center">
               <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-                {{ feature.title }}
+                {{ feature.title || t(additionalKey(index) + '.title') }}
               </h3>
               <p class="text-sm text-gray-700 dark:text-gray-300 mb-3 leading-relaxed">
-                {{ feature.description }}
+                {{ feature.description || t(additionalKey(index) + '.description') }}
               </p>
               <div class="text-xs font-medium"
                    :class="{

@@ -5,7 +5,13 @@
     "about": "À propos",
     "contact": "Contact",
     "login": "Connexion",
-    "getStarted": "Commencer"
+    "getStarted": "Commencer",
+    "blog": "Blog",
+    "news": "Actualités",
+    "openMenu": "Ouvrir le menu principal"
+  },
+  "brand": {
+    "logoAlt": "Logo HeliconTrade"
   },
   "hero": {
     "title": "Recherche de Marché, Alertes et Analyses de Trading",
@@ -27,7 +33,15 @@
     "betaUsers": "Utilisateurs Bêta",
     "assetsTracked": "Actifs Suivis", 
     "dailyAlerts": "Alertes Quotidiennes",
-    "researchReports": "Rapports de Recherche"
+    "researchReports": "Rapports de Recherche",
+    "marketMonitoring": "Surveillance du marché",
+    "neverStopsWatching": "ne s'arrête jamais",
+    "assetsScanned": "Actifs scannés",
+    "acrossGlobalMarkets": "à travers les marchés mondiaux",
+    "patternAccuracy": "Précision des schémas",
+    "aiPoweredDetection": "Détection alimentée par l'IA",
+    "alertSpeed": "Vitesse d'alerte",
+    "lightningFastNotifications": "notifications ultra‑rapides"
   },
   "features": {
     "title": "Tout ce Dont Vous Avez Besoin pour Trader avec Succès",
@@ -63,13 +77,33 @@
     "createAccount": "Créer un Compte Gratuit"
   },
   "footer": {
-    "description": "Autonomiser la prochaine génération de traders avec une technologie de pointe et l'éducation.",
-    "platform": "Plateforme",
-    "company": "Entreprise",
-    "security": "Sécurité",
-    "privacy": "Confidentialité",
-    "terms": "Conditions",
-    "copyright": "Tous droits réservés."
+    "description": "Nous accompagnons la prochaine génération de traders avec une technologie de pointe, de la recherche et de l'éducation. Rejoignez notre bêta pour un accès gratuit à toutes les fonctionnalités.",
+    "newsletter": {
+      "stayUpdated": "Rester informé",
+      "emailPlaceholder": "Entrez votre e‑mail",
+      "subscribe": "S'abonner"
+    },
+    "services": {
+      "title": "Services",
+      "tradingSymbols": "Symboles de trading",
+      "marketIndicators": "Indicateurs de marché",
+      "customAlerts": "Alertes personnalisées",
+      "tradingStrategies": "Stratégies de trading"
+    },
+    "download": {
+      "title": "Télécharger l'application",
+      "appStoreLine1": "Télécharger sur",
+      "appStoreLine2": "App Store",
+      "googlePlayLine1": "Disponible sur",
+      "googlePlayLine2": "Google Play"
+    },
+    "legal": {
+      "privacy": "Politique de confidentialité",
+      "terms": "Conditions d'utilisation",
+      "cookies": "Politique des cookies",
+      "aboutUs": "À propos de nous"
+    },
+    "copyright": "© {year} HeliconTrade. Tous droits réservés."
   },
   "status": {
     "availableAtLaunch": "Disponible au Lancement",
@@ -127,5 +161,114 @@
     "getAlertedDesc": "Recevez des notifications instantanées lorsque les conditions s'alignent parfaitement",
     "tradeSmart": "Tradez intelligemment",
     "tradeSmartDesc": "Prenez des décisions éclairées avec confiance et meilleur timing"
+  },
+  "seo": {
+    "title": "HeliconTrade — Là où les traders recherchent, puis s'engagent",
+    "description": "Plateforme de trading alimentée par l'IA qui surveille les marchés mondiaux 24/7 pour trouver des opportunités adaptées à votre stratégie. Dormez mieux pendant que l'IA surveille les marchés pour vous.",
+    "keywords": "plateforme de trading, analyse de marché, graphiques, données en temps réel, communauté de trading, marchés financiers"
+  },
+  "search": {
+    "placeholder": "Essayez : AAPL, BTC, TSLA, SPY...",
+    "popularLabel": "Populaire :"
+  },
+  "markets": {
+    "all": "Tous les marchés",
+    "indices": "Indices",
+    "stocks": "Actions",
+    "crypto": "Crypto"
+  },
+  "dashboard": {
+    "windowTitle": "Plateforme HeliconTrade",
+    "liveTrading": "TRADING EN DIRECT",
+    "liveIndicator": "● EN DIRECT",
+    "timeframes": {
+      "1D": "1J",
+      "1W": "1S",
+      "1M": "1M"
+    },
+    "portfolioOverview": "Vue d'ensemble du portefeuille",
+    "totalValue": "Valeur totale",
+    "todaysPL": "P&L du jour",
+    "winRate": "Taux de réussite"
+  },
+  "insights": {
+    "title": "Insights IA",
+    "btcBullishPatternDetected": "🤖 Modèle haussier BTC détecté",
+    "confidence": "Confiance",
+    "strongBuyingPressure": "📈 Forte pression acheteuse",
+    "volume": "Volume"
+  },
+  "movers": {
+    "title": "Plus fortes variations"
+  }
+  ,
+  "aiFeed": {
+    "title": "Flux en direct des insights IA",
+    "pause": "Pause",
+    "resume": "Reprendre",
+    "subtitle": "Analyse IA en temps réel • {count} insights actifs",
+    "aiVerified": "Vérifié par l'IA",
+    "poweredBy": "Propulsé par HeliconTrade IA",
+    "liveAnalysis": "Analyse en direct",
+    "justNow": "à l'instant",
+    "minutesAgo": "il y a {m} min",
+    "hoursAgo": "il y a {h} h",
+    "daysAgo": "il y a {d} j"
+  },
+  "featuresGrid": {
+    "featured": {
+      "opportunityDiscovery": {
+        "title": "Découverte d'opportunités",
+        "description": "L'IA scanne en continu les marchés pour trouver des configurations qui correspondent à votre style de trading et à votre tolérance au risque. Ne manquez plus une opportunité rentable.",
+        "short": "Scan du marché par IA"
+      },
+      "smartAlerts": {
+        "title": "Alertes intelligentes",
+        "description": "Soyez notifié instantanément lorsque les conditions s'alignent avec votre stratégie — plus besoin de rester devant les écrans toute la journée.",
+        "short": "Dormez mieux avec des alertes intelligentes"
+      },
+      "everywhereCoverage": {
+        "title": "Couverture partout",
+        "description": "Nous surveillons les marchés mondiaux sur toutes les classes d'actifs pour que vous puissiez vous concentrer sur l'essentiel.",
+        "short": "Surveillance des marchés mondiaux"
+      },
+      "personalizedIntelligence": {
+        "title": "Intelligence personnalisée",
+        "description": "Notre IA apprend vos préférences et affine ses recommandations pour correspondre à votre style de trading et votre tolérance au risque.",
+        "short": "Une IA qui apprend votre style"
+      }
+    },
+    "additional": {
+      "smartAlertsPro": {
+        "title": "Smart Alerts Pro",
+        "description": "Recevez des notifications instantanées lorsque vos conditions personnalisées sont remplies sur vos instruments et configurations favoris.",
+        "short": "Notifications en temps réel"
+      },
+      "aiTradingAssistant": {
+        "title": "Assistant de trading IA",
+        "description": "Laissez notre IA vous aider à identifier des opportunités rentables grâce à la reconnaissance avancée de schémas et à l'analyse du marché.",
+        "short": "Insights alimentés par l'IA"
+      },
+      "marketNewsIntegration": {
+        "title": "Intégration des actualités",
+        "description": "Restez en avance avec des actualités financières en temps réel et des mises à jour de marché, intégrées à votre flux de travail.",
+        "short": "Actualités de marché en temps réel"
+      },
+      "precisionTradingTools": {
+        "title": "Outils de trading de précision",
+        "description": "Algorithmes avancés et analyse de données pour un timing de trading plus précis et une meilleure exécution.",
+        "short": "Précision améliorée"
+      },
+      "multiPlatformIntegration": {
+        "title": "Intégration multi‑plateforme",
+        "description": "Connectez-vous facilement à vos courtiers et plateformes favoris pour une gestion de portefeuille unifiée.",
+        "short": "Intégrations avec 20+ courtiers"
+      },
+      "educationalResources": {
+        "title": "Ressources éducatives",
+        "description": "Apprenez grâce à des analyses d'experts, des webinaires et des guides de trading complets pour améliorer vos compétences.",
+        "short": "Contenu animé par des experts"
+      }
+    }
   }
 }

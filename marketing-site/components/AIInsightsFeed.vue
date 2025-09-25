@@ -1,4 +1,5 @@
 <script setup lang="ts">
+const { t } = useI18n()
 interface AIInsight {
   id: string
   type: 'bullish' | 'bearish' | 'neutral' | 'alert' | 'pattern'
@@ -151,10 +152,10 @@ function getConfidenceColor(confidence: number) {
 function timeAgo(date: Date) {
   const seconds = Math.floor((new Date().getTime() - date.getTime()) / 1000)
   
-  if (seconds < 60) return 'just now'
-  if (seconds < 3600) return `${Math.floor(seconds / 60)}m ago`
-  if (seconds < 86400) return `${Math.floor(seconds / 3600)}h ago`
-  return `${Math.floor(seconds / 86400)}d ago`
+  if (seconds < 60) return t('aiFeed.justNow')
+  if (seconds < 3600) return t('aiFeed.minutesAgo', { m: Math.floor(seconds / 60) })
+  if (seconds < 86400) return t('aiFeed.hoursAgo', { h: Math.floor(seconds / 3600) })
+  return t('aiFeed.daysAgo', { d: Math.floor(seconds / 86400) })
 }
 </script>
 
@@ -168,16 +169,16 @@ function timeAgo(date: Date) {
             <div class="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
             <div class="absolute inset-0 w-3 h-3 bg-green-400 rounded-full animate-ping"></div>
           </div>
-          <h3 class="font-bold text-base sm:text-lg truncate">AI Insights Live Feed</h3>
+          <h3 class="font-bold text-base sm:text-lg truncate">{{ t('aiFeed.title') }}</h3>
         </div>
         <button 
           @click="toggleFeed"
           class="text-xs sm:text-sm px-2 sm:px-3 py-1 bg-white/20 hover:bg-white/30 rounded-lg transition-colors whitespace-nowrap flex-shrink-0"
         >
-          {{ isPaused ? 'Resume' : 'Pause' }}
+          {{ isPaused ? t('aiFeed.resume') : t('aiFeed.pause') }}
         </button>
       </div>
-      <p class="text-blue-100 text-xs sm:text-sm mt-1">Real-time AI analysis • {{ insights.length }} active insights</p>
+      <p class="text-blue-100 text-xs sm:text-sm mt-1">{{ t('aiFeed.subtitle', { count: insights.length }) }}</p>
     </div>
 
     <!-- Feed Container -->
@@ -223,7 +224,7 @@ function timeAgo(date: Date) {
                   <svg class="w-3 h-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
                   </svg>
-                  <span class="whitespace-nowrap">AI Verified</span>
+                  <span class="whitespace-nowrap">{{ t('aiFeed.aiVerified') }}</span>
                 </div>
               </div>
             </div>
@@ -241,10 +242,10 @@ function timeAgo(date: Date) {
     <!-- Footer -->
     <div class="border-t border-gray-200 dark:border-gray-700 p-3 bg-gray-50 dark:bg-gray-800">
       <div class="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
-        <span>Powered by HeliconTrade AI</span>
+        <span>{{ t('aiFeed.poweredBy') }}</span>
         <div class="flex items-center gap-2">
           <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-          <span>Live Analysis</span>
+          <span>{{ t('aiFeed.liveAnalysis') }}</span>
         </div>
       </div>
     </div>

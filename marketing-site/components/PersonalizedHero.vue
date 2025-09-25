@@ -1,5 +1,6 @@
 <script setup lang="ts">
 const { userContext, personalizedContent, isLoading, initializePersonalization, cleanup } = usePersonalization()
+const { t } = useI18n()
 const { getHomepageContent } = useStrapi()
 
 // Homepage content from Strapi
@@ -38,8 +39,8 @@ const loadHomepageContent = () => {
   
   // Set fallback content immediately
   homepageContent.value = {
-    hero_headline_default: "AI finds the opportunities, you make the decisions",
-    hero_subline_default: "Sleep better, trade smarter with 24/7 AI market monitoring."
+    hero_headline_default: t('hero.title'),
+    hero_subline_default: t('hero.subtitle')
   }
   homepageLoading.value = false
   
@@ -98,18 +99,18 @@ const handleCtaClick = () => {
 // Dynamic content selection using personalized content from composable
 const dynamicHeadline = computed(() => {
   if (homepageLoading.value || isLoading.value) {
-    return homepageContent.value.hero_headline_default || "AI finds the opportunities, you make the decisions"
+    return homepageContent.value.hero_headline_default || t('hero.title')
   }
   
   // Use personalized headline from the composable
-  const headline = personalizedContent.value.headline || "AI finds the opportunities, you make the decisions"
+  const headline = personalizedContent.value.headline || t('hero.title')
   console.log('🎨 PersonalizedHero using headline:', headline)
   return headline
 })
 
 const dynamicSubline = computed(() => {
   if (homepageLoading.value || isLoading.value) {
-    return homepageContent.value.hero_subline_default || "Sleep better, trade smarter with 24/7 AI market monitoring."
+    return homepageContent.value.hero_subline_default || t('hero.subtitle')
   }
   
   // Use personalized subheadline from the composable
@@ -231,10 +232,7 @@ const getMarketStatusStyling = computed(() => {
         :class="{ 'animate-slide-up': props.animate }">
       <!-- Always show the default headline first to prevent flickering -->
       <span v-if="isLoading || homepageLoading">
-        AI finds the opportunities,
-        <br>
-        <span class="text-blue-600 dark:text-blue-400">you make</span> the 
-        <span class="text-purple-600 dark:text-purple-400">decisions</span>
+        {{ t('hero.title') }}
       </span>
       
       <!-- Show personalized content after loading with smooth transition -->
@@ -246,7 +244,7 @@ const getMarketStatusStyling = computed(() => {
     <p class="hero-subtitle text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-3xl mx-auto transition-all duration-500 ease-in-out"
        :class="{ 'animate-slide-up-delay': props.animate }">
       <span v-if="isLoading || homepageLoading">
-        Sleep better, trade smarter with 24/7 AI market monitoring.
+        {{ t('hero.subtitle') }}
       </span>
       <span v-else 
             v-html="dynamicSubline"

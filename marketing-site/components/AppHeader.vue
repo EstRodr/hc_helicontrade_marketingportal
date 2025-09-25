@@ -1,5 +1,6 @@
 <script setup lang="ts">
 const config = useRuntimeConfig()
+const { t } = useI18n()
 
 // Mobile menu state
 const isMobileMenuOpen = ref(false)
@@ -27,7 +28,7 @@ function closeMobileMenu() {
           <NuxtLink to="/" class="flex items-center space-x-2">
             <img 
               src="/logo.svg" 
-              alt="HeliconTrade Logo" 
+              :alt="t('brand.logoAlt')"
               class="h-8 w-auto"
               width="32"
               height="32"
@@ -39,22 +40,22 @@ function closeMobileMenu() {
         <!-- Desktop Navigation -->
         <div class="hidden md:flex items-center space-x-8">
           <NuxtLink to="/features" class="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
-            Features
+            {{ t('navigation.features') }}
           </NuxtLink>
           <NuxtLink to="/pricing" class="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
-            Pricing
+            {{ t('navigation.pricing') }}
           </NuxtLink>
           <NuxtLink to="/blog" class="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
-            Blog
+            {{ t('navigation.blog') }}
           </NuxtLink>
           <NuxtLink to="/news" class="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
-            News
+            {{ t('navigation.news') }}
           </NuxtLink>
           <NuxtLink to="/about" class="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
-            About
+            {{ t('navigation.about') }}
           </NuxtLink>
           <NuxtLink to="/contact" class="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
-            Contact
+            {{ t('navigation.contact') }}
           </NuxtLink>
         </div>
 
@@ -64,13 +65,13 @@ function closeMobileMenu() {
             @click="redirectToLogin"
             class="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
           >
-            Login
+            {{ t('navigation.login') }}
           </button>
           <button 
             @click="redirectToRegister"
             class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors"
           >
-            Get Started
+            {{ t('navigation.getStarted') }}
           </button>
         </div>
 
@@ -82,7 +83,7 @@ function closeMobileMenu() {
             aria-controls="mobile-menu"
             :aria-expanded="isMobileMenuOpen"
           >
-            <span class="sr-only">Open main menu</span>
+            <span class="sr-only">{{ t('navigation.openMenu') }}</span>
             <!-- Hamburger icon -->
             <svg v-if="!isMobileMenuOpen" class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
