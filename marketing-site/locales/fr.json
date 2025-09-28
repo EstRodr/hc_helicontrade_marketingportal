@@ -284,4 +284,42 @@
     "alertSpeed": "Vitesse d'alerte",
     "lightningFastNotifications": "notifications ultra‑rapides"
   }
+  ,
+  "marketStatus": {
+    "open": "{market} est ouvert • En direct jusqu'à {time}",
+    "preMarket": "{market} ouvre à {time}",
+    "afterHours": "{market} fermé • Trading après-clôture",
+    "closed": "{market} fermé"
+  }
+  ,
+  "heroVariants": [
+    {
+      "headline": "Vision globale, pensée pour les marchés de {country}",
+      "subheadline": "De {city} à Wall Street, transformez les mouvements en temps réel de {index} en décisions plus intelligentes."
+    },
+    {
+      "headline": "Des yeux IA sur les marchés — l'opportunité ne dort jamais",
+      "subheadline": "De {city} à Wall Street, suivez chaque pulsation du marché, 24/7."
+    },
+    {
+      "headline": "Votre avantage sur les marchés de {country}",
+      "subheadline": "Avec l'IA qui analyse {index} jour et nuit, concentrez‑vous sur des décisions confiantes."
+    },
+    {
+      "headline": "Les marchés de {country}, redéfinis par l'intelligence",
+      "subheadline": "De {city} à Wall Street, restez connecté à chaque mouvement de {index}."
+    },
+    {
+      "headline": "Tradez les marchés de {country} avec une IA mondiale",
+      "subheadline": "De {city} à Wall Street, notre IA garde un œil sur {index} pour que rien ne vous échappe."
+    },
+    {
+      "headline": "{country} en un coup d'œil — par l'IA",
+      "subheadline": "Des signaux en temps réel de {index}, sans le bruit. {city}, préparez‑vous à agir."
+    },
+    {
+      "headline": "Votre stratégie, partout — {country}",
+      "subheadline": "De {city} à Wall Street, restez aligné avec les mouvements de {index} 24/7."
+    }
+  ]
 }

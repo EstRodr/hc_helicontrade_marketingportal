@@ -2,10 +2,11 @@
 const colorMode = useColorMode()
 const { locale } = useI18n()
 
-// Set HTML attributes for proper theme support
+// Set HTML attributes for proper theme and RTL support
 useHead({
   htmlAttrs: {
     lang: computed(() => locale.value),
+    dir: computed(() => locale.value === 'ar' ? 'rtl' : 'ltr'),
     class: computed(() => colorMode.value === 'dark' ? 'dark' : '')
   },
 })

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Final Consistency Fix</title>
+    <style>
+        .text-blue-600 { color: #2563eb; font-weight: 600; }
+        .text-purple-600 { color: #9333ea; font-weight: 600; }
+        .test { margin: 20px 0; padding: 20px; border: 2px solid #10b981; background: #f0fdf4; border-radius: 8px; }
+        .before { border-color: #ef4444; background: #fef2f2; }
+        .fixed { border-color: #059669; background: #ecfdf5; }
+    </style>
+</head>
+<body>
+    <h1>🎯 Final Consistency Fix - Both Issues Resolved</h1>
+    
+    <h2>Issue 1: Base Marketing Text (No Colors)</h2>
+    
+    <div class="test before">
+        <h3>❌ BEFORE:</h3>
+        <p style="font-size: 16px;">
+            Get powerful market research, custom alerts, and trading signals for stocks, crypto, indices, and commodities.
+        </p>
+        <p><strong>Problem:</strong> No colors at all ❌</p>
+    </div>
+    
+    <div class="test fixed">
+        <h3>✅ AFTER:</h3>
+        <p style="font-size: 16px;">
+            Get powerful <span class="text-blue-600">market research</span>, custom alerts, and <span class="text-purple-600">trading signals</span> for stocks, crypto, indices, and commodities.
+        </p>
+        <p><strong>Pattern:</strong> neutral blue neutral purple neutral ✅</p>
+        <p><strong>Fixed:</strong> Now has exactly 1 blue + 1 purple</p>
+    </div>
+    
+    <h2>Issue 2: Personalized Subheadline (Too Many Colors)</h2>
+    
+    <div class="test before">
+        <h3>❌ BEFORE:</h3>
+        <p style="font-size: 16px; color: #ef4444;">
+            From <span class="text-purple-600">Stockholm</span> to Wall Street, turn <span class="text-blue-600">real‑time</span> moves in <span class="text-purple-600">OMXS30</span> into <span class="text-blue-600">smarter decisions</span>.
+        </p>
+        <p><strong>Problem:</strong> 4 highlights total (2 blue + 2 purple) ❌</p>
+        <p><strong>Your feedback:</strong> (neutral, purple, neutral, blue, neutral, purple, neutral, blue)</p>
+    </div>
+    
+    <div class="test fixed">
+        <h3>✅ AFTER:</h3>
+        <p style="font-size: 16px; color: #059669;">
+            From Stockholm to Wall Street, turn <span class="text-blue-600">real‑time</span> moves in <span class="text-purple-600">OMXS30</span> into smarter decisions.
+        </p>
+        <p><strong>Pattern:</strong> neutral blue neutral purple neutral ✅</p>
+        <p><strong>Fixed:</strong> Now has exactly 1 blue + 1 purple</p>
+        <p><strong>Prioritization:</strong> OMXS30 (market index) chosen over Stockholm (city) as more important personalization</p>
+    </div>
+    
+    <div style="margin-top: 30px; padding: 20px; background: #dbeafe; border-radius: 8px;">
+        <h3>🎉 BOTH ISSUES FIXED!</h3>
+        <ul style="line-height: 1.8;">
+            <li><strong>✅ Base marketing text:</strong> Now has proper 1 blue + 1 purple highlighting</li>
+            <li><strong>✅ Personalized subheadlines:</strong> Reduced from 4 highlights to exactly 2 (1 blue + 1 purple)</li>
+            <li><strong>✅ Smart prioritization:</strong> Market indices (OMXS30) prioritized over cities for personalization</li>
+            <li><strong>✅ Perfect consistency:</strong> All text now follows your allowed color patterns</li>
+            <li><strong>✅ Blue highlights:</strong> Action terms (market research, real-time)</li>
+            <li><strong>✅ Purple highlights:</strong> Key entities (trading signals, OMXS30)</li>
+        </ul>
+    </div>
+    
+</body>
+</html>

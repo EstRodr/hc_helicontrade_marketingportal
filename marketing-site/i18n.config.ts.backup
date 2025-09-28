@@ -1,0 +1,401 @@
+import { defineI18nConfig } from '#imports'
+
+export default defineI18nConfig(() => ({
+  legacy: false,
+  fallbackLocale: 'en',
+  messages: {
+    en: {
+      navigation: {
+        features: "Features",
+        pricing: "Pricing", 
+        about: "About",
+        contact: "Contact",
+        login: "Login",
+        getStarted: "Get Started"
+      },
+      hero: {
+        title: "Market Research, Alerts & Trading Insights",
+        subtitle: "Get powerful market research, custom alerts, and trading signals for stocks, crypto, indices, and commodities. Start with our free beta and be ready when trade execution launches.",
+        joinBeta: "Get started for free",
+        loginPlatform: "Login to Platform",
+        viewDemo: "View demo",
+        disclaimer: "Start free — No credit card required",
+        valueProp1: "AI-powered opportunity discovery",
+        valueProp2: "24/7 market scanning", 
+        valueProp3: "Personalized to your strategy"
+      },
+      trust: {
+        secCompliant: "SEC Compliant",
+        bankGradeSecurity: "Bank-Grade Security",
+        support24x7: "24/7 Support"
+      },
+      stats: {
+        betaUsers: "Beta Users",
+        assetsTracked: "Assets Tracked", 
+        dailyAlerts: "Daily Alerts",
+        researchReports: "Research Reports"
+      },
+      features: {
+        title: "Everything You Need to Trade Successfully",
+        subtitle: "Our platform combines powerful trading tools with educational resources to help you succeed in the markets.",
+        customAlerts: {
+          title: "Custom Trading Alerts",
+          description: "Get personalized notifications triggered by specific indicators, price movements, or market conditions."
+        },
+        marketResearch: {
+          title: "Market Research & Insights", 
+          description: "Daily market analysis, research reports, and expert insights across all major asset classes."
+        },
+        tradingSignals: {
+          title: "Trading Signals",
+          description: "Receive real-time trading signals based on advanced algorithms and market analysis."
+        },
+        newsIntegration: {
+          title: "Financial News Integration",
+          description: "Stay updated with automated news feeds and market-moving events in real-time."
+        },
+        aiStrategies: {
+          title: "AI-Powered Strategies",
+          description: "Access pre-built and custom trading strategies powered by artificial intelligence."
+        },
+        tradeExecution: {
+          title: "Trade Execution", 
+          description: "Execute trades directly from the platform across stocks, crypto, indices, and commodities."
+        }
+      },
+      cta: {
+        title: "Ready to Start Your Trading Journey?",
+        subtitle: "Join thousands of successful traders and start building your financial future today.",
+        createAccount: "Create Free Account"
+      },
+      footer: {
+        description: "Empowering the next generation of traders with cutting-edge technology and education.",
+        platform: "Platform",
+        company: "Company",
+        security: "Security",
+        privacy: "Privacy",
+        terms: "Terms",
+        copyright: "All rights reserved."
+      },
+      status: {
+        availableAtLaunch: "Available at Launch",
+        comingSoon: "Coming Soon", 
+        roadmap: "Roadmap"
+      },
+      homepage: {
+        marketSummary: "Market Summary",
+        liveData: "Live data • Updates every second",
+        viewAllMarkets: "View all markets →",
+        neverMissOpportunity: "Never miss an opportunity",
+        whileYouSleep: "while you sleep",
+        aiWorksAroundClock: "Our AI works around the clock, analyzing patterns and finding opportunities that align with your trading style and preferences.",
+        everythingYouNeed: "Everything You Need to",
+        tradeSmarter: "Trade Smarter",
+        completeTradingPlatform: "Complete Trading Platform",
+        beyondAiInsights: "Beyond AI-powered insights, get access to a complete trading ecosystem designed for serious traders.",
+        getStartedFree: "Get Started Free",
+        noCreditCardRequired: "No credit card required • Full access to all features",
+        readyToTransform: "Ready to Transform Your Trading?",
+        yourStrategyEverywhere: "Your strategy everywhere,",
+        yourLifeAnywhere: "your life anywhere",
+        aiExecutesStrategy: "AI executes your trading strategy across global markets 24/7. No more staring at screens — live your life while opportunities find you.",
+        startFreeTrial: "Start free trial",
+        watchDemo: "Watch demo",
+        noCreditCardAiPowered: "No credit card required • AI-powered alerts • 24/7 monitoring",
+        finallyAiThat: "Finally, an AI that",
+        worksForYou: "works for you",
+        stopStaringScreens: "Stop staring at screens all day. Our AI monitors markets 24/7, finds opportunities that match your style, and alerts you instantly.",
+        aiPoweredSolution: "AI-Powered Solution",
+        startSleepingBetter: "Start sleeping better tonight",
+        letAiWatch: "Let our AI watch the markets while you focus on what matters most. Wake up to opportunities, not regrets.",
+        seeHowItWorks: "See how it works"
+      },
+      problems: {
+        missingGreatSetups: "Missing Great Setups",
+        cantWatchEveryMarket: "You can't watch every market, every timeframe, every symbol. The best opportunities happen when you're sleeping or busy.",
+        tooMuchNoise: "Too Much Noise", 
+        endlessNewsAlerts: "Endless news, alerts, and signals flood your feeds. You spend more time filtering information than trading.",
+        emotionalDecisions: "Emotional Decisions",
+        fomoFearStress: "FOMO, fear, and stress lead to bad timing. You know what to do but emotions get in the way.",
+        aiSolution: "AI Solution",
+        marketScanning: "24/7 Market Scanning — Our AI never sleeps, constantly monitoring 10,000+ instruments across all global markets.",
+        smartFiltering: "Smart Filtering — Only get alerts for setups that match your proven strategies and risk tolerance. No more noise.",
+        objectiveAnalysis: "Objective Analysis — AI removes emotions from the equation, delivering purely data-driven opportunities when conditions align."
+      },
+      howItWorks: {
+        title: "How Our AI Works for You",
+        subtitle: "Set it up once, then let AI do the heavy lifting",
+        defineStyle: "Define Your Style",
+        defineStyleDesc: "Tell us your preferred assets, timeframes, and risk tolerance",
+        aiMonitors: "AI Monitors", 
+        aiMonitorsDesc: "Our AI scans global markets 24/7 for your specific setups",
+        getAlerted: "Get Alerted",
+        getAlertedDesc: "Receive instant notifications when conditions align perfectly",
+        tradeSmart: "Trade Smart",
+        tradeSmartDesc: "Make informed decisions with confidence and better timing"
+      }
+    },
+    fr: {
+      navigation: {
+        features: "Fonctionnalités",
+        pricing: "Tarification", 
+        about: "À propos",
+        contact: "Contact",
+        login: "Connexion",
+        getStarted: "Commencer"
+      },
+      hero: {
+        title: "Recherche de Marché, Alertes et Insights de Trading",
+        subtitle: "Obtenez une recherche de marché puissante, des alertes personnalisées et des signaux de trading pour les actions, crypto, indices et matières premières. Commencez avec notre bêta gratuite et soyez prêt quand l'exécution de trades sera lancée.",
+        joinBeta: "Commencer gratuitement",
+        loginPlatform: "Se connecter à la Plateforme",
+        viewDemo: "Voir la démo",
+        disclaimer: "Commencer gratuitement — Aucune carte de crédit requise",
+        valueProp1: "Découverte d'opportunités alimentée par l'IA",
+        valueProp2: "Surveillance de marché 24h/24",
+        valueProp3: "Personnalisé selon votre stratégie"
+      },
+      trust: {
+        secCompliant: "Conforme SEC",
+        bankGradeSecurity: "Sécurité Bancaire",
+        support24x7: "Support 24h/7j"
+      },
+      stats: {
+        betaUsers: "Utilisateurs Bêta",
+        assetsTracked: "Actifs Suivis", 
+        dailyAlerts: "Alertes Quotidiennes",
+        researchReports: "Rapports de Recherche"
+      },
+      features: {
+        title: "Tout ce Dont Vous Avez Besoin pour Trader avec Succès",
+        subtitle: "Notre plateforme combine des outils de trading puissants avec des ressources éducatives pour vous aider à réussir sur les marchés.",
+        customAlerts: {
+          title: "Alertes de Trading Personnalisées",
+          description: "Recevez des notifications personnalisées déclenchées par des indicateurs spécifiques, des mouvements de prix ou des conditions de marché."
+        },
+        marketResearch: {
+          title: "Recherche de Marché et Analyses", 
+          description: "Analyses de marché quotidiennes, rapports de recherche et insights d'experts sur toutes les principales classes d'actifs."
+        },
+        tradingSignals: {
+          title: "Signaux de Trading",
+          description: "Recevez des signaux de trading en temps réel basés sur des algorithmes avancés et une analyse de marché."
+        },
+        newsIntegration: {
+          title: "Intégration d'Actualités Financières",
+          description: "Restez informé avec des flux d'actualités automatisés et des événements qui impactent le marché en temps réel."
+        },
+        aiStrategies: {
+          title: "Stratégies Alimentées par l'IA",
+          description: "Accédez à des stratégies de trading pré-construites et personnalisées alimentées par l'intelligence artificielle."
+        },
+        tradeExecution: {
+          title: "Exécution des Trades", 
+          description: "Exécutez des trades directement depuis la plateforme sur les actions, crypto, indices et matières premières."
+        }
+      },
+      cta: {
+        title: "Prêt à Commencer Votre Parcours de Trading ?",
+        subtitle: "Rejoignez des milliers de traders à succès et commencez à construire votre avenir financier aujourd'hui.",
+        createAccount: "Créer un Compte Gratuit"
+      },
+      footer: {
+        description: "Autonomiser la prochaine génération de traders avec une technologie de pointe et l'éducation.",
+        platform: "Plateforme",
+        company: "Entreprise",
+        security: "Sécurité",
+        privacy: "Confidentialité",
+        terms: "Conditions",
+        copyright: "Tous droits réservés."
+      },
+      status: {
+        availableAtLaunch: "Disponible au Lancement",
+        comingSoon: "Bientôt Disponible", 
+        roadmap: "Feuille de Route"
+      },
+      homepage: {
+        marketSummary: "Résumé du Marché",
+        liveData: "Données en direct • Mises à jour chaque seconde",
+        viewAllMarkets: "Voir tous les marchés →",
+        neverMissOpportunity: "Ne manquez jamais une opportunité",
+        whileYouSleep: "pendant que vous dormez",
+        aiWorksAroundClock: "Notre IA travaille 24h/24, analysant les modèles et trouvant des opportunités qui correspondent à votre style de trading et à vos préférences.",
+        everythingYouNeed: "Tout ce Dont Vous Avez Besoin pour",
+        tradeSmarter: "Trader Plus Intelligemment",
+        completeTradingPlatform: "Plateforme de Trading Complète",
+        beyondAiInsights: "Au-delà des insights alimentés par l'IA, accédez à un écosystème de trading complet conçu pour les traders sérieux.",
+        getStartedFree: "Commencer Gratuitement",
+        noCreditCardRequired: "Aucune carte de crédit requise • Accès complet à toutes les fonctionnalités",
+        readyToTransform: "Prêt à Transformer Votre Trading ?",
+        yourStrategyEverywhere: "Votre stratégie partout,",
+        yourLifeAnywhere: "votre vie n'importe où",
+        aiExecutesStrategy: "L'IA exécute votre stratégie de trading sur les marchés mondiaux 24h/24. Plus besoin de fixer les écrans — vivez votre vie pendant que les opportunités vous trouvent.",
+        startFreeTrial: "Commencer l'essai gratuit",
+        watchDemo: "Regarder la démo",
+        noCreditCardAiPowered: "Aucune carte de crédit requise • Alertes alimentées par l'IA • Surveillance 24h/24",
+        finallyAiThat: "Enfin, une IA qui",
+        worksForYou: "travaille pour vous",
+        stopStaringScreens: "Arrêtez de fixer les écrans toute la journée. Notre IA surveille les marchés 24h/24, trouve des opportunités qui correspondent à votre style et vous alerte instantanément.",
+        aiPoweredSolution: "Solution Alimentée par l'IA",
+        startSleepingBetter: "Commencez à mieux dormir ce soir",
+        letAiWatch: "Laissez notre IA surveiller les marchés pendant que vous vous concentrez sur ce qui compte le plus. Réveillez-vous avec des opportunités, pas des regrets.",
+        seeHowItWorks: "Voir comment ça marche"
+      },
+      problems: {
+        missingGreatSetups: "Manquer de Bonnes Configurations",
+        cantWatchEveryMarket: "Vous ne pouvez pas surveiller chaque marché, chaque période, chaque symbole. Les meilleures opportunités arrivent quand vous dormez ou êtes occupé.",
+        tooMuchNoise: "Trop de Bruit",
+        endlessNewsAlerts: "Des nouvelles et alertes infinies inondent vos flux. Vous passez plus de temps à filtrer l'information qu'à trader.",
+        emotionalDecisions: "Décisions Émotionnelles",
+        fomoFearStress: "La FOMO, la peur et le stress mènent à un mauvais timing. Vous savez quoi faire mais les émotions interfèrent.",
+        aiSolution: "Solution IA",
+        marketScanning: "Surveillance de Marché 24h/24 — Notre IA ne dort jamais, surveillant constamment plus de 10 000 instruments sur tous les marchés mondiaux.",
+        smartFiltering: "Filtrage Intelligent — Recevez uniquement des alertes pour les configurations qui correspondent à vos stratégies éprouvées et à votre tolérance au risque. Plus de bruit.",
+        objectiveAnalysis: "Analyse Objective — L'IA supprime les émotions de l'équation, livrant des opportunités purement basées sur les données quand les conditions s'alignent."
+      },
+      howItWorks: {
+        title: "Comment Notre IA Travaille pour Vous",
+        subtitle: "Configurez une fois, puis laissez l'IA faire le gros du travail",
+        defineStyle: "Définissez Votre Style",
+        defineStyleDesc: "Dites-nous vos actifs préférés, vos périodes et votre tolérance au risque",
+        aiMonitors: "L'IA Surveille",
+        aiMonitorsDesc: "Notre IA scanne les marchés mondiaux 24h/24 pour vos configurations spécifiques",
+        getAlerted: "Soyez Alerté",
+        getAlertedDesc: "Recevez des notifications instantanées quand les conditions s'alignent parfaitement",
+        tradeSmart: "Tradez Intelligemment",
+        tradeSmartDesc: "Prenez des décisions éclairées avec confiance et un meilleur timing"
+      }
+    },
+    ar: {
+      navigation: {
+        features: "الميزات",
+        pricing: "التسعير", 
+        about: "حول",
+        contact: "تواصل",
+        login: "تسجيل الدخول",
+        getStarted: "ابدأ الآن"
+      },
+      hero: {
+        title: "بحوث السوق والتنبيهات ورؤى التداول",
+        subtitle: "احصل على بحوث سوق قوية وتنبيهات مخصصة وإشارات تداول للأسهم والعملات المشفرة والمؤشرات والسلع. ابدأ مع النسخة التجريبية المجانية وكن مستعداً عند إطلاق تنفيذ التداول.",
+        joinBeta: "ابدأ مجاناً",
+        loginPlatform: "تسجيل الدخول للمنصة",
+        viewDemo: "شاهد العرض التوضيحي",
+        disclaimer: "ابدأ مجاناً — لا حاجة لبطاقة ائتمان",
+        valueProp1: "اكتشاف الفرص بالذكاء الاصطناعي",
+        valueProp2: "مراقبة السوق على مدار الساعة",
+        valueProp3: "مخصص لاستراتيجيتك"
+      },
+      trust: {
+        secCompliant: "متوافق مع لجنة الأوراق المالية",
+        bankGradeSecurity: "أمان مصرفي",
+        support24x7: "دعم 24/7"
+      },
+      stats: {
+        betaUsers: "مستخدمو النسخة التجريبية",
+        assetsTracked: "الأصول المتتبعة", 
+        dailyAlerts: "التنبيهات اليومية",
+        researchReports: "تقارير البحث"
+      },
+      features: {
+        title: "كل ما تحتاجه للتداول بنجاح",
+        subtitle: "تجمع منصتنا بين أدوات التداول القوية والموارد التعليمية لمساعدتك على النجاح في الأسواق.",
+        customAlerts: {
+          title: "تنبيهات التداول المخصصة",
+          description: "احصل على إشعارات مخصصة تُثار بواسطة مؤشرات محددة أو حركات الأسعار أو ظروف السوق."
+        },
+        marketResearch: {
+          title: "بحوث السوق والرؤى", 
+          description: "تحليلات السوق اليومية وتقارير البحث ورؤى الخبراء عبر جميع فئات الأصول الرئيسية."
+        },
+        tradingSignals: {
+          title: "إشارات التداول",
+          description: "استقبل إشارات التداول في الوقت الفعلي بناءً على خوارزميات متقدمة وتحليل السوق."
+        },
+        newsIntegration: {
+          title: "تكامل الأخبار المالية",
+          description: "ابق مطلعاً مع تدفقات الأخبار الآلية والأحداث المؤثرة على السوق في الوقت الفعلي."
+        },
+        aiStrategies: {
+          title: "استراتيجيات مدعومة بالذكاء الاصطناعي",
+          description: "اطلع على استراتيجيات التداول المبنية مسبقاً والمخصصة المدعومة بالذكاء الاصطناعي."
+        },
+        tradeExecution: {
+          title: "تنفيذ الصفقات", 
+          description: "نفذ الصفقات مباشرة من المنصة عبر الأسهم والعملات المشفرة والمؤشرات والسلع."
+        }
+      },
+      cta: {
+        title: "مستعد لبدء رحلة التداول الخاصة بك؟",
+        subtitle: "انضم إلى آلاف المتداولين الناجحين وابدأ في بناء مستقبلك المالي اليوم.",
+        createAccount: "إنشاء حساب مجاني"
+      },
+      footer: {
+        description: "تمكين الجيل القادم من المتداولين بالتكنولوجيا المتطورة والتعليم.",
+        platform: "المنصة",
+        company: "الشركة",
+        security: "الأمان",
+        privacy: "الخصوصية",
+        terms: "الشروط",
+        copyright: "جميع الحقوق محفوظة."
+      },
+      status: {
+        availableAtLaunch: "متوفر عند الإطلاق",
+        comingSoon: "قريباً", 
+        roadmap: "خارطة الطريق"
+      },
+      homepage: {
+        marketSummary: "ملخص السوق",
+        liveData: "بيانات مباشرة • تحديثات كل ثانية",
+        viewAllMarkets: "عرض جميع الأسواق ←",
+        neverMissOpportunity: "لا تفوت أي فرصة",
+        whileYouSleep: "أثناء نومك",
+        aiWorksAroundClock: "يعمل الذكاء الاصطناعي لدينا على مدار الساعة، يحلل الأنماط ويجد الفرص التي تتماشى مع أسلوب التداول وتفضيلاتك.",
+        everythingYouNeed: "كل ما تحتاجه",
+        tradeSmarter: "للتداول بذكاء أكبر",
+        completeTradingPlatform: "منصة تداول شاملة",
+        beyondAiInsights: "بعيداً عن الرؤى المدعومة بالذكاء الاصطناعي، احصل على نظام تداول شامل مصمم للمتداولين الجادين.",
+        getStartedFree: "ابدأ مجاناً",
+        noCreditCardRequired: "لا حاجة لبطاقة ائتمان • وصول كامل لجميع الميزات",
+        readyToTransform: "مستعد لتحويل تداولك؟",
+        yourStrategyEverywhere: "استراتيجيتك في كل مكان،",
+        yourLifeAnywhere: "حياتك في أي مكان",
+        aiExecutesStrategy: "ينفذ الذكاء الاصطناعي استراتيجية التداول الخاصة بك عبر الأسواق العالمية على مدار الساعة. لا مزيد من التحديق في الشاشات — عش حياتك بينما تجدك الفرص.",
+        startFreeTrial: "ابدأ التجربة المجانية",
+        watchDemo: "شاهد العرض التوضيحي",
+        noCreditCardAiPowered: "لا حاجة لبطاقة ائتمان • تنبيهات مدعومة بالذكاء الاصطناعي • مراقبة على مدار الساعة",
+        finallyAiThat: "أخيراً، ذكاء اصطناعي",
+        worksForYou: "يعمل لصالحك",
+        stopStaringScreens: "توقف عن التحديق في الشاشات طوال اليوم. يراقب الذكاء الاصطناعي لدينا الأسواق على مدار الساعة، يجد الفرص التي تتطابق مع أسلوبك وينبهك فوراً.",
+        aiPoweredSolution: "حل مدعوم بالذكاء الاصطناعي",
+        startSleepingBetter: "ابدأ في النوم بشكل أفضل الليلة",
+        letAiWatch: "دع الذكاء الاصطناعي لدينا يراقب الأسواق بينما تركز على ما يهم أكثر. استيقظ على الفرص، وليس الندم.",
+        seeHowItWorks: "شاهد كيف يعمل"
+      },
+      problems: {
+        missingGreatSetups: "تفويت الإعدادات الرائعة",
+        cantWatchEveryMarket: "لا يمكنك مراقبة كل سوق، كل إطار زمني، كل رمز. أفضل الفرص تحدث عندما تكون نائماً أو مشغولاً.",
+        tooMuchNoise: "ضوضاء كثيرة جداً",
+        endlessNewsAlerts: "الأخبار والتنبيهات اللامتناهية تغمر تدفقاتك. تقضي وقتاً أكثر في تصفية المعلومات من التداول.",
+        emotionalDecisions: "قرارات عاطفية",
+        fomoFearStress: "الخوف من الفوات والخوف والضغط يؤدي إلى توقيت سيء. تعرف ما يجب فعله لكن العواطف تتدخل.",
+        aiSolution: "حل الذكاء الاصطناعي",
+        marketScanning: "مسح السوق على مدار الساعة — ذكاءنا الاصطناعي لا ينام أبداً، يراقب باستمرار أكثر من 10,000 أداة عبر جميع الأسواق العالمية.",
+        smartFiltering: "تصفية ذكية — احصل فقط على تنبيهات للإعدادات التي تتطابق مع استراتيجياتك المثبتة وتحمل المخاطر. لا مزيد من الضوضاء.",
+        objectiveAnalysis: "تحليل موضوعي — يزيل الذكاء الاصطناعي العواطف من المعادلة، يقدم فرصاً مبنية على البيانات بحتة عندما تتوافق الظروف."
+      },
+      howItWorks: {
+        title: "كيف يعمل الذكاء الاصطناعي لدينا لصالحك",
+        subtitle: "اضبطه مرة واحدة، ثم دع الذكاء الاصطناعي يقوم بالعمل الشاق",
+        defineStyle: "حدد أسلوبك",
+        defineStyleDesc: "أخبرنا عن أصولك المفضلة والأطر الزمنية وتحمل المخاطر",
+        aiMonitors: "الذكاء الاصطناعي يراقب",
+        aiMonitorsDesc: "يمسح ذكاءنا الاصطناعي الأسواق العالمية على مدار الساعة لإعداداتك المحددة",
+        getAlerted: "احصل على التنبيه",
+        getAlertedDesc: "تلقى إشعارات فورية عندما تتوافق الظروف بشكل مثالي",
+        tradeSmart: "تداول بذكاء",
+        tradeSmartDesc: "اتخذ قرارات مدروسة بثقة وتوقيت أفضل"
+      }
+    }
+  }
+}))

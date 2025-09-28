@@ -42,13 +42,13 @@ const marketData = ref([
   { symbol: 'ETH', name: 'Ethereum', price: 3456, change: -89, changePercent: -2.51, category: 'crypto' },
 ])
 
-// AI Platform stats (i18n)
-const platformStats = [
+// AI Platform stats (i18n) — make reactive to locale changes
+const platformStats = computed(() => ([
   { value: '24/7', label: t('stats.marketMonitoring'), subtext: t('stats.neverStopsWatching') },
   { value: '10,000+', label: t('stats.assetsScanned'), subtext: t('stats.acrossGlobalMarkets') },
   { value: '95%+', label: t('stats.patternAccuracy'), subtext: t('stats.aiPoweredDetection') },
   { value: '<0.3ms', label: t('stats.alertSpeed'), subtext: t('stats.lightningFastNotifications') }
-]
+]))
 
 // Static content for faster loading (i18n-backed defaults)
 const homepageContent = ref({
@@ -198,22 +198,41 @@ function getCategoryColor(category: string): string {
   return colorMap[category] || 'blue'
 }
 
+// Static fallback features when CMS is empty
+const staticPlatformFeatures = [
+  { title: '', description: '', stats: '', color: 'blue', svg: 'analytics' },
+  { title: '', description: '', stats: '', color: 'green', svg: 'speed' },
+  { title: '', description: '', stats: '', color: 'purple', svg: 'analytics' },
+  { title: '', description: '', stats: '', color: 'orange', svg: 'speed' }
+]
+
+const staticAdditionalFeatures = [
+  { title: '', description: '', stats: '', color: 'blue', svg: 'bell' },
+  { title: '', description: '', stats: '', color: 'purple', svg: 'brain' },
+  { title: '', description: '', stats: '', color: 'green', svg: 'news' },
+  { title: '', description: '', stats: '', color: 'orange', svg: 'target' },
+  { title: '', description: '', stats: '', color: 'cyan', svg: 'connect' },
+  { title: '', description: '', stats: '', color: 'indigo', svg: 'education' }
+]
+
 // Map features to template format
 const mappedPlatformFeatures = computed(() => {
-  return platformFeatures.value.map(feature => ({
+  const features = platformFeatures.value.length > 0 ? platformFeatures.value : staticPlatformFeatures
+  return features.map((feature, index) => ({
     ...feature,
     svg: getIconName(feature.icon, feature.title),
-    color: getCategoryColor(feature.category),
+    color: getCategoryColor(feature.category) || feature.color,
     highlight: feature.short_description || '',
     stats: feature.short_description || ''
   }))
 })
 
 const mappedAdditionalFeatures = computed(() => {
-  return additionalFeatures.value.map(feature => ({
+  const features = additionalFeatures.value.length > 0 ? additionalFeatures.value : staticAdditionalFeatures
+  return features.map((feature, index) => ({
     ...feature,
     svg: getIconName(feature.icon, feature.title),
-    color: getCategoryColor(feature.category),
+    color: getCategoryColor(feature.category) || feature.color,
     stats: feature.short_description || ''
   }))
 })
@@ -692,12 +711,12 @@ onMounted(() => {
               
               <!-- Title -->
               <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-4 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-                {{ feature.title || t(featuredKey(index) + '.title') }}
+                {{ (locale === 'en' && feature.title) ? feature.title : t(featuredKey(index) + '.title') }}
               </h3>
               
               <!-- Description -->
               <p class="text-gray-600 dark:text-gray-400 mb-4 leading-relaxed">
-                {{ feature.description || t(featuredKey(index) + '.description') }}
+                {{ (locale === 'en' && feature.description) ? feature.description : t(featuredKey(index) + '.description') }}
               </p>
               
               <!-- Stats -->
@@ -711,7 +730,7 @@ onMounted(() => {
                 <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
                   <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
                 </svg>
-                {{ feature.stats || t(featuredKey(index) + '.short') }}
+                {{ (locale === 'en' && feature.stats) ? feature.stats : t(featuredKey(index) + '.short') }}
               </div>
             </div>
           </div>
@@ -833,10 +852,10 @@ onMounted(() => {
             <!-- Content -->
             <div class="text-center">
               <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-                {{ feature.title || t(additionalKey(index) + '.title') }}
+                {{ (locale === 'en' && feature.title) ? feature.title : t(additionalKey(index) + '.title') }}
               </h3>
               <p class="text-sm text-gray-700 dark:text-gray-300 mb-3 leading-relaxed">
-                {{ feature.description || t(additionalKey(index) + '.description') }}
+                {{ (locale === 'en' && feature.description) ? feature.description : t(additionalKey(index) + '.description') }}
               </p>
               <div class="text-xs font-medium"
                    :class="{
@@ -847,7 +866,7 @@ onMounted(() => {
                      'text-cyan-600 dark:text-cyan-400': feature.color === 'cyan',
                      'text-indigo-600 dark:text-indigo-400': feature.color === 'indigo'
                    }">
-                {{ feature.stats }}
+                {{ (locale === 'en' && feature.stats) ? feature.stats : t(additionalKey(index) + '.short') }}
               </div>
             </div>
           </div>

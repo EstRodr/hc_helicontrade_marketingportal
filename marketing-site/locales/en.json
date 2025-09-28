@@ -282,4 +282,33 @@
     "alertSpeed": "Alert Speed",
     "lightningFastNotifications": "lightning-fast notifications"
   }
+  ,
+  "marketStatus": {
+    "open": "{market} is open • Live until {time}",
+    "preMarket": "{market} opens at {time}",
+    "afterHours": "{market} closed • After-hours trading",
+    "closed": "{market} closed"
+  },
+  "heroVariants": [
+    {
+      "headline": "Global insight, built for {country} markets",
+      "subheadline": "From {city} to Wall Street, turn real-time moves in {index} into smarter decisions."
+    },
+    {
+      "headline": "AI eyes on {country} markets — opportunity never sleeps",
+      "subheadline": "From {city} to Wall Street, track every market pulse, 24/7."
+    },
+    {
+      "headline": "Your edge in {country}'s markets",
+      "subheadline": "With AI scanning {index} day and night, you focus on making confident moves."
+    },
+    {
+      "headline": "{country} markets, redefined by intelligence",
+      "subheadline": "From {city} to Wall Street, stay connected to every swing in {index}."
+    },
+    {
+      "headline": "Trade {country} markets with global AI power",
+      "subheadline": "From {city} to Wall Street, our AI keeps an eye on {index} so you don't miss a beat."
+    }
+  ]
 }

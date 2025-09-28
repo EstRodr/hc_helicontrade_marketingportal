@@ -1,0 +1,62 @@
+{
+  "hero": {
+    "joinBeta": "Get started for free",
+    "viewDemo": "View demo",
+    "disclaimer": "Start free — No credit card required",
+    "valueProp1": "AI-powered opportunity discovery",
+    "valueProp2": "24/7 market scanning",
+    "valueProp3": "Personalized to your strategy"
+  },
+  "homepage": {
+    "marketSummary": "Market Summary",
+    "liveData": "Live data • Updates every second",
+    "viewAllMarkets": "View all markets →",
+    "neverMissOpportunity": "Never miss an opportunity",
+    "whileYouSleep": "while you sleep",
+    "aiWorksAroundClock": "Our AI works around the clock, analyzing patterns and finding opportunities that align with your trading style and preferences.",
+    "readyToTransform": "Ready to Transform Your Trading?",
+    "yourStrategyEverywhere": "Your strategy everywhere,",
+    "yourLifeAnywhere": "your life anywhere",
+    "aiExecutesStrategy": "AI executes your trading strategy across global markets 24/7. No more staring at screens — live your life while opportunities find you.",
+    "startFreeTrial": "Start free trial",
+    "watchDemo": "Watch demo",
+    "noCreditCardAiPowered": "No credit card required • AI-powered alerts • 24/7 monitoring",
+    "completeTradingPlatform": "Complete Trading Platform",
+    "everythingYouNeed": "Everything You Need to",
+    "tradeSmarter": "Trade Smarter",
+    "beyondAiInsights": "Beyond AI-powered insights, get access to a complete trading ecosystem designed for serious traders.",
+    "getStartedFree": "Get Started Free",
+    "noCreditCardRequired": "No credit card required • Full access to all features",
+    "aiPoweredSolution": "AI-Powered Solution",
+    "finallyAiThat": "Finally, an AI that",
+    "worksForYou": "works for you",
+    "stopStaringScreens": "Stop staring at screens all day. Our AI monitors markets 24/7, finds opportunities that match your style, and alerts you instantly.",
+    "startSleepingBetter": "Start sleeping better tonight",
+    "letAiWatch": "Let our AI watch the markets while you focus on what matters most. Wake up to opportunities, not regrets.",
+    "seeHowItWorks": "See how it works"
+  },
+  "problems": {
+    "missingGreatSetups": "Missing Great Setups",
+    "cantWatchEveryMarket": "You can't watch every market, every timeframe, every symbol. The best opportunities happen when you're sleeping or busy.",
+    "aiSolution": "AI Solution",
+    "marketScanning": "24/7 Market Scanning — Our AI never sleeps, constantly monitoring 10,000+ instruments across all global markets.",
+    "tooMuchNoise": "Too Much Noise",
+    "endlessNewsAlerts": "Endless news, alerts, and signals flood your feeds. You spend more time filtering information than trading.",
+    "smartFiltering": "Smart Filtering — Only get alerts for setups that match your proven strategies and risk tolerance. No more noise.",
+    "emotionalDecisions": "Emotional Decisions",
+    "fomoFearStress": "FOMO, fear, and stress lead to bad timing. You know what to do but emotions get in the way.",
+    "objectiveAnalysis": "Objective Analysis — AI removes emotions from the equation, delivering purely data-driven opportunities when conditions align."
+  },
+  "howItWorks": {
+    "title": "How Our AI Works for You",
+    "subtitle": "Set it up once, then let AI do the heavy lifting",
+    "defineStyle": "Define Your Style",
+    "defineStyleDesc": "Tell us your preferred assets, timeframes, and risk tolerance",
+    "aiMonitors": "AI Monitors",
+    "aiMonitorsDesc": "Our AI scans global markets 24/7 for your specific setups",
+    "getAlerted": "Get Alerted",
+    "getAlertedDesc": "Receive instant notifications when conditions align perfectly",
+    "tradeSmart": "Trade Smart",
+    "tradeSmartDesc": "Make informed decisions with confidence and better timing"
+  }
+}

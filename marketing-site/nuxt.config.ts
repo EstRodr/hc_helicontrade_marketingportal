@@ -42,6 +42,7 @@ export default defineNuxtConfig({
       { code: 'fr', name: 'Français', flag: '🇫🇷', file: 'fr.json' },
       { code: 'ar', name: 'العربية', flag: '🇸🇦', dir: 'rtl', file: 'ar.json' }
     ],
+    // Note: nuxt-i18n prefixes this with 'i18n/' internally, so keep this as 'locales'
     langDir: 'locales',
     detectBrowserLanguage: {
       useCookie: true,

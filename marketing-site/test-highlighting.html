@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Highlighting Consistency Test</title>
+    <style>
+        .text-blue-600 { color: #2563eb; font-weight: 600; }
+        .text-purple-600 { color: #9333ea; font-weight: 600; }
+        .test-case { margin: 20px 0; padding: 15px; border: 1px solid #e5e7eb; border-radius: 8px; }
+        .language { font-size: 14px; color: #6b7280; margin-bottom: 10px; }
+        .result { font-size: 18px; line-height: 1.6; }
+    </style>
+</head>
+<body>
+    <h1>HeliconTrade Headline Highlighting Consistency Test</h1>
+    
+    <div class="test-case">
+        <div class="language">English</div>
+        <div class="result">
+            Market <span class="text-blue-600">Research</span>, Alerts & <span class="text-purple-600">Trading Insights</span>
+        </div>
+        <div style="margin-top: 10px; color: #6b7280;">
+            Pattern: neutral blue neutral purple (1 blue + 1 purple) ✅ CONSISTENT
+        </div>
+    </div>
+    
+    <div class="test-case">
+        <div class="language">French</div>
+        <div class="result">
+            <span class="text-blue-600">Recherche</span> de Marché, Alertes et <span class="text-purple-600">Analyses de Trading</span>
+        </div>
+        <div style="margin-top: 10px; color: #6b7280;">
+            Pattern: blue neutral purple (1 blue + 1 purple) ✅ CONSISTENT
+        </div>
+    </div>
+    
+    <div class="test-case">
+        <div class="language">Arabic</div>
+        <div class="result">
+            <span class="text-blue-600">بحوث</span> السوق والتنبيهات و<span class="text-purple-600">رؤى التداول</span>
+        </div>
+        <div style="margin-top: 10px; color: #6b7280;">
+            Pattern: blue neutral purple (1 blue + 1 purple) ✅ CONSISTENT
+        </div>
+    </div>
+    
+    <h2 style="margin-top: 40px;">Personalized Headlines (Fixed)</h2>
+    
+    <div class="test-case">
+        <div class="language">English Personalized</div>
+        <div class="result">
+            Global <span class="text-blue-600">insight</span>, built for <span class="text-purple-600">Swedish</span> markets
+        </div>
+        <div style="margin-top: 10px; color: #6b7280;">
+            Pattern: neutral blue neutral purple neutral (1 blue + 1 purple) ✅ CONSISTENT
+        </div>
+    </div>
+    
+    <div class="test-case">
+        <div class="language">French Personalized</div>
+        <div class="result">
+            <span class="text-blue-600">Vision globale</span>, pensée pour les marchés de <span class="text-purple-600">Suède</span>
+        </div>
+        <div style="margin-top: 10px; color: #6b7280;">
+            Pattern: blue neutral purple neutral (1 blue + 1 purple) ✅ CONSISTENT
+        </div>
+    </div>
+    
+    <div class="test-case">
+        <div class="language">Arabic Personalized</div>
+        <div class="result">
+            <span class="text-blue-600">رؤية عالمية</span> مصمّمة لأسواق <span class="text-purple-600">السويد</span>
+        </div>
+        <div style="margin-top: 10px; color: #6b7280;">
+            Pattern: blue neutral purple (1 blue + 1 purple) ✅ CONSISTENT
+        </div>
+    </div>
+    
+    <div style="margin-top: 40px; padding: 20px; background: #f9fafb; border-radius: 8px;">
+        <h3>Consistency Rules Applied:</h3>
+        <ul>
+            <li><strong>Base Headlines:</strong> Maximum 1 blue + 1 purple highlight per headline</li>
+            <li><strong>Personalized Headlines:</strong> Blue = Vision/Insight words + Purple = Country names (personalization focus)</li>
+            <li><strong>Fixed:</strong> Now uses "Swedish markets" instead of "Sweden markets"</li>
+            <li><strong>Fixed:</strong> Highlights country names (Swedish/Suède/السويد) instead of generic "markets"</li>
+            <li>Allowed patterns: (neutral blue neutral purple neutral), (blue neutral purple), (neutral blue neutral purple), (blue neutral purple neutral)</li>
+        </ul>
+    </div>
+    
+</body>
+</html>

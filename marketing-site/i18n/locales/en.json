@@ -282,4 +282,11 @@
     "alertSpeed": "Alert Speed",
     "lightningFastNotifications": "lightning-fast notifications"
   }
+  ,
+  "marketStatus": {
+    "open": "{market} is open • Live until {time}",
+    "preMarket": "{market} opens at {time}",
+    "afterHours": "{market} closed • After-hours trading",
+    "closed": "{market} closed"
+  }
 }

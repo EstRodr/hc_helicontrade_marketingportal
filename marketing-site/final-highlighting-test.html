@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>FINAL HIGHLIGHTING CONSISTENCY TEST</title>
+    <style>
+        .text-blue-600 { color: #2563eb; font-weight: 600; }
+        .text-purple-600 { color: #9333ea; font-weight: 600; }
+        .test-case { margin: 20px 0; padding: 20px; border: 2px solid #e5e7eb; border-radius: 8px; }
+        .pass { border-color: #10b981; background: #f0fdf4; }
+        .fail { border-color: #ef4444; background: #fef2f2; }
+        .language { font-size: 16px; font-weight: 600; margin-bottom: 10px; }
+        .result { font-size: 24px; line-height: 1.6; margin-bottom: 10px; }
+        .pattern { font-size: 14px; color: #6b7280; }
+    </style>
+</head>
+<body>
+    <h1>🎯 FINAL HIGHLIGHTING CONSISTENCY TEST</h1>
+    <p><strong>Goal:</strong> ALL languages must have BOTH blue AND purple highlights following allowed patterns</p>
+    
+    <div class="test-case pass">
+        <div class="language">✅ English - CORRECT</div>
+        <div class="result">
+            Global <span class="text-blue-600">insight</span>, built for <span class="text-purple-600">Swedish</span> markets
+        </div>
+        <div class="pattern">
+            <strong>Pattern:</strong> neutral blue neutral purple neutral (1 blue + 1 purple) ✅
+        </div>
+    </div>
+    
+    <div class="test-case pass">
+        <div class="language">✅ French - NOW CORRECT</div>
+        <div class="result">
+            <span class="text-blue-600">Vision globale</span>, pensée pour les marchés de <span class="text-purple-600">Suède</span>
+        </div>
+        <div class="pattern">
+            <strong>Pattern:</strong> blue neutral purple (1 blue + 1 purple) ✅
+        </div>
+    </div>
+    
+    <div class="test-case pass">
+        <div class="language">✅ Arabic - NOW CORRECT</div>
+        <div class="result">
+            <span class="text-blue-600">رؤية عالمية</span> مصمّمة لأسواق <span class="text-purple-600">السويد</span>
+        </div>
+        <div class="pattern">
+            <strong>Pattern:</strong> blue neutral purple (1 blue + 1 purple) ✅
+        </div>
+    </div>
+    
+    <div style="margin-top: 40px; padding: 20px; background: #dbeafe; border-radius: 8px; border: 2px solid #3b82f6;">
+        <h3>🎉 CONSISTENCY ACHIEVED!</h3>
+        <ul style="line-height: 1.8;">
+            <li><strong>✅ All languages now have BOTH blue AND purple highlights</strong></li>
+            <li><strong>✅ All follow allowed patterns:</strong> (neutral blue neutral purple neutral), (blue neutral purple), etc.</li>
+            <li><strong>✅ Blue highlights:</strong> Vision/insight words (insight, Vision globale, رؤية عالمية)</li>
+            <li><strong>✅ Purple highlights:</strong> Country personalization (Swedish, Suède, السويد)</li>
+            <li><strong>✅ Grammar fixed:</strong> "Swedish markets" not "Sweden markets"</li>
+            <li><strong>✅ Personalization focus:</strong> Country names are highlighted, not generic "markets"</li>
+        </ul>
+    </div>
+    
+</body>
+</html>

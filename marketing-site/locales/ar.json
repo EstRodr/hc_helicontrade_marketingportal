@@ -283,4 +283,33 @@
     "alertSpeed": "سرعة التنبيه",
     "lightningFastNotifications": "تنبيهات فائقة السرعة"
   }
+  ,
+  "marketStatus": {
+    "open": "{market} مفتوح • مباشر حتى {time}",
+    "preMarket": "{market} يفتح عند {time}",
+    "afterHours": "{market} مغلق • تداول بعد الإغلاق",
+    "closed": "{market} مغلق"
+  },
+  "heroVariants": [
+    {
+      "headline": "رؤية عالمية مصممة لأسواق {country}",
+      "subheadline": "من {city} إلى وول ستريت، حوّل تحركات {index} اللحظية إلى قرارات أذكى."
+    },
+    {
+      "headline": "عيون الذكاء الاصطناعي على أسواق {country} — الفرص لا تنام",
+      "subheadline": "من {city} إلى وول ستريت، تابع نبض السوق على مدار 24/7."
+    },
+    {
+      "headline": "ميزتك في أسواق {country}",
+      "subheadline": "مع الذكاء الاصطناعي يراقب {index} ليلاً ونهاراً، ركّز على قرارات واثقة."
+    },
+    {
+      "headline": "أسواق {country}، تُعاد صياغتها بالذكاء",
+      "subheadline": "من {city} إلى وول ستريت، ابقَ على اتصال بكل حركة في {index}."
+    },
+    {
+      "headline": "تداول أسواق {country} بقوة ذكاء عالمي",
+      "subheadline": "من {city} إلى وول ستريت، يراقب ذكاؤنا الاصطناعي {index} كي لا يفوتك شيء."
+    }
+  ]
 }

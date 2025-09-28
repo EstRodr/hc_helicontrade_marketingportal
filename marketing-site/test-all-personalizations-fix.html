@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>All Personalizations Fix</title>
+    <style>
+        .text-blue-600 { color: #2563eb; font-weight: 600; }
+        .text-purple-600 { color: #9333ea; font-weight: 600; }
+        .test { margin: 20px 0; padding: 20px; border: 2px solid #10b981; background: #f0fdf4; border-radius: 8px; }
+        .before { border-color: #ef4444; background: #fef2f2; }
+        .correct { border-color: #059669; background: #ecfdf5; }
+    </style>
+</head>
+<body>
+    <h1>🎯 Personalization Rule: Highlight ALL Personalizations</h1>
+    
+    <div class="test before">
+        <h3>❌ BEFORE (Incomplete):</h3>
+        <p style="font-size: 18px; color: #ef4444;">
+            From Stockholm to Wall Street, turn <span class="text-blue-600">real‑time</span> moves in <span class="text-purple-600">OMXS30</span> into smarter decisions.
+        </p>
+        <p><strong>Problem:</strong> Only highlighted OMXS30, but missed Stockholm (both are personalizations!)</p>
+        <p><strong>Pattern:</strong> neutral blue neutral purple neutral</p>
+    </div>
+    
+    <div class="test correct">
+        <h3>✅ AFTER (Complete):</h3>
+        <p style="font-size: 18px; color: #059669;">
+            From <span class="text-purple-600">Stockholm</span> to Wall Street, turn <span class="text-blue-600">real‑time</span> moves in <span class="text-purple-600">OMXS30</span> into smarter decisions.
+        </p>
+        <p><strong>Fixed:</strong> Now highlights ALL personalizations (Stockholm AND OMXS30) ✅</p>
+        <p><strong>Pattern:</strong> purple neutral blue neutral purple</p>
+        <p><strong>Total highlights:</strong> 1 blue + 2 purple = 3 total</p>
+    </div>
+    
+    <h2>Different Scenarios:</h2>
+    
+    <div class="test correct">
+        <h3>Scenario 1: Multiple Personalizations Available</h3>
+        <p style="font-size: 16px;">
+            From <span class="text-purple-600">Stockholm</span> to Wall Street, turn <span class="text-blue-600">real‑time</span> moves in <span class="text-purple-600">OMXS30</span> into smarter decisions.
+        </p>
+        <p><strong>Rule:</strong> Highlight ALL personalizations (Stockholm + OMXS30) ✅</p>
+    </div>
+    
+    <div class="test correct">
+        <h3>Scenario 2: Single Personalization Available</h3>
+        <p style="font-size: 16px;">
+            Turn <span class="text-blue-600">real‑time</span> market moves in <span class="text-purple-600">OMXS30</span> into smarter decisions.
+        </p>
+        <p><strong>Rule:</strong> Highlight the single personalization (OMXS30) ✅</p>
+    </div>
+    
+    <div class="test correct">
+        <h3>Scenario 3: No Personalization Available</h3>
+        <p style="font-size: 16px;">
+            Turn <span class="text-blue-600">real‑time</span> market moves from <span class="text-purple-600">Wall Street</span> into smarter decisions.
+        </p>
+        <p><strong>Rule:</strong> Fallback to financial centers (Wall Street) ✅</p>
+    </div>
+    
+    <div style="margin-top: 30px; padding: 20px; background: #dbeafe; border-radius: 8px;">
+        <h3>📋 Updated Personalization Rules:</h3>
+        <ul style="line-height: 1.8;">
+            <li><strong>✅ Multiple personalizations:</strong> Highlight ALL of them in purple</li>
+            <li><strong>✅ Single personalization:</strong> Highlight it in purple</li>
+            <li><strong>✅ No personalizations:</strong> Fallback to common financial centers</li>
+            <li><strong>✅ Blue highlights:</strong> Always exactly 1 action term (real-time, temps réel, etc.)</li>
+            <li><strong>✅ Pattern flexibility:</strong> Can be (blue purple purple) when multiple personalizations exist</li>
+            <li><strong>✅ Personalization priority:</strong> Market indices > Cities > Financial centers</li>
+        </ul>
+    </div>
+    
+</body>
+</html>
