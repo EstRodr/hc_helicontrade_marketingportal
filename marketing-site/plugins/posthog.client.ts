@@ -51,6 +51,11 @@ export default defineNuxtPlugin(async () => {
     // Add PostHog to global context
     const nuxtApp = useNuxtApp()
     nuxtApp.provide('posthog', posthog)
+    
+    // Also add to global window for debugging/external access
+    if (typeof window !== 'undefined') {
+      (window as any).posthog = posthog
+    }
 
     // Track route changes
     const router = useRouter()

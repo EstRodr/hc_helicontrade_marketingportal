@@ -1,5 +1,6 @@
 import { ref, computed, readonly } from 'vue'
 import { useRuntimeConfig, useI18n } from '#imports'
+import { highlightHeroHeadline, highlightHeroSubheadline, getUserContextForHighlighting } from '~/utils/textHighlighting'
 
 interface UserContext {
   location: {
@@ -596,8 +597,30 @@ const initializeVariant = async (): Promise<number> => {
     return userContext.value.location.country || 'global'
   }
 
+  // Track last generation to prevent excessive calls
+  let lastGenerationTime = 0
+  let isGenerating = false
+  const GENERATION_DEBOUNCE_MS = 2000 // Prevent regeneration within 2 seconds
+
   // Generate personalized content based on context
   const generatePersonalizedContent = async () => {
+    const now = Date.now()
+    
+    // Prevent concurrent generations
+    if (isGenerating) {
+      console.log('⏱️ Personalization generation in progress, skipping...')
+      return
+    }
+    
+    // Prevent too frequent calls
+    if (now - lastGenerationTime < GENERATION_DEBOUNCE_MS) {
+      console.log('⏱️ Personalization generation debounced (too frequent calls)')
+      return
+    }
+    
+    isGenerating = true
+    lastGenerationTime = now
+    
     const { location, timing, market, preferences } = userContext.value
     
     // Personalization control - easy to toggle
@@ -723,12 +746,16 @@ const initializeVariant = async (): Promise<number> => {
         const isValidTH = typeof tH === 'string' && !tH.startsWith('heroVariants.')
         const isValidTS = typeof tS === 'string' && !tS.startsWith('heroVariants.')
         if (isValidTH && isValidTS) {
-          // Keep plain text; UI formatter applies highlights uniformly across locales
+          // Apply semantic highlighting to localized content
+          const highlightContext = getUserContextForHighlighting(userContext.value, locale.value)
+          const highlightedHeadline = highlightHeroHeadline(tH, locale.value, highlightContext)
+          const highlightedSubheadline = highlightHeroSubheadline(tS, locale.value, highlightContext)
+          
           personalizedContent.value = {
             ...personalizedContent.value,
             greeting,
-            headline: `${tH}`,
-            subheadline: `${tS}`,
+            headline: highlightedHeadline,
+            subheadline: highlightedSubheadline,
             cta: t('cta.createAccount'),
             urgency: personalizedContent.value.urgency || '',
             relevantSymbols: market.localIndices.concat(['BTC', 'ETH']).slice(0, 5),
@@ -777,12 +804,16 @@ const initializeVariant = async (): Promise<number> => {
         const finalHeadline = h && h.trim().length > 0 ? h : t('hero.title')
         const finalSub = s && s.trim().length > 0 ? s : t('hero.subtitle')
         console.log('📝 Non-EN final copy', { finalHeadline, finalSub })
-        // Keep plain text; UI formatter applies highlights uniformly across locales
+        // Apply semantic highlighting to localized content
+        const highlightContext = getUserContextForHighlighting(userContext.value, locale.value)
+        const highlightedHeadline = highlightHeroHeadline(finalHeadline, locale.value, highlightContext)
+        const highlightedSubheadline = highlightHeroSubheadline(finalSub, locale.value, highlightContext)
+        
         personalizedContent.value = {
           ...personalizedContent.value,
           greeting,
-          headline: `${finalHeadline}`,
-          subheadline: `${finalSub}`,
+          headline: highlightedHeadline,
+          subheadline: highlightedSubheadline,
           cta: t('cta.createAccount'),
           urgency: personalizedContent.value.urgency || '',
           relevantSymbols: market.localIndices.concat(['BTC', 'ETH']).slice(0, 5),
@@ -792,12 +823,18 @@ const initializeVariant = async (): Promise<number> => {
         // Do not start rotation for non-English; show a single personalized message
         return
       } else {
-        // Fallback to base localized copy
+        // Fallback to base localized copy with highlighting
+        const highlightContext = getUserContextForHighlighting(userContext.value, locale.value)
+        const baseHeadline = t('hero.title')
+        const baseSubheadline = t('hero.subtitle')
+        const highlightedHeadline = highlightHeroHeadline(baseHeadline, locale.value, highlightContext)
+        const highlightedSubheadline = highlightHeroSubheadline(baseSubheadline, locale.value, highlightContext)
+        
         personalizedContent.value = {
           ...personalizedContent.value,
           greeting: t('hero.joinBeta'),
-          headline: t('hero.title'),
-          subheadline: t('hero.subtitle'),
+          headline: highlightedHeadline,
+          subheadline: highlightedSubheadline,
           cta: t('cta.createAccount'),
           urgency: personalizedContent.value.urgency || '',
           relevantSymbols: market.localIndices.concat(['BTC', 'ETH']).slice(0, 5),
@@ -833,20 +870,32 @@ const initializeVariant = async (): Promise<number> => {
     
     if (location.country && location.city) {
       // Location detected - apply personalization with dynamic injection
-      headline = currentOption.headline(location.country)
-      subheadline = currentOption.subheadline(location.city, market.localIndices[0] || 'SPY')
+      const rawHeadline = currentOption.headline(location.country)
+      const rawSubheadline = currentOption.subheadline(location.city, market.localIndices[0] || 'SPY')
       
-      console.log(`🌍 Personalization applied:`, {
+      // Apply semantic highlighting to personalized content
+      const highlightContext = getUserContextForHighlighting(userContext.value, locale.value)
+      headline = highlightHeroHeadline(rawHeadline, locale.value, highlightContext)
+      subheadline = highlightHeroSubheadline(rawSubheadline, locale.value, highlightContext)
+      
+      console.log(`🌍 Personalization applied with highlighting:`, {
         country: location.country,
         city: location.city,
         index: market.localIndices[0],
-        option: currentOptionIndex
+        option: currentOptionIndex,
+        rawHeadline,
+        highlightedHeadline: headline,
+        rawSubheadline,
+        highlightedSubheadline: subheadline
       })
     } else {
-      // Location detection failed - NO PERSONALIZATION
-      headline = t('hero.title')
-      subheadline = t('hero.subtitle')
-      console.log('⚠️ No location detected - using neutral base content')
+      // Location detection failed - NO PERSONALIZATION, but still apply highlighting to base content
+      const baseHeadline = t('hero.title')
+      const baseSubheadline = t('hero.subtitle')
+      const highlightContext = getUserContextForHighlighting(userContext.value, locale.value)
+      headline = highlightHeroHeadline(baseHeadline, locale.value, highlightContext)
+      subheadline = highlightHeroSubheadline(baseSubheadline, locale.value, highlightContext)
+      console.log('⚠️ No location detected - using neutral base content with highlighting')
     }
     
     console.log('📝 Generated content:', { headline, subheadline })
@@ -854,11 +903,17 @@ const initializeVariant = async (): Promise<number> => {
     // Only override with market-specific messages for pre-market and after-hours
     // Keep personalized content during market hours
     if (timing.marketSession === 'pre-market') {
-      headline = 'Pre-market is heating up — Get ready for the open'
-      subheadline = 'AI detected overnight moves. See what\'s setting up before markets open.'
+      const rawHeadline = 'Pre-market is heating up — Get ready for the open'
+      const rawSubheadline = 'AI detected overnight moves. See what\'s setting up before markets open.'
+      const highlightContext = getUserContextForHighlighting(userContext.value, locale.value)
+      headline = highlightHeroHeadline(rawHeadline, locale.value, highlightContext)
+      subheadline = highlightHeroSubheadline(rawSubheadline, locale.value, highlightContext)
     } else if (timing.marketSession === 'after-hours') {
-      headline = 'After-hours action continues — AI never stops'
-      subheadline = 'Extended hours present unique opportunities. Let AI catch what others miss.'
+      const rawHeadline = 'After-hours action continues — AI never stops'
+      const rawSubheadline = 'Extended hours present unique opportunities. Let AI catch what others miss.'
+      const highlightContext = getUserContextForHighlighting(userContext.value, locale.value)
+      headline = highlightHeroHeadline(rawHeadline, locale.value, highlightContext)
+      subheadline = highlightHeroSubheadline(rawSubheadline, locale.value, highlightContext)
     }
     // Note: During market hours, we now use the personalized options instead of generic "Markets are LIVE"
     
@@ -900,6 +955,9 @@ const initializeVariant = async (): Promise<number> => {
         timeZoneMessage: `Local time: ${market.marketHours.localTime} ${location.timezone.split('/')[1]}`
       }
     }
+    
+    // Reset generating flag
+    isGenerating = false
   }
 
   // Function to rotate to next personalization option
@@ -1035,7 +1093,14 @@ const initializeVariant = async (): Promise<number> => {
 
   // Initialize personalization system with PostHog integration
   const initializePersonalization = async () => {
+    // Prevent duplicate initialization
+    if (isInitialized) {
+      console.log('⚠️ Personalization already initialized, skipping...')
+      return
+    }
+    
     console.log('🚀 Initializing personalization system...')
+    isInitialized = true
     
     // Set initial loading state
     isLoading.value = true
@@ -1142,16 +1207,68 @@ const initializeVariant = async (): Promise<number> => {
       const country = userContext.value.location.country
       const countryCode = userContext.value.location.countryCode
       
-      // Known markets mapping (easily extendable)
+      // Comprehensive worldwide market coverage
       const MARKET_MAP: Record<string, { name: string, indices: string[], exchange: string, hours: { open: number, close: number } }> = {
+        // North America
+        'US': { name: 'NYSE', indices: ['SPY', 'QQQ', 'DIA'], exchange: 'NYSE', hours: { open: 9.5, close: 16 } },
+        'CA': { name: 'TSX', indices: ['TSX', 'VTI'], exchange: 'TSX', hours: { open: 9.5, close: 16 } },
+        'MX': { name: 'BMV', indices: ['IPC'], exchange: 'BMV', hours: { open: 8.5, close: 15 } },
+        
+        // Europe  
         'SE': { name: 'OMX', indices: ['OMXS30'], exchange: 'OMX', hours: { open: 9, close: 17.5 } },
-        'US': { name: 'NYSE', indices: ['SPY', 'QQQ'], exchange: 'NYSE', hours: { open: 9.5, close: 16 } },
-        'GB': { name: 'LSE', indices: ['FTSE'], exchange: 'LSE', hours: { open: 8, close: 16.5 } },
-        'DE': { name: 'XETRA', indices: ['DAX'], exchange: 'XETRA', hours: { open: 9, close: 17.5 } },
-        'FR': { name: 'EPA', indices: ['CAC'], exchange: 'EPA', hours: { open: 9, close: 17.5 } },
+        'GB': { name: 'LSE', indices: ['FTSE', 'UKX'], exchange: 'LSE', hours: { open: 8, close: 16.5 } },
+        'DE': { name: 'XETRA', indices: ['DAX', 'MDAX'], exchange: 'XETRA', hours: { open: 9, close: 17.5 } },
+        'FR': { name: 'Euronext', indices: ['CAC', 'SBF'], exchange: 'Euronext', hours: { open: 9, close: 17.5 } },
         'ES': { name: 'BME', indices: ['IBEX'], exchange: 'BME', hours: { open: 9, close: 17.5 } },
-        'IT': { name: 'MIB', indices: ['FTSE MIB'], exchange: 'MIB', hours: { open: 9, close: 17.5 } },
-        'NL': { name: 'AEX', indices: ['AEX'], exchange: 'AEX', hours: { open: 9, close: 17.5 } },
+        'IT': { name: 'Borsa Italiana', indices: ['FTSE MIB'], exchange: 'MIB', hours: { open: 9, close: 17.5 } },
+        'NL': { name: 'Euronext', indices: ['AEX'], exchange: 'Euronext', hours: { open: 9, close: 17.5 } },
+        'CH': { name: 'SIX', indices: ['SMI'], exchange: 'SIX', hours: { open: 9, close: 17.5 } },
+        'NO': { name: 'OSE', indices: ['OBX'], exchange: 'OSE', hours: { open: 9, close: 16.5 } },
+        'DK': { name: 'NASDAQ Copenhagen', indices: ['OMXC'], exchange: 'NASDAQ', hours: { open: 9, close: 17 } },
+        'FI': { name: 'NASDAQ Helsinki', indices: ['OMXH'], exchange: 'NASDAQ', hours: { open: 10, close: 18.5 } },
+        'AT': { name: 'Wiener Börse', indices: ['ATX'], exchange: 'WBAG', hours: { open: 9, close: 17.5 } },
+        'BE': { name: 'Euronext', indices: ['BEL20'], exchange: 'Euronext', hours: { open: 9, close: 17.5 } },
+        'PT': { name: 'Euronext', indices: ['PSI'], exchange: 'Euronext', hours: { open: 9, close: 17.5 } },
+        'GR': { name: 'ATHEX', indices: ['ASE'], exchange: 'ATHEX', hours: { open: 10, close: 17.5 } },
+        'PL': { name: 'WSE', indices: ['WIG'], exchange: 'WSE', hours: { open: 9, close: 17 } },
+        'CZ': { name: 'PSE', indices: ['PX'], exchange: 'PSE', hours: { open: 9, close: 17 } },
+        'RU': { name: 'MOEX', indices: ['RTS'], exchange: 'MOEX', hours: { open: 10, close: 18.5 } },
+        
+        // Asia-Pacific
+        'JP': { name: 'TSE', indices: ['N225', 'TOPIX'], exchange: 'TSE', hours: { open: 9, close: 15 } },
+        'CN': { name: 'SSE', indices: ['SHCOMP', 'CSI300'], exchange: 'SSE', hours: { open: 9.5, close: 15 } },
+        'HK': { name: 'HKEX', indices: ['HSI'], exchange: 'HKEX', hours: { open: 9.5, close: 16 } },
+        'KR': { name: 'KRX', indices: ['KOSPI'], exchange: 'KRX', hours: { open: 9, close: 15.5 } },
+        'TW': { name: 'TWSE', indices: ['TAIEX'], exchange: 'TWSE', hours: { open: 9, close: 13.5 } },
+        'SG': { name: 'SGX', indices: ['STI'], exchange: 'SGX', hours: { open: 9, close: 17 } },
+        'MY': { name: 'Bursa', indices: ['KLCI'], exchange: 'Bursa', hours: { open: 9, close: 17 } },
+        'TH': { name: 'SET', indices: ['SET'], exchange: 'SET', hours: { open: 10, close: 16.5 } },
+        'ID': { name: 'IDX', indices: ['JCI'], exchange: 'IDX', hours: { open: 9, close: 16 } },
+        'PH': { name: 'PSE', indices: ['PSEI'], exchange: 'PSE', hours: { open: 9.5, close: 15.5 } },
+        'VN': { name: 'HOSE', indices: ['VNI'], exchange: 'HOSE', hours: { open: 9, close: 15 } },
+        'IN': { name: 'NSE', indices: ['NIFTY', 'SENSEX'], exchange: 'NSE', hours: { open: 9.25, close: 15.5 } },
+        'AU': { name: 'ASX', indices: ['XAO', 'XJO'], exchange: 'ASX', hours: { open: 10, close: 16 } },
+        'NZ': { name: 'NZX', indices: ['NZX50'], exchange: 'NZX', hours: { open: 10, close: 16.5 } },
+        
+        // Middle East & Africa
+        'AE': { name: 'DFM', indices: ['DFMGI'], exchange: 'DFM', hours: { open: 10, close: 15 } },
+        'SA': { name: 'Tadawul', indices: ['TASI'], exchange: 'Tadawul', hours: { open: 10, close: 15 } },
+        'QA': { name: 'QSE', indices: ['QSI'], exchange: 'QSE', hours: { open: 9.5, close: 13 } },
+        'KW': { name: 'Boursa Kuwait', indices: ['KWSE'], exchange: 'Boursa', hours: { open: 9.5, close: 13 } },
+        'IL': { name: 'TASE', indices: ['TA125'], exchange: 'TASE', hours: { open: 9.5, close: 17.25 } },
+        'TR': { name: 'Borsa Istanbul', indices: ['XU100'], exchange: 'BIST', hours: { open: 10, close: 18 } },
+        'ZA': { name: 'JSE', indices: ['JSE'], exchange: 'JSE', hours: { open: 9, close: 17 } },
+        'EG': { name: 'EGX', indices: ['EGX30'], exchange: 'EGX', hours: { open: 10, close: 14.5 } },
+        'MA': { name: 'Casablanca SE', indices: ['MASI'], exchange: 'CSE', hours: { open: 9.5, close: 15.5 } },
+        'NG': { name: 'NSE', indices: ['NSE'], exchange: 'NSE', hours: { open: 10, close: 14.5 } },
+        'KE': { name: 'NSE', indices: ['NSE20'], exchange: 'NSE', hours: { open: 9.5, close: 15 } },
+        
+        // Latin America
+        'BR': { name: 'B3', indices: ['IBOV', 'BVSP'], exchange: 'B3', hours: { open: 10, close: 17 } },
+        'AR': { name: 'BYMA', indices: ['MERV'], exchange: 'BYMA', hours: { open: 11, close: 17 } },
+        'CL': { name: 'BCS', indices: ['IPSA'], exchange: 'BCS', hours: { open: 9.5, close: 16 } },
+        'CO': { name: 'BVC', indices: ['COLCAP'], exchange: 'BVC', hours: { open: 9.5, close: 16 } },
+        'PE': { name: 'BVL', indices: ['IGBVL'], exchange: 'BVL', hours: { open: 9.5, close: 15.5 } },
       }
       
       // Default to US markets if country not found or location detection failed
@@ -1251,21 +1368,39 @@ const initializeVariant = async (): Promise<number> => {
     if (typeof window !== 'undefined' && (window as any).posthog) {
       const posthog = (window as any).posthog
       
-      // Ensure flags are loaded before usage
-      posthog.onFeatureFlags(() => {
-        console.log('🎯 PostHog feature flags loaded')
+      // Use a polling approach instead of callback to avoid multiple triggers
+      let flagCheckAttempts = 0
+      const checkFlags = async () => {
+        flagCheckAttempts++
         
-        // Check if personalization is enabled
+        // Try to get feature flags (they may not be loaded yet)
         const personalizationEnabled = posthog.isFeatureEnabled('marketing-homepage-headline-enable-personalization')
-        console.log('🎛️ Personalization enabled:', personalizationEnabled)
+        const variantFlag = posthog.getFeatureFlag('marketing-homepage-headline-personalization-variant')
         
-        // Smooth transition: wait 2 seconds then show personalized content
-        setTimeout(async () => {
-          isLoading.value = false
-          await generatePersonalizedContent()
-          setLocalizedMarketStatus()
-        }, 2000)
-      })
+        // If we got valid flags or we've tried enough times, proceed
+        if (personalizationEnabled !== undefined || variantFlag !== undefined || flagCheckAttempts >= 20) {
+          console.log('🎯 PostHog feature flags loaded (attempt', flagCheckAttempts, ')')
+          console.log('🎛️ Personalization enabled:', personalizationEnabled !== false)
+          
+          // Smooth transition: wait 2 seconds then show personalized content
+          setTimeout(async () => {
+            isLoading.value = false
+            await generatePersonalizedContent()
+            setLocalizedMarketStatus()
+          }, 2000)
+          
+          return // Stop checking
+        }
+        
+        // If flags aren't ready yet, try again in 200ms
+        if (flagCheckAttempts < 20) {
+          setTimeout(checkFlags, 200)
+        }
+      }
+      
+      // Start checking for flags
+      setTimeout(checkFlags, 500)
+      
     } else {
       // Fallback if PostHog is not available
       console.log('⚠️ PostHog not available, using fallback personalization')
@@ -1275,6 +1410,10 @@ const initializeVariant = async (): Promise<number> => {
       }, 2000)
     }
   }
+
+  // Track initialization state to prevent duplicates
+  let isInitialized = false
+  let featureFlagsCallbackSet = false
 
   // Re-localize after language fully switches
   if (onLanguageSwitched) {
