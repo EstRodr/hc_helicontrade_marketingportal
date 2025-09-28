@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const { userContext, personalizedContent, isLoading, initializePersonalization, cleanup } = usePersonalization()
+const { userContext, personalizedContent, isLoading, initializePersonalization, cleanup, variant, trackHeroInteraction, trackVariantPerformance } = usePersonalization()
 const { t, locale } = useI18n()
 const { getHomepageContent } = useStrapi()
 
@@ -20,6 +20,18 @@ onMounted(() => {
     // Initialize personalization system
     await initializePersonalization()
     loadHomepageContent()
+    
+    // Track hero view after initialization
+    setTimeout(() => {
+      trackHeroInteraction('view', {
+        component_name: 'PersonalizedHero',
+        props: {
+          showLocationBadge: props.showLocationBadge,
+          showMarketStatus: props.showMarketStatus,
+          animate: props.animate
+        }
+      })
+    }, 1000)
   })
 })
 
@@ -87,9 +99,18 @@ watch(() => userContext.value.location.city, (newCity) => {
 
 // Handle CTA click with context
 const handleCtaClick = () => {
+  // Track the CTA click with PostHog
+  trackHeroInteraction('cta_click', {
+    cta_text: personalizedContent.value.cta,
+    button_position: 'hero_primary',
+    page_url: typeof window !== 'undefined' ? window.location.href : '',
+    referrer: typeof document !== 'undefined' ? document.referrer : ''
+  })
+  
   emit('ctaClick', {
     userContext: userContext.value,
-    personalizedContent: personalizedContent.value
+    personalizedContent: personalizedContent.value,
+    variant: variant.value
   })
 }
 
@@ -119,130 +140,21 @@ const dynamicSubline = computed(() => {
   return formatSubheadlineText(subheadline)
 })
 
-// Helper function to format subheadline text with uniform styling (blue for action, purple for entities)
-const formatSubheadlineText = (text: string): string => {
-  if (!text) return ''
-  let out = text
-  const esc = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-  const cc = (userContext.value.location.countryCode || '').toUpperCase()
-  let localizedCountry = ''
-  try { localizedCountry = cc ? new Intl.DisplayNames([locale.value], { type: 'region' }).of(cc) || '' : '' } catch (_) {}
-  const primaryIndex = userContext.value.market.localIndices[0] || ''
-
-  const lang = (locale.value || 'en').split('-')[0]
-  const maps: Record<string, { blue: (RegExp|string)[], purple: (RegExp|string)[] }> = {
-    en: {
-      blue: [
-        /\bmarket research\b/i,
-        /\bAI\b/,
-        /\b24\/7\b/,
-        /\breal[-\s]?time\b/i,
-        /\bturn\b|\btransform\b|\bconvert\b/i,
-        /\bsmarter decisions\b/i,
-        /\bcustom alerts?\b/i
-      ],
-      purple: [/\bstocks\b/i, /\bcrypto\b/i, /\bindices\b/i, /\bcommodities\b/i]
-    },
-    fr: {
-      blue: [
-        /\bRecherche de Marché\b|\bRecherche de marché\b/i,
-        /\bIA\b/,
-        /\btemps réel\b/i,
-        /\btransforme(?:z|r)?\b/i,
-        /\bdécisions? plus intelligentes\b/i,
-        /\balertes? personnalisées\b/i
-      ],
-      purple: [/\bactions\b/i, /\bcrypto\b/i, /\bindices\b/i, /\bmatières premières\b/i]
-    },
-    ar: {
-      blue: [
-        /أبحاث السوق/g,
-        /الذكاء الاصطناعي/g,
-        /الوقت الحقيقي/g,
-        /حوِّل|تحويل|حوّل|حوِّل|قم بتحويل/g,
-        /قرارات(?:\s)?أكثر ذكاءً|قرارات أذكى/g,
-        /تنبيهات(?:\s)?مخصصة/g
-      ],
-      purple: [/الأسهم/g, /العملات المشفرة/g, /المؤشرات/g, /السلع/g]
-    }
-  }
-
-  const apply = (s: string, patterns: (RegExp|string)[], cls: string) => {
-    let r = s
-    for (const p of patterns) {
-      const re = p instanceof RegExp ? p : new RegExp(`\\b${esc(p)}\\b`, 'gi')
-      r = r.replace(re, `<span class="${cls}">$&</span>`)
-    }
-    return r
-  }
-
-  const m = maps[lang] || maps.en
-  out = apply(out, m.blue, 'text-blue-600 dark:text-blue-400')
-  out = apply(out, m.purple, 'text-purple-600 dark:text-purple-400')
-
-  if (localizedCountry) {
-    out = out.replace(new RegExp(esc(localizedCountry), 'g'), `<span class="text-purple-600 dark:text-purple-400">${localizedCountry}</span>`)
-  }
-  if (primaryIndex) {
-    out = out.replace(new RegExp(esc(String(primaryIndex)), 'g'), `<span class="text-purple-600 dark:text-purple-400">${primaryIndex}</span>`)
-  }
-  return out
-}
+// Import the unified highlighting system
+import { highlightHeroHeadline, highlightHeroSubheadline, getUserContextForHighlighting } from '~/utils/textHighlighting'
 
 // Helper function to format headline text with beautiful styling
 const formatHeadlineText = (text: string): string => {
   if (!text) return ''
-  let out = text
-  const esc = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-  const cc = (userContext.value.location.countryCode || '').toUpperCase()
-  let localizedCountry = ''
-  try { localizedCountry = cc ? new Intl.DisplayNames([locale.value], { type: 'region' }).of(cc) || '' : '' } catch (_) {}
-  const primaryIndex = userContext.value.market.localIndices[0] || ''
-  const lang = (locale.value || 'en').split('-')[0]
+  const highlightContext = getUserContextForHighlighting(userContext.value, locale.value)
+  return highlightHeroHeadline(text, locale.value, highlightContext)
+}
 
-  // Special-case: split core noun phrases per locale for precise coloring
-  // EN: Market (purple) + Research (blue)
-  out = out.replace(/\bMarket\s+Research\b/g, '<span class="text-purple-600 dark:text-purple-400">Market</span> <span class="text-blue-600 dark:text-blue-400">Research</span>')
-  // FR: Recherche (blue) de Marché (purple)
-  out = out.replace(/\bRecherche\s+de\s+(Marché|marché)\b/g, '<span class="text-blue-600 dark:text-blue-400">Recherche</span> de <span class="text-purple-600 dark:text-purple-400">$1</span>')
-  // AR: أبحاث (blue) السوق (purple)
-  out = out.replace(/أبحاث\s+السوق/g, '<span class="text-blue-600 dark:text-blue-400">أبحاث</span> <span class="text-purple-600 dark:text-purple-400">السوق</span>')
-
-  const maps: Record<string, { blue: (RegExp|string)[], purple: (RegExp|string)[] }> = {
-    en: {
-      blue: [/\bGlobal insight\b/i, /\bResearch\b/],
-      purple: [/\bTrading Insights\b/]
-    },
-    fr: {
-      blue: [/\bVision globale\b/i, /\bRecherche\b/],
-      purple: [/\bAnalyses? de Trading\b/, /\bMarché\b/i]
-    },
-    ar: {
-      blue: [/رؤى عالمية/g, /\bأبحاث\b/g],
-      purple: [/تحليلات التداول/g, /\bالسوق\b/g]
-    }
-  }
-
-  const apply = (s: string, patterns: (RegExp|string)[], cls: string) => {
-    let r = s
-    for (const p of patterns) {
-      const re = p instanceof RegExp ? p : new RegExp(`\\b${esc(p)}\\b`, 'gi')
-      r = r.replace(re, `<span class="${cls}">$&</span>`)
-    }
-    return r
-  }
-
-  const m = maps[lang] || maps.en
-  out = apply(out, m.blue, 'text-blue-600 dark:text-blue-400')
-  out = apply(out, m.purple, 'text-purple-600 dark:text-purple-400')
-
-  if (localizedCountry) {
-    out = out.replace(new RegExp(esc(localizedCountry), 'g'), `<span class="text-purple-600 dark:text-purple-400">${localizedCountry}</span>`)
-  }
-  if (primaryIndex) {
-    out = out.replace(new RegExp(esc(String(primaryIndex)), 'g'), `<span class="text-purple-600 dark:text-purple-400">${primaryIndex}</span>`)
-  }
-  return out
+// Helper function to format subheadline text with uniform styling
+const formatSubheadlineText = (text: string): string => {
+  if (!text) return ''
+  const highlightContext = getUserContextForHighlighting(userContext.value, locale.value)
+  return highlightHeroSubheadline(text, locale.value, highlightContext)
 }
 
 // Get market status styling

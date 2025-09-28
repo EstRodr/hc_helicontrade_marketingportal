@@ -293,31 +293,48 @@ export const usePersonalization = () => {
     }
   }
 
+  // Helper function to convert country names to adjectives
+  const getCountryAdjective = (country: string): string => {
+    const countryAdjectiveMap: Record<string, string> = {
+      'Sweden': 'Swedish',
+      'United States': 'US',
+      'United Kingdom': 'UK', 
+      'Germany': 'German',
+      'France': 'French',
+      'Japan': 'Japanese',
+      'Canada': 'Canadian',
+      'Australia': 'Australian',
+      'India': 'Indian',
+      'Brazil': 'Brazilian'
+    }
+    return countryAdjectiveMap[country] || country
+  }
+
   // Rotating personalization message options
   const personalizationOptions = [
     {
       // Option A (empowerment frame)
-      headline: (country: string) => `Global insight, built for ${country} markets`,
+      headline: (country: string) => `Global insight, built for ${getCountryAdjective(country)} markets`,
       subheadline: (city: string, index: string) => `From ${city} to Wall Street, turn real‑time moves in ${index} into smarter decisions.`
     },
     {
       // Option B (momentum/dynamism)
-      headline: (country: string) => `AI eyes on ${country} markets — opportunity never sleeps`,
+      headline: (country: string) => `AI eyes on ${getCountryAdjective(country)} markets — opportunity never sleeps`,
       subheadline: (city: string) => `From ${city} to Wall Street, track every market pulse, 24/7.`
     },
     {
       // Option C (user‑centric)
-      headline: (country: string) => `Your edge in ${country}'s markets`,
+      headline: (country: string) => `Your edge in ${getCountryAdjective(country)} markets`,
       subheadline: (city: string, index: string) => `With AI scanning ${index} day and night, you focus on making confident moves.`
     },
     {
       // Option D (clean & modern)
-      headline: (country: string) => `${country} markets, redefined by intelligence`,
+      headline: (country: string) => `${getCountryAdjective(country)} markets, redefined by intelligence`,
       subheadline: (city: string, index: string) => `From ${city} to Wall Street, stay connected to every swing in ${index}.`
     },
     {
       // Option E (short, punchy, younger feel)
-      headline: (country: string) => `Trade ${country} markets with global AI power`,
+      headline: (country: string) => `Trade ${getCountryAdjective(country)} markets with global AI power`,
       subheadline: (city: string, index: string) => `From ${city} to Wall Street, our AI keeps an eye on ${index} so you don't miss a beat.`
     }
   ]
@@ -395,16 +412,36 @@ export const usePersonalization = () => {
         console.log('🎯 PostHog A/B Test - Variant:', variantValue, '→ Option:', optionIndex)
         
         // Track the variant assignment with detailed context
-        posthog.capture('personalization_variant_assigned', {
-          variant: optionIndex,
+        const eventData = {
+          variant_id: optionIndex,
           variant_key: variantValue,
           flag_name: flagName,
-          source: 'posthog',
+          source: 'posthog_ab_test',
           enabled: true,
           country: userContext.value.location.country || 'Sweden',
+          country_code: userContext.value.location.countryCode || 'SE',
+          city: userContext.value.location.city || 'Stockholm',
           market_session: userContext.value.timing.marketSession,
+          time_of_day: userContext.value.timing.timeOfDay,
+          timezone: userContext.value.location.timezone || 'Europe/Stockholm',
+          primary_index: userContext.value.market.localIndices[0] || 'OMXS30',
           headline: personalizationOptions[optionIndex].headline(userContext.value.location.country || 'Sweden'),
+          visit_count: userContext.value.preferences.visitCount,
+          interaction_level: userContext.value.preferences.interactionLevel,
           timestamp: new Date().toISOString()
+        }
+        
+        // Capture the main event
+        posthog.capture('personalization_variant_assigned', eventData)
+        
+        // Also set user properties for better cohort analysis
+        posthog.setPersonProperties({
+          'personalization_variant': optionIndex,
+          'personalization_enabled': true,
+          'last_variant_assignment': new Date().toISOString(),
+          'market_primary_index': eventData.primary_index,
+          'user_country': eventData.country,
+          'user_city': eventData.city
         })
         
         return optionIndex
@@ -445,10 +482,17 @@ export const usePersonalization = () => {
     return weekNumber % personalizationOptions.length
   }
   
-  // Make currentOptionIndex reactive to config changes
-  const currentOptionIndex = computed(() => getPersonalizationOptionIndex())
+// Make variant reactive and available to components
+const variant = ref<number>(0)
 
-  // Localized country helpers (must be defined before generatePersonalizedContent)
+// Initialize variant with PostHog A/B test result
+const initializeVariant = (): number => {
+  const optionIndex = getPersonalizationOptionIndex()
+  variant.value = optionIndex
+  return optionIndex
+}
+
+// Localized country helpers (must be defined before generatePersonalizedContent)
   const getCountryCode = (): string => {
     const cc = (userContext.value.location.countryCode || '').toUpperCase()
     if (cc) return cc
@@ -695,7 +739,8 @@ export const usePersonalization = () => {
     }
 
     // Get rotating personalization option (English-only variants)
-    const currentOption = personalizationOptions[currentOptionIndex.value]
+    const currentOptionIndex = initializeVariant()
+    const currentOption = personalizationOptions[currentOptionIndex]
     
     console.log('🎯 Personalization Debug:', {
       optionIndex: currentOptionIndex.value,
@@ -1127,14 +1172,71 @@ export const usePersonalization = () => {
     }
   }
   
+  // Hero interaction tracking for conversion analysis
+  const trackHeroInteraction = (action: 'view' | 'click' | 'cta_click', additionalData: any = {}) => {
+    if (typeof window !== 'undefined' && (window as any).posthog) {
+      const posthog = (window as any).posthog
+      
+      const eventData = {
+        action,
+        variant_id: variant.value,
+        headline: personalizedContent.value.headline,
+        subheadline: personalizedContent.value.subheadline,
+        country: userContext.value.location.country,
+        market_session: userContext.value.timing.marketSession,
+        time_of_day: userContext.value.timing.timeOfDay,
+        visit_count: userContext.value.preferences.visitCount,
+        interaction_level: userContext.value.preferences.interactionLevel,
+        timestamp: new Date().toISOString(),
+        ...additionalData
+      }
+      
+      // Track the interaction event
+      posthog.capture(`hero_${action}`, eventData)
+      
+      // For CTA clicks, also track conversion funnel progress
+      if (action === 'cta_click') {
+        posthog.capture('conversion_funnel_hero_cta', {
+          ...eventData,
+          funnel_step: 'hero_cta_click',
+          conversion_source: 'personalized_hero'
+        })
+      }
+      
+      console.log('📊 Hero interaction tracked:', action, eventData)
+    }
+  }
+  
+  // Track hero variant performance metrics
+  const trackVariantPerformance = (metrics: {
+    time_to_interaction?: number
+    scroll_depth?: number
+    engagement_score?: number
+  }) => {
+    if (typeof window !== 'undefined' && (window as any).posthog) {
+      const posthog = (window as any).posthog
+      
+      posthog.capture('hero_variant_performance', {
+        variant_id: variant.value,
+        country: userContext.value.location.country,
+        market_session: userContext.value.timing.marketSession,
+        timestamp: new Date().toISOString(),
+        ...metrics
+      })
+    }
+  }
+  
   // Expose reactive state and methods
   return {
     userContext: readonly(userContext),
     personalizedContent: readonly(personalizedContent),
     isLoading: readonly(isLoading),
+    variant: readonly(variant),
     initializePersonalization,
     generatePersonalizedContent,
     rotatePersonalizationOption,
+    trackHeroInteraction,
+    trackVariantPerformance,
     cleanup
   }
 }
