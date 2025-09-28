@@ -1,3 +1,6 @@
+import { ref, computed, readonly } from 'vue'
+import { useRuntimeConfig, useI18n } from '#imports'
+
 interface UserContext {
   location: {
     country: string
@@ -23,7 +26,7 @@ interface UserContext {
     timeOfDay: 'morning' | 'afternoon' | 'evening' | 'night'
     dayOfWeek: string
     isWeekend: boolean
-    marketSession: 'pre-market' | 'market' | 'after-hours' | 'closed'
+    marketSession: 'pre-market' | 'market' | 'after-hours' | 'closed' | 'market-open' | 'market-closed'
   }
   preferences: {
     visitCount: number
@@ -67,8 +70,15 @@ const locationMarketMap: Record<string, {
 }
 
 export const usePersonalization = () => {
+  const { t, locale, getLocaleMessage, onLanguageSwitched, tm } = useI18n() as any
   // Track intervals for cleanup
   let updateInterval: ReturnType<typeof setInterval> | null = null
+  // Retry timer for non-English variant loading
+  let nonEnRetryTimer: ReturnType<typeof setTimeout> | null = null
+  // Limited retry counter for loading localized hero variants
+  const nonEnVariantRetryCount = ref(0)
+  // Rotation index for non-English heroVariants
+  const nonEnVariantIndex = ref(0)
   
   const userContext = ref<UserContext>({
     location: {
@@ -412,12 +422,7 @@ export const usePersonalization = () => {
       return parseInt(runtimeOption) % personalizationOptions.length
     }
     
-    // Priority 4: Environment variable fallback
-    const envOption = process.env.PERSONALIZATION_OPTION
-    if (envOption && !isNaN(parseInt(envOption))) {
-      console.log('🌍 Using env option:', envOption)
-      return parseInt(envOption) % personalizationOptions.length
-    }
+    // Priority 4: Environment variable fallback removed (TS client-side)
     
     // Priority 5: Intelligent default based on user context
     const { location, timing } = userContext.value
@@ -443,6 +448,33 @@ export const usePersonalization = () => {
   // Make currentOptionIndex reactive to config changes
   const currentOptionIndex = computed(() => getPersonalizationOptionIndex())
 
+  // Localized country helpers (must be defined before generatePersonalizedContent)
+  const getCountryCode = (): string => {
+    const cc = (userContext.value.location.countryCode || '').toUpperCase()
+    if (cc) return cc
+    const name = userContext.value.location.country
+    const map: Record<string, string> = {
+      'Sweden': 'SE',
+      'United States': 'US',
+      'United Kingdom': 'GB',
+      'Germany': 'DE',
+      'France': 'FR'
+    }
+    return map[name] || ''
+  }
+
+  const getLocalizedCountryName = (): string => {
+    try {
+      const code = getCountryCode()
+      if (code) {
+        const dn = new Intl.DisplayNames([locale.value], { type: 'region' }) as any
+        const name = dn.of(code)
+        if (typeof name === 'string') return name
+      }
+    } catch (e) {}
+    return userContext.value.location.country || 'global'
+  }
+
   // Generate personalized content based on context
   const generatePersonalizedContent = () => {
     const { location, timing, market, preferences } = userContext.value
@@ -454,10 +486,10 @@ export const usePersonalization = () => {
     if (!ENABLE_PERSONALIZATION) {
       // Use default non-personalized content
       personalizedContent.value = {
-        greeting: 'Welcome',
-        headline: 'AI finds the opportunities, you make the decisions',
-        subheadline: 'Sleep better, trade smarter with 24/7 AI market monitoring.',
-        cta: 'Get started for free',
+        greeting: t('hero.joinBeta'),
+        headline: t('hero.title'),
+        subheadline: t('hero.subtitle'),
+        cta: t('cta.createAccount'),
         urgency: '',
         marketStatus: '',
         relevantSymbols: ['AAPL', 'TSLA', 'BTC'],
@@ -470,10 +502,10 @@ export const usePersonalization = () => {
     // If smooth transition is enabled, start with default content
     if (ENABLE_SMOOTH_TRANSITION && isLoading.value) {
       personalizedContent.value = {
-        greeting: 'Welcome',
-        headline: 'AI finds the opportunities, you make the decisions',
-        subheadline: 'Sleep better, trade smarter with 24/7 AI market monitoring.',
-        cta: 'Get started for free',
+        greeting: t('hero.joinBeta'),
+        headline: t('hero.title'),
+        subheadline: t('hero.subtitle'),
+        cta: t('cta.createAccount'),
         urgency: '',
         marketStatus: '',
         relevantSymbols: ['AAPL', 'TSLA', 'BTC'],
@@ -497,12 +529,173 @@ export const usePersonalization = () => {
     if (location.city) {
       greeting += ` from ${location.city}`
     }
-    
-    // Get rotating personalization option
-    const currentOption = personalizationOptions[currentOptionIndex.value]
+
+    // Prepare dynamic placeholders
     const country = location.country || 'global'
     const city = location.city || 'your city'
     const primaryIndex = market.localIndices[0] || 'SPY'
+
+    // If locale is not English, use localized rotating variants if available
+    if (locale.value !== 'en') {
+      const localizedCountry = getLocalizedCountryName()
+      console.log('🌐 i18n non-EN branch start', { locale: locale.value })
+      // Prefer plain JSON from getLocaleMessage (avoids Proxy/value wrappers). Fallback to tm().
+      let variants: any[] = []
+      const messages = getLocaleMessage ? (getLocaleMessage(locale.value) as any) : null
+      if (messages && (Array.isArray(messages.heroVariants) || typeof messages.heroVariants === 'object')) {
+        try {
+          // Normalize to array (handles object-with-numeric-keys)
+          const raw = Array.isArray(messages.heroVariants)
+            ? messages.heroVariants
+            : Object.values(messages.heroVariants)
+          // Deep-clone to strip reactivity/proxies
+          variants = JSON.parse(JSON.stringify(raw))
+        } catch (_) {
+          variants = Array.isArray(messages.heroVariants)
+            ? messages.heroVariants
+            : Object.values(messages.heroVariants)
+        }
+        console.log('📦 getLocaleMessage(heroVariants) length:', variants.length)
+      }
+      if (!Array.isArray(variants) || variants.length === 0) {
+        try {
+          if (tm && typeof tm === 'function') {
+            const v = tm('heroVariants')
+            if (Array.isArray(v)) {
+              try {
+                variants = JSON.parse(JSON.stringify(v))
+              } catch (_) {
+                variants = v as any[]
+              }
+              console.log('🧩 tm("heroVariants") length:', variants.length)
+            }
+          }
+        } catch (e) { console.warn('tm("heroVariants") failed', e) }
+      }
+      // If variants aren't ready yet (race with i18n HMR/load), retry a few times before falling back
+      if ((!variants || variants.length === 0) && nonEnVariantRetryCount.value < 8) {
+        nonEnVariantRetryCount.value += 1
+        if (!nonEnRetryTimer) {
+          nonEnRetryTimer = setTimeout(() => {
+            nonEnRetryTimer = null
+            generatePersonalizedContent()
+          }, 350)
+        }
+        // Preserve existing personalized content until variants appear
+        return
+      }
+      if (Array.isArray(variants) && variants.length > 0) {
+        if (nonEnRetryTimer) {
+          clearTimeout(nonEnRetryTimer)
+          nonEnRetryTimer = null
+        }
+        const idx = nonEnVariantIndex.value % variants.length
+        const v = variants[idx]
+        console.log('✅ Using localized variant', { idx, total: variants.length, v })
+        // Try resolving with i18n path first (avoids proxies/wrappers)
+        const headKey = `heroVariants.${idx}.headline`
+        const subKey = `heroVariants.${idx}.subheadline`
+        let tH: any = ''
+        let tS: any = ''
+        try { tH = t(headKey, { country: localizedCountry, city, index: primaryIndex }) } catch (_) {}
+        try { tS = t(subKey, { country: localizedCountry, city, index: primaryIndex }) } catch (_) {}
+        const isValidTH = typeof tH === 'string' && !tH.startsWith('heroVariants.')
+        const isValidTS = typeof tS === 'string' && !tS.startsWith('heroVariants.')
+        if (isValidTH && isValidTS) {
+          // Keep plain text; UI formatter applies highlights uniformly across locales
+          personalizedContent.value = {
+            ...personalizedContent.value,
+            greeting,
+            headline: `${tH}`,
+            subheadline: `${tS}`,
+            cta: t('cta.createAccount'),
+            urgency: personalizedContent.value.urgency || '',
+            relevantSymbols: market.localIndices.concat(['BTC', 'ETH']).slice(0, 5),
+            localizedCurrency: getCurrencySymbol(location.currency),
+            timeZoneMessage: `Local time: ${market.marketHours.localTime} ${location.timezone.split('/')[1]}`
+          }
+          // Do not auto-start rotation for non-English; show a single personalized message
+          return
+        }
+        // Extract strings robustly (walk nested structures and pick first string)
+        const pickString = (val: any): string => {
+          if (typeof val === 'string') return val
+          if (val == null) return ''
+          if (Array.isArray(val)) {
+            for (const item of val) {
+              const s = pickString(item)
+              if (s) return s
+            }
+            return ''
+          }
+          if (typeof val === 'object') {
+            const preferred = ['value', 'text', 'message', 'label', 'content']
+            for (const k of preferred) {
+              if (typeof (val as any)[k] === 'string') return (val as any)[k]
+            }
+            for (const k in val) {
+              const s = pickString((val as any)[k])
+              if (s) return s
+            }
+          }
+          return ''
+        }
+        const rawH = pickString(v.headline)
+        const baseH = (rawH && rawH.trim().length > 0) ? rawH : (t('hero.title') as string)
+        const h = baseH
+          .replace('{country}', localizedCountry)
+          .replace('{city}', city)
+          .replace('{index}', primaryIndex)
+        const rawS = pickString(v.subheadline)
+        const baseS = (rawS && rawS.trim().length > 0) ? rawS : (t('hero.subtitle') as string)
+        const s = baseS
+          .replace('{country}', localizedCountry)
+          .replace('{city}', city)
+          .replace('{index}', primaryIndex)
+        // If variant fields are missing, fallback safely to base localized copy
+        const finalHeadline = h && h.trim().length > 0 ? h : t('hero.title')
+        const finalSub = s && s.trim().length > 0 ? s : t('hero.subtitle')
+        console.log('📝 Non-EN final copy', { finalHeadline, finalSub })
+        // Keep plain text; UI formatter applies highlights uniformly across locales
+        personalizedContent.value = {
+          ...personalizedContent.value,
+          greeting,
+          headline: `${finalHeadline}`,
+          subheadline: `${finalSub}`,
+          cta: t('cta.createAccount'),
+          urgency: personalizedContent.value.urgency || '',
+          relevantSymbols: market.localIndices.concat(['BTC', 'ETH']).slice(0, 5),
+          localizedCurrency: getCurrencySymbol(location.currency),
+          timeZoneMessage: `Local time: ${market.marketHours.localTime} ${location.timezone.split('/')[1]}`
+        }
+        // Do not start rotation for non-English; show a single personalized message
+        return
+      } else {
+        // Fallback to base localized copy
+        personalizedContent.value = {
+          ...personalizedContent.value,
+          greeting: t('hero.joinBeta'),
+          headline: t('hero.title'),
+          subheadline: t('hero.subtitle'),
+          cta: t('cta.createAccount'),
+          urgency: personalizedContent.value.urgency || '',
+          relevantSymbols: market.localIndices.concat(['BTC', 'ETH']).slice(0, 5),
+          localizedCurrency: getCurrencySymbol(location.currency),
+          timeZoneMessage: `Local time: ${market.marketHours.localTime} ${location.timezone.split('/')[1]}`
+        }
+        // If variants not yet loaded, retry shortly
+        if (nonEnVariantRetryCount.value < 5) {
+          nonEnVariantRetryCount.value += 1
+          setTimeout(() => {
+            generatePersonalizedContent()
+          }, 600)
+        }
+        return
+      }
+    }
+
+    // Get rotating personalization option (English-only variants)
+    const currentOption = personalizationOptions[currentOptionIndex.value]
     
     console.log('🎯 Personalization Debug:', {
       optionIndex: currentOptionIndex.value,
@@ -554,16 +747,19 @@ export const usePersonalization = () => {
       urgency = 'Markets are moving now'
     }
 
-    personalizedContent.value = {
-      greeting,
-      headline,
-      subheadline,
-      cta: ctas[preferences.interactionLevel],
-      urgency,
-      marketStatus,
-      relevantSymbols: market.localIndices.concat(['BTC', 'ETH']).slice(0, 5),
-      localizedCurrency: getCurrencySymbol(location.currency),
-      timeZoneMessage: `Local time: ${market.marketHours.localTime} ${location.timezone.split('/')[1]}`
+    const prev3 = personalizedContent.value
+    if (prev3.headline !== headline || prev3.subheadline !== subheadline) {
+      personalizedContent.value = {
+        ...prev3,
+        greeting,
+        headline,
+        subheadline,
+        cta: ctas[preferences.interactionLevel],
+        urgency,
+        relevantSymbols: market.localIndices.concat(['BTC', 'ETH']).slice(0, 5),
+        localizedCurrency: getCurrencySymbol(location.currency),
+        timeZoneMessage: `Local time: ${market.marketHours.localTime} ${location.timezone.split('/')[1]}`
+      }
     }
   }
 
@@ -606,6 +802,96 @@ export const usePersonalization = () => {
       AUD: 'AUD', CAD: 'CAD', INR: 'INR', BRL: 'BRL', SEK: 'SEK'
     }
     return names[currencyCode] || currencyCode
+  }
+
+  // Helper: get market schedule by country
+  const getMarketSchedule = (country: string) => {
+    // Defaults
+    let marketOpen = 9
+    let marketClose = 17.5
+    let marketName = 'OMX'
+    if (country === 'Sweden') {
+      marketOpen = 9
+      marketClose = 17.5
+      marketName = 'OMX'
+    } else if (country === 'United States') {
+      marketOpen = 9.5
+      marketClose = 16
+      marketName = 'NYSE'
+    } else if (country === 'United Kingdom') {
+      marketOpen = 8
+      marketClose = 16.5
+      marketName = 'LSE'
+    } else if (country === 'Germany') {
+      marketOpen = 9
+      marketClose = 17.5
+      marketName = 'XETRA'
+    } else if (country === 'France') {
+      marketOpen = 9
+      marketClose = 17.5
+      marketName = 'EPA'
+    }
+    return { marketOpen, marketClose, marketName }
+  }
+
+  // Helper: format time according to locale
+  const formatHHmm = (hoursFloat: number) => {
+    const h = Math.floor(hoursFloat)
+    const m = Math.round((hoursFloat % 1) * 60)
+    if (locale.value === 'en') {
+      const date = new Date()
+      date.setHours(h, m, 0, 0)
+      return date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })
+    } else {
+      return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`
+    }
+  }
+
+  // Helper: localize and set market status text
+  const setLocalizedMarketStatus = () => {
+    const country = userContext.value.location.country || 'Sweden'
+    const { marketOpen, marketClose, marketName } = getMarketSchedule(country)
+    const session = userContext.value.timing.marketSession
+    const isOpen = userContext.value.market.marketHours.isOpen
+    const weekend = userContext.value.timing.isWeekend || session === 'market-closed'
+    let msg = ''
+    if (weekend) {
+      msg = t('marketStatus.closed', { market: marketName }) as string
+    } else if (isOpen) {
+      const closeTime = formatHHmm(marketClose)
+      msg = t('marketStatus.open', { market: marketName, time: closeTime }) as string
+    } else if (session === 'pre-market') {
+      const openTime = formatHHmm(marketOpen)
+      msg = t('marketStatus.preMarket', { market: marketName, time: openTime }) as string
+    } else if (session === 'after-hours') {
+      msg = t('marketStatus.afterHours', { market: marketName }) as string
+    } else {
+      msg = t('marketStatus.closed', { market: marketName }) as string
+    }
+
+    // Only assign if resolved; otherwise keep previous and retry shortly
+    if (typeof msg === 'string' && msg.startsWith('marketStatus.')) {
+      // Build safe English fallback so the badge doesn't disappear on first paint
+      let fallback = ''
+      if (isOpen) {
+        const closeTime = formatHHmm(marketClose)
+        fallback = `${marketName} is open • Live until ${closeTime}`
+      } else if (session === 'pre-market') {
+        const openTime = formatHHmm(marketOpen)
+        fallback = `${marketName} opens at ${openTime}`
+      } else if (session === 'after-hours') {
+        fallback = `${marketName} closed • After-hours trading`
+      } else {
+        fallback = `${marketName} closed`
+      }
+      // Keep previous if present, otherwise use fallback
+      if (!personalizedContent.value.marketStatus) {
+        personalizedContent.value.marketStatus = fallback
+      }
+      setTimeout(() => setLocalizedMarketStatus(), 250)
+      return
+    }
+    personalizedContent.value.marketStatus = msg
   }
 
   // Initialize personalization system with PostHog integration
@@ -706,21 +992,27 @@ export const usePersonalization = () => {
       }
       
       // Determine market session
-      const currentHour = hour + (now.getMinutes() / 60) // Include minutes for precision
-      
-      if (currentHour >= marketOpen && currentHour < marketClose) {
-        userContext.value.timing.marketSession = 'market-open'
-        userContext.value.market.marketHours.isOpen = true
-      } else if (currentHour >= (marketOpen - 3) && currentHour < marketOpen) {
-        userContext.value.timing.marketSession = 'pre-market'
-        userContext.value.market.marketHours.isOpen = false
-      } else if (currentHour >= marketClose && currentHour < (marketClose + 3)) {
-        userContext.value.timing.marketSession = 'after-hours'
-        userContext.value.market.marketHours.isOpen = false
-      } else {
-        userContext.value.timing.marketSession = 'market-closed'
-        userContext.value.market.marketHours.isOpen = false
-      }
+  const currentHour = hour + (now.getMinutes() / 60) // Include minutes for precision
+  const day = now.getDay()
+  const isWeekend = day === 0 || day === 6
+  userContext.value.timing.isWeekend = isWeekend
+
+  if (isWeekend) {
+    userContext.value.timing.marketSession = 'market-closed'
+    userContext.value.market.marketHours.isOpen = false
+  } else if (currentHour >= marketOpen && currentHour < marketClose) {
+    userContext.value.timing.marketSession = 'market-open'
+    userContext.value.market.marketHours.isOpen = true
+  } else if (currentHour >= (marketOpen - 3) && currentHour < marketOpen) {
+    userContext.value.timing.marketSession = 'pre-market'
+    userContext.value.market.marketHours.isOpen = false
+  } else if (currentHour >= marketClose && currentHour < (marketClose + 3)) {
+    userContext.value.timing.marketSession = 'after-hours'
+    userContext.value.market.marketHours.isOpen = false
+  } else {
+    userContext.value.timing.marketSession = 'market-closed'
+    userContext.value.market.marketHours.isOpen = false
+  }
       
       // Generate market status message with proper time formatting
       console.log('⏰ Market timing debug:', {
@@ -732,25 +1024,21 @@ export const usePersonalization = () => {
         session: userContext.value.timing.marketSession
       })
       
-      if (userContext.value.market.marketHours.isOpen) {
-        const closeHour = Math.floor(marketClose)
-        const closeMinutes = Math.round((marketClose % 1) * 60)
-        const closeTime = closeHour + ':' + String(closeMinutes).padStart(2, '0')
-        personalizedContent.value.marketStatus = `${marketName} is open • Live until ${closeTime} PM`
-        console.log('✅ Market open status:', personalizedContent.value.marketStatus)
-      } else if (userContext.value.timing.marketSession === 'pre-market') {
-        const openHour = Math.floor(marketOpen)
-        const openMinutes = Math.round((marketOpen % 1) * 60)
-        const openTime = openHour + ':' + String(openMinutes).padStart(2, '0')
-        personalizedContent.value.marketStatus = `${marketName} opens at ${openTime} AM`
-        console.log('🌅 Pre-market status:', personalizedContent.value.marketStatus)
-      } else if (userContext.value.timing.marketSession === 'after-hours') {
-        personalizedContent.value.marketStatus = `${marketName} closed • After-hours trading`
-        console.log('🌙 After-hours status:', personalizedContent.value.marketStatus)
-      } else {
-        personalizedContent.value.marketStatus = `${marketName} closed`
-        console.log('🔒 Market closed status:', personalizedContent.value.marketStatus)
+      // Helper: build localized time string
+      const formatHHmm = (hoursFloat: number) => {
+        const h = Math.floor(hoursFloat)
+        const m = Math.round((hoursFloat % 1) * 60)
+        // Use 24h for non-English locales; 12h for English to keep existing style
+        if (locale.value === 'en') {
+          const date = new Date()
+          date.setHours(h, m, 0, 0)
+          return date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })
+        } else {
+          return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`
+        }
       }
+
+      setLocalizedMarketStatus()
       
       console.log('📊 Market status generated:', {
         country,
@@ -767,7 +1055,18 @@ export const usePersonalization = () => {
       console.warn('Error initializing user context:', error)
     }
     
-    // Check if PostHog is available and wait for feature flags
+    // If non-English, finalize immediately to avoid flicker and English variants
+    if (locale.value !== 'en') {
+      // Show base localized headline first, then personalize after 3s
+      setLocalizedMarketStatus()
+      setTimeout(() => {
+        isLoading.value = false
+        generatePersonalizedContent()
+      }, 3000)
+      return
+    }
+
+    // Check if PostHog is available and wait for feature flags (English only)
     if (typeof window !== 'undefined' && (window as any).posthog) {
       const posthog = (window as any).posthog
       
@@ -783,6 +1082,7 @@ export const usePersonalization = () => {
         setTimeout(() => {
           isLoading.value = false
           generatePersonalizedContent()
+          setLocalizedMarketStatus()
         }, 2000)
       })
     } else {
@@ -795,11 +1095,35 @@ export const usePersonalization = () => {
     }
   }
 
+  // Re-localize after language fully switches
+  if (onLanguageSwitched) {
+    onLanguageSwitched(() => {
+      // Reset retry counter so localized variants can load after switch
+      nonEnVariantRetryCount.value = 0
+      nonEnVariantIndex.value = 0
+      // Stop any existing rotation (e.g., switching FR -> EN)
+      if (updateInterval) {
+        clearInterval(updateInterval)
+        updateInterval = null
+      }
+      if (nonEnRetryTimer) {
+        clearTimeout(nonEnRetryTimer)
+        nonEnRetryTimer = null
+      }
+      setLocalizedMarketStatus()
+      generatePersonalizedContent()
+    })
+  }
+
   // Cleanup function to clear intervals
   const cleanup = () => {
     if (updateInterval) {
       clearInterval(updateInterval)
       updateInterval = null
+    }
+    if (nonEnRetryTimer) {
+      clearTimeout(nonEnRetryTimer)
+      nonEnRetryTimer = null
     }
   }
   

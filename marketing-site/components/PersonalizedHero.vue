@@ -1,6 +1,6 @@
 <script setup lang="ts">
 const { userContext, personalizedContent, isLoading, initializePersonalization, cleanup } = usePersonalization()
-const { t } = useI18n()
+const { t, locale } = useI18n()
 const { getHomepageContent } = useStrapi()
 
 // Homepage content from Strapi
@@ -114,81 +114,151 @@ const dynamicSubline = computed(() => {
   }
   
   // Use personalized subheadline from the composable
-  const subheadline = personalizedContent.value.subheadline || "Sleep better, trade smarter with 24/7 AI market monitoring."
+  const subheadline = personalizedContent.value.subheadline || t('hero.subtitle')
   console.log('🎨 PersonalizedHero using subheadline:', subheadline)
   return formatSubheadlineText(subheadline)
 })
 
-// Helper function to format subheadline text with subtle styling
+// Helper function to format subheadline text with uniform styling (blue for action, purple for entities)
 const formatSubheadlineText = (text: string): string => {
   if (!text) return ''
-  
-  let styledText = text
-  
-  // Add subtle styling to key phrases in subheadlines - clean 2-color approach, consistent font weight
-  styledText = styledText
-    .replace(/Wall Street/g, '<span class="text-blue-600 dark:text-blue-400">$&</span>')
-    .replace(/Stockholm|Berlin|Paris|Tokyo|Sydney|Toronto/g, '<span class="text-purple-600 dark:text-purple-400">$&</span>')
-    .replace(/OMXS30|SPY|QQQ|DAX|CAC|FTSE|N225|ASX/g, '<span class="text-purple-600 dark:text-purple-400">$&</span>')
-    .replace(/24\/7/g, '<span class="text-blue-600 dark:text-blue-400">$&</span>')
-    .replace(/AI/g, '<span class="text-blue-600 dark:text-blue-400">$&</span>')
-    .replace(/real‑time/g, '$&')
-  
-  return styledText
+  let out = text
+  const esc = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+  const cc = (userContext.value.location.countryCode || '').toUpperCase()
+  let localizedCountry = ''
+  try { localizedCountry = cc ? new Intl.DisplayNames([locale.value], { type: 'region' }).of(cc) || '' : '' } catch (_) {}
+  const primaryIndex = userContext.value.market.localIndices[0] || ''
+
+  const lang = (locale.value || 'en').split('-')[0]
+  const maps: Record<string, { blue: (RegExp|string)[], purple: (RegExp|string)[] }> = {
+    en: {
+      blue: [
+        /\bmarket research\b/i,
+        /\bAI\b/,
+        /\b24\/7\b/,
+        /\breal[-\s]?time\b/i,
+        /\bturn\b|\btransform\b|\bconvert\b/i,
+        /\bsmarter decisions\b/i,
+        /\bcustom alerts?\b/i
+      ],
+      purple: [/\bstocks\b/i, /\bcrypto\b/i, /\bindices\b/i, /\bcommodities\b/i]
+    },
+    fr: {
+      blue: [
+        /\bRecherche de Marché\b|\bRecherche de marché\b/i,
+        /\bIA\b/,
+        /\btemps réel\b/i,
+        /\btransforme(?:z|r)?\b/i,
+        /\bdécisions? plus intelligentes\b/i,
+        /\balertes? personnalisées\b/i
+      ],
+      purple: [/\bactions\b/i, /\bcrypto\b/i, /\bindices\b/i, /\bmatières premières\b/i]
+    },
+    ar: {
+      blue: [
+        /أبحاث السوق/g,
+        /الذكاء الاصطناعي/g,
+        /الوقت الحقيقي/g,
+        /حوِّل|تحويل|حوّل|حوِّل|قم بتحويل/g,
+        /قرارات(?:\s)?أكثر ذكاءً|قرارات أذكى/g,
+        /تنبيهات(?:\s)?مخصصة/g
+      ],
+      purple: [/الأسهم/g, /العملات المشفرة/g, /المؤشرات/g, /السلع/g]
+    }
+  }
+
+  const apply = (s: string, patterns: (RegExp|string)[], cls: string) => {
+    let r = s
+    for (const p of patterns) {
+      const re = p instanceof RegExp ? p : new RegExp(`\\b${esc(p)}\\b`, 'gi')
+      r = r.replace(re, `<span class="${cls}">$&</span>`)
+    }
+    return r
+  }
+
+  const m = maps[lang] || maps.en
+  out = apply(out, m.blue, 'text-blue-600 dark:text-blue-400')
+  out = apply(out, m.purple, 'text-purple-600 dark:text-purple-400')
+
+  if (localizedCountry) {
+    out = out.replace(new RegExp(esc(localizedCountry), 'g'), `<span class="text-purple-600 dark:text-purple-400">${localizedCountry}</span>`)
+  }
+  if (primaryIndex) {
+    out = out.replace(new RegExp(esc(String(primaryIndex)), 'g'), `<span class="text-purple-600 dark:text-purple-400">${primaryIndex}</span>`)
+  }
+  return out
 }
 
 // Helper function to format headline text with beautiful styling
 const formatHeadlineText = (text: string): string => {
   if (!text) return ''
-  
-  // Apply special styling for the default headline
-  if (text.includes('AI finds the opportunities, you make the decisions')) {
-    return text
-      .replace(/you make/g, '<span class="text-blue-600 dark:text-blue-400">$&</span>')
-      .replace(/decisions/g, '<span class="text-purple-600 dark:text-purple-400">$&</span>')
+  let out = text
+  const esc = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+  const cc = (userContext.value.location.countryCode || '').toUpperCase()
+  let localizedCountry = ''
+  try { localizedCountry = cc ? new Intl.DisplayNames([locale.value], { type: 'region' }).of(cc) || '' : '' } catch (_) {}
+  const primaryIndex = userContext.value.market.localIndices[0] || ''
+  const lang = (locale.value || 'en').split('-')[0]
+
+  // Special-case: split core noun phrases per locale for precise coloring
+  // EN: Market (purple) + Research (blue)
+  out = out.replace(/\bMarket\s+Research\b/g, '<span class="text-purple-600 dark:text-purple-400">Market</span> <span class="text-blue-600 dark:text-blue-400">Research</span>')
+  // FR: Recherche (blue) de Marché (purple)
+  out = out.replace(/\bRecherche\s+de\s+(Marché|marché)\b/g, '<span class="text-blue-600 dark:text-blue-400">Recherche</span> de <span class="text-purple-600 dark:text-purple-400">$1</span>')
+  // AR: أبحاث (blue) السوق (purple)
+  out = out.replace(/أبحاث\s+السوق/g, '<span class="text-blue-600 dark:text-blue-400">أبحاث</span> <span class="text-purple-600 dark:text-purple-400">السوق</span>')
+
+  const maps: Record<string, { blue: (RegExp|string)[], purple: (RegExp|string)[] }> = {
+    en: {
+      blue: [/\bGlobal insight\b/i, /\bResearch\b/],
+      purple: [/\bTrading Insights\b/]
+    },
+    fr: {
+      blue: [/\bVision globale\b/i, /\bRecherche\b/],
+      purple: [/\bAnalyses? de Trading\b/, /\bMarché\b/i]
+    },
+    ar: {
+      blue: [/رؤى عالمية/g, /\bأبحاث\b/g],
+      purple: [/تحليلات التداول/g, /\bالسوق\b/g]
+    }
   }
-  
-  // Apply styling to personalized headlines
-  let styledText = text
-  
-  // Generic styling patterns that work for any country - clean 2-color approach
-  styledText = styledText
-    // Highlight key action words in blue - keep same font weight as headline
-    .replace(/Global insight/g, '<span class="text-blue-600 dark:text-blue-400">$&</span>')
-    .replace(/AI eyes/g, '<span class="text-blue-600 dark:text-blue-400">$&</span>')
-    .replace(/Your edge/g, '<span class="text-blue-600 dark:text-blue-400">$&</span>')
-    .replace(/Trade/g, '<span class="text-blue-600 dark:text-blue-400">$&</span>')
-    
-    // Highlight country/market references in purple - keep same font weight
-    .replace(/(Sweden|United States|Germany|France|Japan|Australia|Canada|global)(\s+markets?)/g, '<span class="text-purple-600 dark:text-purple-400">$1</span><span class="text-purple-600 dark:text-purple-400"> $2</span>')
-    .replace(/(Sweden|United States|Germany|France|Japan|Australia|Canada)'s markets/g, '<span class="text-purple-600 dark:text-purple-400">$1\'s markets</span>')
-    
-    // Keep compelling phrases simple - no font weight changes
-    .replace(/opportunity never sleeps/g, '$&')
-    .replace(/redefined by intelligence/g, '$&')
-    .replace(/global AI power/g, '$&')
-  
-  // Market-specific messages - keep consistent with 2-color theme and font weight
-  styledText = styledText
-    .replace(/Markets are LIVE|LIVE/g, '<span class="text-blue-600 dark:text-blue-400">$&</span>')
-    .replace(/Pre-market/g, '<span class="text-blue-600 dark:text-blue-400">$&</span>')
-    .replace(/After-hours/g, '<span class="text-purple-600 dark:text-purple-400">$&</span>')
-    .replace(/AI never stops/g, '<span class="text-blue-600 dark:text-blue-400">$&</span>')
-  
-  // Add line breaks for better mobile display
-  styledText = styledText.replace(/—/g, '<br class="sm:hidden">')
-  
-  return styledText
+
+  const apply = (s: string, patterns: (RegExp|string)[], cls: string) => {
+    let r = s
+    for (const p of patterns) {
+      const re = p instanceof RegExp ? p : new RegExp(`\\b${esc(p)}\\b`, 'gi')
+      r = r.replace(re, `<span class="${cls}">$&</span>`)
+    }
+    return r
+  }
+
+  const m = maps[lang] || maps.en
+  out = apply(out, m.blue, 'text-blue-600 dark:text-blue-400')
+  out = apply(out, m.purple, 'text-purple-600 dark:text-purple-400')
+
+  if (localizedCountry) {
+    out = out.replace(new RegExp(esc(localizedCountry), 'g'), `<span class="text-purple-600 dark:text-purple-400">${localizedCountry}</span>`)
+  }
+  if (primaryIndex) {
+    out = out.replace(new RegExp(esc(String(primaryIndex)), 'g'), `<span class="text-purple-600 dark:text-purple-400">${primaryIndex}</span>`)
+  }
+  return out
 }
 
 // Get market status styling
 const getMarketStatusStyling = computed(() => {
-  if (userContext.value.market.marketHours.isOpen) {
+  const session = userContext.value.timing.marketSession
+  if (session === 'market-open') {
     return 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 border-green-200 dark:border-green-800'
-  } else if (userContext.value.timing.marketSession === 'pre-market') {
+  }
+  if (session === 'pre-market') {
     return 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border-blue-200 dark:border-blue-800'
-  } else if (userContext.value.timing.marketSession === 'after-hours') {
+  }
+  if (session === 'after-hours') {
     return 'bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 border-purple-200 dark:border-purple-800'
+  }
+  if (session === 'market-closed') {
+    return 'bg-gray-100 dark:bg-gray-900/30 text-gray-700 dark:text-gray-300 border-gray-200 dark:border-gray-800'
   }
   return 'bg-gray-100 dark:bg-gray-900/30 text-gray-700 dark:text-gray-300 border-gray-200 dark:border-gray-800'
 })
@@ -217,10 +287,10 @@ const getMarketStatusStyling = computed(() => {
         <div :class="`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium border ${getMarketStatusStyling} transition-all duration-300`">
           <div class="w-1.5 h-1.5 rounded-full mr-2 animate-pulse"
                :class="{
-                 'bg-green-500': userContext.market.marketHours.isOpen,
+                 'bg-green-500': userContext.market.marketHours.isOpen || userContext.timing.marketSession === 'market-open',
                  'bg-blue-500': userContext.timing.marketSession === 'pre-market',
                  'bg-purple-500': userContext.timing.marketSession === 'after-hours',
-                 'bg-gray-500': userContext.timing.marketSession === 'closed'
+                 'bg-gray-500': userContext.timing.marketSession === 'closed' || userContext.timing.marketSession === 'market-closed'
                }"></div>
           {{ personalizedContent.marketStatus }}
         </div>
@@ -231,9 +301,7 @@ const getMarketStatusStyling = computed(() => {
     <h1 class="hero-title text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white mb-6 leading-tight transition-all duration-500 ease-in-out"
         :class="{ 'animate-slide-up': props.animate }">
       <!-- Always show the default headline first to prevent flickering -->
-      <span v-if="isLoading || homepageLoading">
-        {{ t('hero.title') }}
-      </span>
+      <span v-if="isLoading || homepageLoading" v-html="formatHeadlineText(t('hero.title'))"></span>
       
       <!-- Show personalized content after loading with smooth transition -->
       <span v-else 
@@ -243,9 +311,7 @@ const getMarketStatusStyling = computed(() => {
     
     <p class="hero-subtitle text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-3xl mx-auto transition-all duration-500 ease-in-out"
        :class="{ 'animate-slide-up-delay': props.animate }">
-      <span v-if="isLoading || homepageLoading">
-        {{ t('hero.subtitle') }}
-      </span>
+      <span v-if="isLoading || homepageLoading" v-html="formatSubheadlineText(t('hero.subtitle'))"></span>
       <span v-else 
             v-html="dynamicSubline"
             class="animate-fade-in-smooth"></span>
@@ -254,6 +320,13 @@ const getMarketStatusStyling = computed(() => {
 </template>
 
 <style scoped>
+/* Gradient brand styling for non-English headlines */
+.gradient-text {
+  background-image: linear-gradient(90deg, #2563eb, #9333ea);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
 /* Animation classes */
 .animate-fade-in {
   animation: fadeIn 0.8s ease-out;

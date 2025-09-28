@@ -210,7 +210,7 @@ function timeAgo(date: Date) {
                   {{ insight.type.toUpperCase() }}
                 </span>
                 <span :class="`text-xs font-semibold ${getConfidenceColor(insight.confidence)}`">
-                  {{ insight.confidence }}% confident
+                  {{ t('aiFeed.confidencePct', { pct: insight.confidence }) }}
                 </span>
               </div>
               <p class="text-xs sm:text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
@@ -234,7 +234,7 @@ function timeAgo(date: Date) {
         <!-- Loading State -->
         <div v-if="insights.length === 0" class="text-center py-8">
           <div class="animate-spin w-8 h-8 border-2 border-blue-500 border-t-transparent rounded-full mx-auto mb-4"></div>
-          <p class="text-gray-500 dark:text-gray-400">AI is analyzing markets...</p>
+          <p class="text-gray-500 dark:text-gray-400">{{ t('aiFeed.loading') }}</p>
         </div>
       </div>
     </div>

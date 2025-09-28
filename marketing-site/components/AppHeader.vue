@@ -105,7 +105,7 @@ function closeMobileMenu() {
           @click="closeMobileMenu"
           class="text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white block px-3 py-2 rounded-md text-base font-medium"
         >
-          Features
+          {{ t('navigation.features') }}
         </NuxtLink>
         
         <NuxtLink 
@@ -113,7 +113,7 @@ function closeMobileMenu() {
           @click="closeMobileMenu"
           class="text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white block px-3 py-2 rounded-md text-base font-medium"
         >
-          Pricing
+          {{ t('navigation.pricing') }}
         </NuxtLink>
         
         <NuxtLink 
@@ -121,7 +121,7 @@ function closeMobileMenu() {
           @click="closeMobileMenu"
           class="text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white block px-3 py-2 rounded-md text-base font-medium"
         >
-          Blog
+          {{ t('navigation.blog') }}
         </NuxtLink>
         
         <NuxtLink 
@@ -129,7 +129,7 @@ function closeMobileMenu() {
           @click="closeMobileMenu"
           class="text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white block px-3 py-2 rounded-md text-base font-medium"
         >
-          News
+          {{ t('navigation.news') }}
         </NuxtLink>
         
         <NuxtLink 
@@ -137,7 +137,7 @@ function closeMobileMenu() {
           @click="closeMobileMenu"
           class="text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white block px-3 py-2 rounded-md text-base font-medium"
         >
-          About
+          {{ t('navigation.about') }}
         </NuxtLink>
         
         <NuxtLink 
@@ -145,22 +145,23 @@ function closeMobileMenu() {
           @click="closeMobileMenu"
           class="text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white block px-3 py-2 rounded-md text-base font-medium"
         >
-          Contact
+          {{ t('navigation.contact') }}
         </NuxtLink>
         
         <div class="pt-4 border-t border-gray-200 dark:border-gray-700">
+          
           <button 
             @click="redirectToLogin(); closeMobileMenu()"
             class="text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white block px-3 py-2 rounded-md text-base font-medium w-full text-left"
           >
-            Login
+            {{ t('navigation.login') }}
           </button>
           
           <button 
             @click="redirectToRegister(); closeMobileMenu()"
             class="bg-blue-600 hover:bg-blue-700 text-white block px-3 py-2 rounded-md text-base font-medium w-full text-left mt-2"
           >
-            Get Started
+            {{ t('navigation.getStarted') }}
           </button>
         </div>
       </div>
