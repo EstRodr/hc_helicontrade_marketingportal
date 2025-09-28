@@ -43,10 +43,13 @@ const HIGHLIGHTING_RULES: LocalizedRules = {
       /\bpersonalized\b/gi,
       /\btrade smarter\b/gi,
       
-      // Emotional appeals for better sleep/lifestyle
+      // Emotional appeals for better sleep/lifestyle  
       /\bsleep better\b/gi,
       /\bnever sleeps?\b/gi,
+      /\bAI never sleeps?\b/gi,
       /\bopportunity never sleeps\b/gi,
+      /\bAI never stops\b/gi,
+      /\bnever stops\b/gi,
     ],
     purple: [
       // Financial instruments young traders use
@@ -61,6 +64,8 @@ const HIGHLIGHTING_RULES: LocalizedRules = {
       /\bTrading Insights?\b/gi,
       /\bWall Street\b/gi,
       /\bmarkets?\b/gi,
+      /\bMarkets? Closed\b/gi,
+      /\bAfter[-\s]hours\b/gi,
       
       // Will be dynamically added: countries, cities, indices
     ]
@@ -223,6 +228,14 @@ export function highlightHeroHeadline(
     return result
   }
   
+  if (text.includes('Markets Closed') && text.includes('AI Never Sleeps')) {
+    // "Markets Closed, But Your AI Never Sleeps" → AI Never Sleeps(blue) + Markets(purple)
+    result = text.replace(/AI Never Sleeps/gi, `<span class="${BLUE_CLASS}">AI Never Sleeps</span>`)
+    result = result.replace(/\bMarkets\b/gi, `<span class="${PURPLE_CLASS}">Markets</span>`)
+    console.log('✅ HEADLINE: AI Never Sleeps(blue) + Markets(purple)')
+    return result
+  }
+  
   const rules = getLanguageRules(locale)
   
   // Special handling for base marketing headlines per language
@@ -368,6 +381,17 @@ export function highlightHeroHeadline(
         }
       }
     }
+  }
+  
+  // FINAL FALLBACK: Apply general blue/purple rules if no specific highlighting was applied
+  if (!result.includes(BLUE_CLASS) || !result.includes(PURPLE_CLASS)) {
+    // Apply blue highlighting rules first
+    result = applyHighlightingRules(result, rules.blue, BLUE_CLASS)
+    
+    // Apply purple highlighting rules second  
+    result = applyHighlightingRules(result, rules.purple, PURPLE_CLASS)
+    
+    console.log('🔧 Applied general blue/purple rules as fallback')
   }
   
   return result

@@ -605,6 +605,7 @@ const initializeVariant = async (): Promise<number> => {
   // Generate personalized content based on context
   const generatePersonalizedContent = async () => {
     const now = Date.now()
+    console.log('🚀 generatePersonalizedContent called at:', new Date().toISOString())
     
     // Prevent concurrent generations
     if (isGenerating) {
@@ -617,6 +618,17 @@ const initializeVariant = async (): Promise<number> => {
       console.log('⏱️ Personalization generation debounced (too frequent calls)')
       return
     }
+    
+    console.log('🔧 Starting personalization generation...', {
+      isLoading: isLoading.value,
+      locale: locale.value,
+      userContext: {
+        country: userContext.value.location.country,
+        city: userContext.value.location.city,
+        marketSession: userContext.value.timing.marketSession,
+        isWeekend: userContext.value.timing.isWeekend
+      }
+    })
     
     isGenerating = true
     lastGenerationTime = now
@@ -858,11 +870,16 @@ const initializeVariant = async (): Promise<number> => {
     
     console.log('🎯 Personalization Debug:', {
       optionIndex: currentOptionIndex,
+      optionType: currentOption.type,
       country,
       city,
       primaryIndex,
       isLoading: isLoading.value,
-      marketSession: timing.marketSession
+      marketSession: timing.marketSession,
+      selectedOption: {
+        headline: currentOption.headline(country),
+        subheadline: currentOption.subheadline(city, primaryIndex)
+      }
     })
     
     // Generic personalization with dynamic location injection
@@ -1318,8 +1335,12 @@ const initializeVariant = async (): Promise<number> => {
         marketClose,
         marketName,
         currentHour,
+        currentTime: new Date().toISOString(),
+        isWeekend,
         isOpen: userContext.value.market.marketHours.isOpen,
-        session: userContext.value.timing.marketSession
+        session: userContext.value.timing.marketSession,
+        country: userContext.value.location.country,
+        timezone: userContext.value.location.timezone
       })
       
       // Helper: build localized time string
@@ -1368,38 +1389,61 @@ const initializeVariant = async (): Promise<number> => {
     if (typeof window !== 'undefined' && (window as any).posthog) {
       const posthog = (window as any).posthog
       
-      // Use a polling approach instead of callback to avoid multiple triggers
-      let flagCheckAttempts = 0
-      const checkFlags = async () => {
-        flagCheckAttempts++
-        
-        // Try to get feature flags (they may not be loaded yet)
-        const personalizationEnabled = posthog.isFeatureEnabled('marketing-homepage-headline-enable-personalization')
-        const variantFlag = posthog.getFeatureFlag('marketing-homepage-headline-personalization-variant')
-        
-        // If we got valid flags or we've tried enough times, proceed
-        if (personalizationEnabled !== undefined || variantFlag !== undefined || flagCheckAttempts >= 20) {
-          console.log('🎯 PostHog feature flags loaded (attempt', flagCheckAttempts, ')')
-          console.log('🎛️ Personalization enabled:', personalizationEnabled !== false)
-          
-          // Smooth transition: wait 2 seconds then show personalized content
-          setTimeout(async () => {
-            isLoading.value = false
-            await generatePersonalizedContent()
-            setLocalizedMarketStatus()
-          }, 2000)
-          
-          return // Stop checking
-        }
-        
-        // If flags aren't ready yet, try again in 200ms
-        if (flagCheckAttempts < 20) {
-          setTimeout(checkFlags, 200)
+      // Helper to compute stable hash from flags + locale state
+      const computeFlagsHash = () => {
+        try {
+          // PostHog method to get all active flags
+          const flags = posthog.getAllFlags ? posthog.getAllFlags() : (posthog.getFeatureFlags ? posthog.getFeatureFlags() : {})
+          const flagEntries = Object.entries(flags || {})
+          const flagData = flagEntries.map(([key, value]) => [key, value, posthog.getFeatureFlagPayload(key)])
+          return JSON.stringify({ locale: locale.value, flagData })
+        } catch (error) {
+          console.warn('Error computing flags hash:', error)
+          return JSON.stringify({ locale: locale.value, error: error.message })
         }
       }
       
-      // Start checking for flags
-      setTimeout(checkFlags, 500)
+      // Guarded personalization function
+      const applyPersonalizationIfNeeded = async (force = false) => {
+        const currentHash = computeFlagsHash()
+        console.log('🔍 PersonalizationCheck:', { force, currentHash, lastAppliedFlagsHash })
+        
+        if (!force && currentHash === lastAppliedFlagsHash) {
+          console.log('⏭️ PostHog flags unchanged, skipping personalization')
+          return
+        }
+        
+        lastAppliedFlagsHash = currentHash
+        console.log('🎯 PostHog flags changed, applying personalization')
+        console.log('🔄 Current location:', userContext.value.location)
+        console.log('🔄 Market timing:', userContext.value.timing)
+        
+        isLoading.value = false
+        await generatePersonalizedContent()
+        setLocalizedMarketStatus()
+        
+        console.log('✅ Personalization applied, current headline:', personalizedContent.value.headline)
+      }
+      
+      // Register onFeatureFlags callback only once
+      if (!postHogCallbackRegistered && typeof posthog.onFeatureFlags === 'function') {
+        postHogCallbackRegistered = true
+        
+        posthog.onFeatureFlags(() => {
+          console.log('📡 PostHog onFeatureFlags callback triggered')
+          // Debounce to handle rapid multiple callbacks
+          setTimeout(() => {
+            applyPersonalizationIfNeeded(false)
+          }, 100)
+        })
+        
+        console.log('✅ PostHog onFeatureFlags callback registered')
+      }
+      
+      // Initial personalization after delay (for first load)
+      setTimeout(async () => {
+        await applyPersonalizationIfNeeded(true)
+      }, 2000)
       
     } else {
       // Fallback if PostHog is not available
@@ -1414,6 +1458,8 @@ const initializeVariant = async (): Promise<number> => {
   // Track initialization state to prevent duplicates
   let isInitialized = false
   let featureFlagsCallbackSet = false
+  let lastAppliedFlagsHash: string | null = null
+  let postHogCallbackRegistered = false
 
   // Re-localize after language fully switches
   if (onLanguageSwitched) {

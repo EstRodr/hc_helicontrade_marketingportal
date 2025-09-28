@@ -6,11 +6,8 @@ export const useAppRedirects = () => {
   
   // Get the correct app URL for current environment
   const getAppUrl = () => {
-    // Force localhost:5174 for development since that's where the Vue app is running
-    if (config.public.appUrl.includes('localhost')) {
-      return 'http://localhost:5174'
-    }
-    return config.public.appUrl
+    // Use the configured app URL from environment variables
+    return config.public.appUrl || 'http://localhost:5173'
   }
   
   // Build URL with theme and language parameters
