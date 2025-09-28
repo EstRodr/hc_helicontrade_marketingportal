@@ -310,40 +310,95 @@ export const usePersonalization = () => {
     return countryAdjectiveMap[country] || country
   }
 
-  // Rotating personalization message options
+  // Enhanced personalization options with urgency and behavioral variants
   const personalizationOptions = [
     {
       // Option A (empowerment frame)
       headline: (country: string) => `Global insight, built for ${getCountryAdjective(country)} markets`,
-      subheadline: (city: string, index: string) => `From ${city} to Wall Street, turn real‑time moves in ${index} into smarter decisions.`
+      subheadline: (city: string, index: string) => `From ${city} to Wall Street, turn real‑time moves in ${index} into smarter decisions.`,
+      type: 'empowerment'
     },
     {
       // Option B (momentum/dynamism)
       headline: (country: string) => `AI eyes on ${getCountryAdjective(country)} markets — opportunity never sleeps`,
-      subheadline: (city: string) => `From ${city} to Wall Street, track every market pulse, 24/7.`
+      subheadline: (city: string) => `From ${city} to Wall Street, track every market pulse, 24/7.`,
+      type: 'momentum'
     },
     {
       // Option C (user‑centric)
       headline: (country: string) => `Your edge in ${getCountryAdjective(country)} markets`,
-      subheadline: (city: string, index: string) => `With AI scanning ${index} day and night, you focus on making confident moves.`
+      subheadline: (city: string, index: string) => `With AI scanning ${index} day and night, you focus on making confident moves.`,
+      type: 'user_centric'
     },
     {
       // Option D (clean & modern)
       headline: (country: string) => `${getCountryAdjective(country)} markets, redefined by intelligence`,
-      subheadline: (city: string, index: string) => `From ${city} to Wall Street, stay connected to every swing in ${index}.`
+      subheadline: (city: string, index: string) => `From ${city} to Wall Street, stay connected to every swing in ${index}.`,
+      type: 'modern'
     },
     {
       // Option E (short, punchy, younger feel)
       headline: (country: string) => `Trade ${getCountryAdjective(country)} markets with global AI power`,
-      subheadline: (city: string, index: string) => `From ${city} to Wall Street, our AI keeps an eye on ${index} so you don't miss a beat.`
+      subheadline: (city: string, index: string) => `From ${city} to Wall Street, our AI keeps an eye on ${index} so you don't miss a beat.`,
+      type: 'action_oriented'
+    },
+    {
+      // Option F (TIME-BASED URGENCY: Pre-market)
+      headline: (country: string) => `Markets Open Soon — Your ${getCountryAdjective(country)} Edge Awaits`,
+      subheadline: (city: string, index: string) => `Our AI scanned overnight while you slept. Ready to see today's opportunities in ${index}?`,
+      type: 'pre_market_urgency'
+    },
+    {
+      // Option G (TIME-BASED URGENCY: Market hours)
+      headline: (country: string) => `Live Market Action — ${getCountryAdjective(country)} Opportunities Now`,
+      subheadline: (city: string, index: string) => `${index} is moving right now. Our AI is tracking every opportunity as it happens.`,
+      type: 'market_open_urgency'
+    },
+    {
+      // Option H (TIME-BASED URGENCY: After hours)
+      headline: (country: string) => `Markets Closed, But Your AI Never Sleeps`,
+      subheadline: (city: string, index: string) => `Review today's ${index} patterns and prepare for tomorrow's moves while others rest.`,
+      type: 'after_hours_urgency'
+    },
+    {
+      // Option I (BEHAVIORAL: New visitors)
+      headline: (country: string) => `Start Trading Smarter with AI-Powered Insights`,
+      subheadline: (city: string) => `Join thousands of traders from ${city} and beyond using AI to make better decisions. Free to start, simple to use.`,
+      type: 'new_visitor'
+    },
+    {
+      // Option J (BEHAVIORAL: Returning visitors)
+      headline: (country: string) => `Welcome Back — Ready to Trade Smarter?`,
+      subheadline: (city: string, index: string) => `Your AI assistant has been watching ${index} since your last visit. See what we've found for you.`,
+      type: 'returning_visitor'
     }
   ]
 
   // Production-ready personalization option selection with fallback hierarchy
-  const getPersonalizationOptionIndex = (): number => {
+  const getPersonalizationOptionIndex = async (): Promise<number> => {
+    // Give PostHog a moment to fully initialize if it's still loading
+    if (typeof window !== 'undefined') {
+      let attempts = 0
+      while (!((window as any).posthog || useNuxtApp()?.$posthog) && attempts < 10) {
+        await new Promise(resolve => setTimeout(resolve, 100))
+        attempts++
+      }
+    }
     // Priority 0: Check if personalization is enabled via PostHog kill switch
-    if (typeof window !== 'undefined' && (window as any).posthog) {
-      const posthog = (window as any).posthog
+    // Try multiple ways to access PostHog
+    let posthog = null
+    if (typeof window !== 'undefined') {
+      // Method 1: Direct window access
+      posthog = (window as any).posthog
+      // Method 2: Check if Nuxt provided it
+      if (!posthog) {
+        const nuxtApp = useNuxtApp()
+        posthog = nuxtApp.$posthog
+      }
+    }
+    
+    if (posthog) {
+      console.log('✅ PostHog found for personalization:', !!posthog)
       
       // Check the kill switch first
       const personalizationEnabled = posthog.isFeatureEnabled('marketing-homepage-headline-enable-personalization')
@@ -412,9 +467,11 @@ export const usePersonalization = () => {
         console.log('🎯 PostHog A/B Test - Variant:', variantValue, '→ Option:', optionIndex)
         
         // Track the variant assignment with detailed context
+        const selectedVariant = personalizationOptions[optionIndex]
         const eventData = {
           variant_id: optionIndex,
           variant_key: variantValue,
+          variant_type: selectedVariant.type, // NEW: Track variant category
           flag_name: flagName,
           source: 'posthog_ab_test',
           enabled: true,
@@ -423,11 +480,15 @@ export const usePersonalization = () => {
           city: userContext.value.location.city || 'Stockholm',
           market_session: userContext.value.timing.marketSession,
           time_of_day: userContext.value.timing.timeOfDay,
+          is_weekend: userContext.value.timing.isWeekend,
           timezone: userContext.value.location.timezone || 'Europe/Stockholm',
           primary_index: userContext.value.market.localIndices[0] || 'OMXS30',
-          headline: personalizationOptions[optionIndex].headline(userContext.value.location.country || 'Sweden'),
+          headline: selectedVariant.headline(userContext.value.location.country || 'Sweden'),
           visit_count: userContext.value.preferences.visitCount,
+          is_new_visitor: userContext.value.preferences.visitCount === 1,
+          is_returning_visitor: userContext.value.preferences.visitCount > 3,
           interaction_level: userContext.value.preferences.interactionLevel,
+          device_type: typeof window !== 'undefined' && window.innerWidth < 768 ? 'mobile' : 'desktop',
           timestamp: new Date().toISOString()
         }
         
@@ -462,32 +523,48 @@ export const usePersonalization = () => {
     // Priority 4: Environment variable fallback removed (TS client-side)
     
     // Priority 5: Intelligent default based on user context
-    const { location, timing } = userContext.value
+    const { location, timing, preferences } = userContext.value
     
-    // Smart defaults based on market conditions
+    // NEW VISITOR vs RETURNING VISITOR (highest priority)
+    if (preferences.visitCount === 1) {
+      console.log('👋 New visitor: Using welcome variant (Option 8)')
+      return 8 // "Start Trading Smarter with AI-Powered Insights"
+    } else if (preferences.visitCount > 3) {
+      console.log('🔄 Returning visitor: Using returning variant (Option 9)')
+      return 9 // "Welcome Back — Ready to Trade Smarter?"
+    }
+    
+    // TIME-BASED URGENCY (market session variants)
     if (timing.marketSession === 'pre-market') {
-      console.log('📈 Using pre-market default: Option 1 (AI eyes)')
-      return 1 // "AI eyes on markets — opportunity never sleeps"
+      console.log('📈 Pre-market urgency: Option 5 (Markets Open Soon)')
+      return 5 // "Markets Open Soon — Your [Country] Edge Awaits"
+    } else if (timing.marketSession === 'market' || timing.marketSession === 'market-open') {
+      console.log('🔥 Market open urgency: Option 6 (Live Market Action)')
+      return 6 // "Live Market Action — [Country] Opportunities Now"
     } else if (timing.marketSession === 'after-hours') {
-      console.log('🌙 Using after-hours default: Option 2 (Your edge)')
-      return 2 // "Your edge in markets"
-    } else if (location.country === 'Sweden') {
+      console.log('🌙 After-hours urgency: Option 7 (AI Never Sleeps)')
+      return 7 // "Markets Closed, But Your AI Never Sleeps"
+    }
+    
+    // ORIGINAL VARIANTS for standard market hours
+    if (location.country === 'Sweden') {
       console.log('🇸🇪 Using Sweden default: Option 0 (Global insight)')
       return 0 // "Global insight, built for Sweden markets"
     }
     
-    // Final fallback: Week-based cycling
+    // Final fallback: Week-based cycling through original 5 variants
     const weekNumber = Math.floor(Date.now() / (1000 * 60 * 60 * 24 * 7))
-    console.log('📅 Using week-based fallback:', weekNumber % personalizationOptions.length)
-    return weekNumber % personalizationOptions.length
+    const fallbackOption = weekNumber % 5 // Only cycle through original 5
+    console.log('📅 Using week-based fallback:', fallbackOption)
+    return fallbackOption
   }
   
 // Make variant reactive and available to components
 const variant = ref<number>(0)
 
 // Initialize variant with PostHog A/B test result
-const initializeVariant = (): number => {
-  const optionIndex = getPersonalizationOptionIndex()
+const initializeVariant = async (): Promise<number> => {
+  const optionIndex = await getPersonalizationOptionIndex()
   variant.value = optionIndex
   return optionIndex
 }
@@ -520,7 +597,7 @@ const initializeVariant = (): number => {
   }
 
   // Generate personalized content based on context
-  const generatePersonalizedContent = () => {
+  const generatePersonalizedContent = async () => {
     const { location, timing, market, preferences } = userContext.value
     
     // Personalization control - easy to toggle
@@ -730,8 +807,8 @@ const initializeVariant = (): number => {
         // If variants not yet loaded, retry shortly
         if (nonEnVariantRetryCount.value < 5) {
           nonEnVariantRetryCount.value += 1
-          setTimeout(() => {
-            generatePersonalizedContent()
+          setTimeout(async () => {
+            await generatePersonalizedContent()
           }, 600)
         }
         return
@@ -739,11 +816,11 @@ const initializeVariant = (): number => {
     }
 
     // Get rotating personalization option (English-only variants)
-    const currentOptionIndex = initializeVariant()
+    const currentOptionIndex = await initializeVariant()
     const currentOption = personalizationOptions[currentOptionIndex]
     
     console.log('🎯 Personalization Debug:', {
-      optionIndex: currentOptionIndex.value,
+      optionIndex: currentOptionIndex,
       country,
       city,
       primaryIndex,
@@ -751,9 +828,26 @@ const initializeVariant = (): number => {
       marketSession: timing.marketSession
     })
     
-    // Generate personalized headlines and subheadlines using the selected option
-    let headline = currentOption.headline(country)
-    let subheadline = currentOption.subheadline(city, primaryIndex)
+    // Generic personalization with dynamic location injection
+    let headline, subheadline
+    
+    if (location.country && location.city) {
+      // Location detected - apply personalization with dynamic injection
+      headline = currentOption.headline(location.country)
+      subheadline = currentOption.subheadline(location.city, market.localIndices[0] || 'SPY')
+      
+      console.log(`🌍 Personalization applied:`, {
+        country: location.country,
+        city: location.city,
+        index: market.localIndices[0],
+        option: currentOptionIndex
+      })
+    } else {
+      // Location detection failed - NO PERSONALIZATION
+      headline = t('hero.title')
+      subheadline = t('hero.subtitle')
+      console.log('⚠️ No location detected - using neutral base content')
+    }
     
     console.log('📝 Generated content:', { headline, subheadline })
     
@@ -809,9 +903,9 @@ const initializeVariant = (): number => {
   }
 
   // Function to rotate to next personalization option
-  const rotatePersonalizationOption = () => {
+  const rotatePersonalizationOption = async () => {
     currentOptionIndex.value = (currentOptionIndex.value + 1) % personalizationOptions.length
-    generatePersonalizedContent()
+    await generatePersonalizedContent()
   }
 
   // Helper function to get time until a date
@@ -954,24 +1048,73 @@ const initializeVariant = (): number => {
         const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone
         userContext.value.location.timezone = timezone
         
-        // Map timezone to country (comprehensive European mapping)
-        if (timezone.includes('Stockholm') || timezone.includes('Europe/Stockholm')) {
-          userContext.value.location.country = 'Sweden'
-          userContext.value.location.city = 'Stockholm'
-        } else if (timezone.includes('Europe/Berlin') || timezone.includes('Europe/Amsterdam') || timezone.includes('Europe/Brussels') || timezone.includes('Europe/Copenhagen') || timezone.includes('Europe/Oslo') || timezone.includes('Europe/Helsinki') || timezone.includes('Europe/Zurich') || timezone.includes('Europe/Vienna') || timezone.includes('Europe/Prague') || timezone.includes('Europe/Warsaw')) {
-          // Central European Time zone - default to Sweden for Nordic/European users
-          userContext.value.location.country = 'Sweden'
-          userContext.value.location.city = 'Stockholm'
-        } else if (timezone.includes('New_York') || timezone.includes('America/New_York') || timezone.includes('America/Chicago') || timezone.includes('America/Denver') || timezone.includes('America/Los_Angeles')) {
-          userContext.value.location.country = 'United States'
-          userContext.value.location.city = 'New York'
-        } else if (timezone.includes('London') || timezone.includes('Europe/London')) {
-          userContext.value.location.country = 'United Kingdom'
-          userContext.value.location.city = 'London'
-        } else {
-          // Default to Sweden for European users
-          userContext.value.location.country = 'Sweden'
-          userContext.value.location.city = 'Stockholm'
+        // Try to get ACTUAL user location using multiple methods
+        let locationDetected = false
+        
+        try {
+          // Method 1: Try IP geolocation (most accurate for city) 
+          console.log('📍 Attempting IP-based location detection...')
+          try {
+            const response = await fetch('https://ipapi.co/json/')
+            if (response.ok) {
+              const data = await response.json()
+              if (data.city && data.country_name && data.country_code) {
+                userContext.value.location.country = data.country_name
+                userContext.value.location.city = data.city
+                userContext.value.location.countryCode = data.country_code.toUpperCase()
+                locationDetected = true
+                console.log('✅ Location detected via IP:', { 
+                  country: data.country_name, 
+                  city: data.city, 
+                  code: data.country_code 
+                })
+              }
+            }
+          } catch (ipError) {
+            console.warn('IP geolocation failed, trying timezone fallback:', ipError)
+          }
+          
+          // Method 2: Timezone fallback (less accurate but better than nothing)
+          if (!locationDetected && timezone.startsWith('Europe/')) {
+            const city = timezone.split('/')[1].replace('_', ' ')
+            // Use Intl.DisplayNames to get country from timezone  
+            const locale_parts = navigator.language.split('-')
+            const region = locale_parts[1] // e.g., 'ES' from 'es-ES'
+            
+            if (region) {
+              try {
+                const displayNames = new Intl.DisplayNames([navigator.language], { type: 'region' })
+                const countryName = displayNames.of(region)
+                
+                if (countryName && city) {
+                  userContext.value.location.country = countryName
+                  userContext.value.location.city = city
+                  userContext.value.location.countryCode = region
+                  locationDetected = true
+                  console.log('✅ Location detected via timezone + browser locale:', { country: countryName, city, region })
+                }
+              } catch (e) {
+                console.warn('Failed to resolve country name:', e)
+              }
+            }
+          } else if (!locationDetected && timezone.startsWith('America/')) {
+            const city = timezone.split('/')[1].replace('_', ' ')
+            userContext.value.location.country = 'United States'
+            userContext.value.location.city = city
+            userContext.value.location.countryCode = 'US'
+            locationDetected = true
+            console.log('✅ Location detected (US):', { city })
+          }
+        } catch (error) {
+          console.warn('Location detection failed:', error)
+        }
+        
+        if (!locationDetected) {
+          // NO PERSONALIZATION if location detection fails
+          userContext.value.location.country = ''
+          userContext.value.location.city = ''
+          userContext.value.location.countryCode = ''
+          console.log('⚠️ Location detection failed - no personalization will be applied')
         }
         
         console.log('🌍 Detected location:', {
@@ -995,46 +1138,39 @@ const initializeVariant = (): number => {
         userContext.value.timing.timeOfDay = 'night'
       }
       
-      // Set market session and hours based on country
-      const country = userContext.value.location.country || 'Sweden'
-      let marketOpen = 9
-      let marketClose = 17.5
-      let marketName = 'OMX'
+      // Generic market mapping based on country code with US fallback
+      const country = userContext.value.location.country
+      const countryCode = userContext.value.location.countryCode
       
-      console.log('🏢 Setting market for country:', country)
-      
-      // Set market hours based on country
-      if (country === 'Sweden') {
-        marketOpen = 9
-        marketClose = 17.5 // 5:30 PM (17:30)
-        marketName = 'OMX'
-        userContext.value.market.localIndices = ['OMXS30']
-        userContext.value.market.primaryExchange = 'OMX'
-      } else if (country === 'United States') {
-        marketOpen = 9.5 // 9:30 AM
-        marketClose = 16 // 4:00 PM
-        marketName = 'NYSE'
-        userContext.value.market.localIndices = ['SPY', 'QQQ']
-        userContext.value.market.primaryExchange = 'NYSE'
-      } else if (country === 'United Kingdom') {
-        marketOpen = 8
-        marketClose = 16.5 // 4:30 PM
-        marketName = 'LSE'
-        userContext.value.market.localIndices = ['FTSE']
-        userContext.value.market.primaryExchange = 'LSE'
-      } else if (country === 'Germany') {
-        marketOpen = 9
-        marketClose = 17.5 // 5:30 PM
-        marketName = 'XETRA'
-        userContext.value.market.localIndices = ['DAX']
-        userContext.value.market.primaryExchange = 'XETRA'
-      } else if (country === 'France') {
-        marketOpen = 9
-        marketClose = 17.5 // 5:30 PM
-        marketName = 'EPA'
-        userContext.value.market.localIndices = ['CAC']
-        userContext.value.market.primaryExchange = 'EPA'
+      // Known markets mapping (easily extendable)
+      const MARKET_MAP: Record<string, { name: string, indices: string[], exchange: string, hours: { open: number, close: number } }> = {
+        'SE': { name: 'OMX', indices: ['OMXS30'], exchange: 'OMX', hours: { open: 9, close: 17.5 } },
+        'US': { name: 'NYSE', indices: ['SPY', 'QQQ'], exchange: 'NYSE', hours: { open: 9.5, close: 16 } },
+        'GB': { name: 'LSE', indices: ['FTSE'], exchange: 'LSE', hours: { open: 8, close: 16.5 } },
+        'DE': { name: 'XETRA', indices: ['DAX'], exchange: 'XETRA', hours: { open: 9, close: 17.5 } },
+        'FR': { name: 'EPA', indices: ['CAC'], exchange: 'EPA', hours: { open: 9, close: 17.5 } },
+        'ES': { name: 'BME', indices: ['IBEX'], exchange: 'BME', hours: { open: 9, close: 17.5 } },
+        'IT': { name: 'MIB', indices: ['FTSE MIB'], exchange: 'MIB', hours: { open: 9, close: 17.5 } },
+        'NL': { name: 'AEX', indices: ['AEX'], exchange: 'AEX', hours: { open: 9, close: 17.5 } },
       }
+      
+      // Default to US markets if country not found or location detection failed
+      const marketConfig = MARKET_MAP[countryCode] || MARKET_MAP['US']
+      
+      const marketOpen = marketConfig.hours.open
+      const marketClose = marketConfig.hours.close 
+      const marketName = marketConfig.name
+      
+      userContext.value.market.localIndices = marketConfig.indices
+      userContext.value.market.primaryExchange = marketConfig.exchange
+      
+      console.log('🏢 Market config:', {
+        country,
+        countryCode,
+        marketName,
+        indices: marketConfig.indices,
+        fallback: !MARKET_MAP[countryCode] ? 'US_FALLBACK' : 'DIRECT_MATCH'
+      })
       
       // Determine market session
   const currentHour = hour + (now.getMinutes() / 60) // Include minutes for precision
@@ -1104,9 +1240,9 @@ const initializeVariant = (): number => {
     if (locale.value !== 'en') {
       // Show base localized headline first, then personalize after 3s
       setLocalizedMarketStatus()
-      setTimeout(() => {
+      setTimeout(async () => {
         isLoading.value = false
-        generatePersonalizedContent()
+        await generatePersonalizedContent()
       }, 3000)
       return
     }
@@ -1124,25 +1260,25 @@ const initializeVariant = (): number => {
         console.log('🎛️ Personalization enabled:', personalizationEnabled)
         
         // Smooth transition: wait 2 seconds then show personalized content
-        setTimeout(() => {
+        setTimeout(async () => {
           isLoading.value = false
-          generatePersonalizedContent()
+          await generatePersonalizedContent()
           setLocalizedMarketStatus()
         }, 2000)
       })
     } else {
       // Fallback if PostHog is not available
       console.log('⚠️ PostHog not available, using fallback personalization')
-      setTimeout(() => {
+      setTimeout(async () => {
         isLoading.value = false
-        generatePersonalizedContent()
+        await generatePersonalizedContent()
       }, 2000)
     }
   }
 
   // Re-localize after language fully switches
   if (onLanguageSwitched) {
-    onLanguageSwitched(() => {
+    onLanguageSwitched(async () => {
       // Reset retry counter so localized variants can load after switch
       nonEnVariantRetryCount.value = 0
       nonEnVariantIndex.value = 0
@@ -1156,7 +1292,7 @@ const initializeVariant = (): number => {
         nonEnRetryTimer = null
       }
       setLocalizedMarketStatus()
-      generatePersonalizedContent()
+      await generatePersonalizedContent()
     })
   }
 

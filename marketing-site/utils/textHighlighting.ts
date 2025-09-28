@@ -196,6 +196,33 @@ export function highlightHeroHeadline(
   if (!text) return ''
   
   let result = text
+  console.log('🏆 Processing HEADLINE for highlighting:', text)
+  
+  // ENFORCE EXACT HIGHLIGHTING RULES FOR SPECIFIC HEADLINES
+  if (text.includes('Swedish markets') && text.includes('intelligence')) {
+    // "Swedish markets, redefined by intelligence" → intelligence(blue) + Swedish markets(purple)
+    result = text.replace(/\bintelligence\b/gi, `<span class="${BLUE_CLASS}">intelligence</span>`)
+    result = result.replace(/Swedish markets/gi, `<span class="${PURPLE_CLASS}">Swedish markets</span>`)
+    console.log('✅ HEADLINE: intelligence(blue) + Swedish markets(purple)')
+    return result
+  }
+  
+  if (text.includes('AI eyes') && text.includes('opportunity never sleeps')) {
+    // "AI eyes on Swedish markets — opportunity never sleeps" → AI eyes(blue) + Swedish markets(purple)  
+    result = text.replace(/AI eyes/gi, `<span class="${BLUE_CLASS}">AI eyes</span>`)
+    result = result.replace(/Swedish markets/gi, `<span class="${PURPLE_CLASS}">Swedish markets</span>`)
+    console.log('✅ HEADLINE: AI eyes(blue) + Swedish markets(purple)')
+    return result
+  }
+  
+  if (text.includes('Market Research') && text.includes('Trading Insights')) {
+    // "Market Research, Alerts & Trading Insights" → Market Research(blue) + Trading Insights(purple)
+    result = text.replace(/Market Research/gi, `<span class="${BLUE_CLASS}">Market Research</span>`)
+    result = result.replace(/Trading Insights/gi, `<span class="${PURPLE_CLASS}">Trading Insights</span>`)
+    console.log('✅ HEADLINE: Market Research(blue) + Trading Insights(purple)')
+    return result
+  }
+  
   const rules = getLanguageRules(locale)
   
   // Special handling for base marketing headlines per language
@@ -379,32 +406,40 @@ export function highlightHeroSubheadline(
     // Blue keywords (action/process terms) - add translations for each language
     blue: {
       // Research/Analysis terms
-      'research': ['research', 'recherche', 'بحوث', 'أبحاث'],
-      'market_research': ['market research', 'recherche de marché', 'بحوث السوق', 'أبحاث السوق'],
+      'research': ['research', 'recherche', 'بحوث', 'أبحاث', 'Market Research'],
+      'market_research': ['market research', 'Market Research', 'recherche de marché', 'بحوث السوق', 'أبحاث السوق'],
       'powerful': ['powerful', 'puissante', 'قوية'],
-      'get': ['get', 'obtenez', 'احصل', 'احصلوا'],
-      'start': ['start', 'commencez', 'ابدأ', 'ابدأوا'],
+      'get': ['get', 'Get', 'obtenez', 'احصل', 'احصلوا'],
+      'start': ['start', 'Start', 'commencez', 'ابدأ', 'ابدأوا'],
       'real_time': ['real-time', 'real time', 'temps réel', 'الوقت الحقيقي'],
       'ai': ['AI', 'IA', 'الذكاء الاصطناعي'],
       'insight': ['insight', 'vision globale', 'رؤية عالمية'],
       'smart_decisions': ['smarter decisions', 'décisions intelligentes', 'قرارات ذكية', 'قرارات أذكى'],
-      'custom': ['custom', 'personnalisées', 'مخصصة'],
+      'custom': ['custom', 'Custom', 'personnalisées', 'مخصصة'],
       'free_beta': ['free beta', 'bêta gratuite', 'بيتا مجانية'],
-      'ready': ['ready', 'prêt', 'جاهز', 'مستعد']
+      'ready': ['ready', 'prêt', 'جاهز', 'مستعد'],
+      'redefined': ['redefined', 'redéfini', 'مُعاد تعريف'],
+      'intelligence': ['intelligence', 'Intelligence', 'intelligence', 'ذكاء'],
+      'connected': ['connected', 'connecté', 'متصل'],
+      'stay_connected': ['stay connected', 'restez connecté', 'ابق متصلاً']
     },
     // Purple keywords (entities/instruments/services)
     purple: {
-      'trading_signals': ['trading signals', 'signaux de trading', 'إشارات التداول'],
-      'trading_insights': ['trading insights', 'analyses de trading', 'رؤى التداول'],
-      'alerts': ['alerts', 'alertes', 'تنبيهات'],
+      'trading_signals': ['trading signals', 'Trading Signals', 'signaux de trading', 'إشارات التداول'],
+      'trading_insights': ['trading insights', 'Trading Insights', 'analyses de trading', 'رؤى التداول'],
+      'alerts': ['alerts', 'Alerts', 'alertes', 'تنبيهات'],
       'custom_alerts': ['custom alerts', 'alertes personnalisées', 'تنبيهات مخصصة'],
-      'markets': ['markets', 'marchés', 'الأسواق', 'السوق'],
+      'markets': ['markets', 'Markets', 'Swedish markets', 'marchés', 'الأسواق', 'السوق'],
       'stocks': ['stocks', 'actions', 'الأسهم'],
       'crypto': ['crypto', 'crypto', 'العملات المشفرة'],
       'indices': ['indices', 'indices', 'المؤشرات'],
       'commodities': ['commodities', 'matières premières', 'السلع'],
       'trade_execution': ['trade execution', 'exécution des trades', 'تنفيذ الصفقات'],
-      'execution': ['execution', 'exécution', 'تنفيذ']
+      'execution': ['execution', 'exécution', 'تنفيذ'],
+      'wall_street': ['Wall Street', 'وول ستريت'],
+      'omxs30': ['OMXS30', 'OMX', 'OMXS'],
+      'swing': ['swing', 'mouvement', 'تحرك'],
+      'every_swing': ['every swing', 'chaque mouvement', 'كل تحرك']
     }
   }
   
@@ -423,15 +458,49 @@ export function highlightHeroSubheadline(
         
         // Check if this translation exists in the text and isn't already highlighted
         const regex = new RegExp(`\\b${escapeRegex(translation)}\\b`, 'gi')
-        if (regex.test(text) && !result.includes(`>${translation}<`)) {
-          result = result.replace(regex, `<span class="${cssClass}">${translation}</span>`)
-          highlightCount++
-          break // Move to next concept once we find a match
+        if (regex.test(text) && !result.includes(`>${translation.toLowerCase()}<`) && !result.includes(`>${translation}<`)) {
+          // Match the actual case in the text
+          const matches = text.match(regex)
+          if (matches && matches[0]) {
+            const actualMatch = matches[0]
+            result = result.replace(regex, `<span class="${cssClass}">${actualMatch}</span>`)
+            highlightCount++
+            console.log(`✨ Highlighted '${actualMatch}' with ${cssClass}`)
+            break // Move to next concept once we find a match
+          }
         }
       }
     }
     
     return { result, count: highlightCount }
+  }
+  
+  // ENFORCE EXACT HIGHLIGHTING RULES FOR SPECIFIC CONTENT
+  console.log('🌎 Processing text for highlighting:', text)
+  
+  // Handle specific personalized headlines with exact rules
+  if (text.includes('Swedish markets') && text.includes('intelligence')) {
+    // "Swedish markets, redefined by intelligence" → markets(purple) + intelligence(blue)
+    result = text.replace(/Swedish markets/gi, `<span class="${PURPLE_CLASS}">Swedish markets</span>`)
+    result = result.replace(/intelligence/gi, `<span class="${BLUE_CLASS}">intelligence</span>`)
+    console.log('✅ Applied specific rule: Swedish markets(purple) + intelligence(blue)')
+    return result
+  }
+  
+  if (text.includes('Stockholm') && text.includes('Wall Street')) {
+    // "From Stockholm to Wall Street, track every market pulse, 24/7." → track(blue) + Stockholm(purple)
+    result = text.replace(/\btrack\b/gi, `<span class="${BLUE_CLASS}">track</span>`)
+    result = result.replace(/Stockholm/gi, `<span class="${PURPLE_CLASS}">Stockholm</span>`)
+    console.log('✅ Applied specific rule: track(blue) + Stockholm(purple)')
+    return result
+  }
+  
+  if (text.includes('AI eyes') && text.includes('opportunity never sleeps')) {
+    // "AI eyes on Swedish markets — opportunity never sleeps" → AI(blue) + markets(purple)  
+    result = text.replace(/\bAI\b/gi, `<span class="${BLUE_CLASS}">AI</span>`)
+    result = result.replace(/Swedish markets/gi, `<span class="${PURPLE_CLASS}">Swedish markets</span>`)
+    console.log('✅ Applied specific rule: AI(blue) + Swedish markets(purple)')
+    return result
   }
   
   // Check if this is base marketing text (no personalization)
@@ -443,12 +512,22 @@ export function highlightHeroSubheadline(
     /obtenez.*recherche de marché.*alertes.*signaux/i.test(text) ||
     /بحوث.*تنبيهات.*رؤى/i.test(text)
   
-  // Apply semantic highlighting (language-agnostic)
+  if (isBaseMarketingText) {
+    // Base marketing: research(blue) + trading signals(purple)
+    result = result.replace(/\bresearch\b/gi, `<span class="${BLUE_CLASS}">research</span>`)
+    result = result.replace(/trading signals/gi, `<span class="${PURPLE_CLASS}">trading signals</span>`)
+    console.log('✅ Applied base marketing rule: research(blue) + trading signals(purple)')
+    return result
+  }
+  
+  // Apply semantic highlighting (language-agnostic) for other cases
   const blueResult = highlightSemanticKeywords(result, SEMANTIC_KEYWORDS.blue, BLUE_CLASS, 1)
   result = blueResult.result
+  console.log('🔵 After blue highlighting:', result)
   
   const purpleResult = highlightSemanticKeywords(result, SEMANTIC_KEYWORDS.purple, PURPLE_CLASS, 1)  
   result = purpleResult.result
+  console.log('🟪 After purple highlighting:', result)
   
   // CRITICAL: Highlight ALL personalizations when available (but still follow color pattern rules)
   if (userContext && !isBaseMarketingText) {
