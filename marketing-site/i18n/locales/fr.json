@@ -13,6 +13,12 @@
   "brand": {
     "logoAlt": "Logo HeliconTrade"
   },
+  "common": {
+    "cta": {
+      "getStarted": "Commencer",
+      "createAccount": "Créer un Compte Gratuit"
+    }
+  },
   "hero": {
     "title": "Recherche de Marché, Alertes et Analyses de Trading",
     "subtitle": "Obtenez une recherche de marché puissante, des alertes personnalisées et des signaux de trading pour les actions, crypto, indices et matières premières. Commencez avec notre bêta gratuite et soyez prêt quand l'exécution des trades sera lancée.",
@@ -46,6 +52,84 @@
   "features": {
     "title": "Tout ce Dont Vous Avez Besoin pour Trader avec Succès",
     "subtitle": "Notre plateforme combine des outils de trading puissants avec des ressources éducatives pour vous aider à réussir sur les marchés.",
+    "hero": {
+      "title": "Fonctionnalités de Trading Puissantes",
+      "subtitle": "Tout ce dont vous avez besoin pour trader avec succès, des outils pour débutants aux analyses avancées."
+    },
+    "meta": {
+      "title": "Fonctionnalités - Plateforme de Trading HeliconTrade",
+      "description": "Découvrez des fonctionnalités de trading puissantes : graphiques avancés, données en temps réel, gestion de portefeuille et ressources éducatives.",
+      "keywords": "fonctionnalités de trading, graphiques, portefeuille, analyses, éducation, trading crypto, trading actions"
+    },
+    "cta": {
+      "title": "Prêt à commencer à trader ?",
+      "subtitle": "Rejoignez des milliers de traders qui utilisent notre plateforme pour de meilleures décisions."
+    },
+    "categories": {
+      "tradingTools": {
+        "title": "Outils de Trading",
+        "icon": "📈",
+        "items": {
+          "advancedCharting": {
+            "title": "Graphiques Avancés",
+            "description": "Graphiques professionnels avec plus de 100 indicateurs techniques, outils de dessin et plages de temps personnalisables.",
+            "icon": "📊"
+          },
+          "realTimeData": {
+            "title": "Données en Temps Réel",
+            "description": "Données de marché en direct avec une latence de l'ordre de la milliseconde pour des décisions de trading précises.",
+            "icon": "⚡"
+          },
+          "orderManagement": {
+            "title": "Gestion des Ordres",
+            "description": "Types d'ordres avancés incluant stop-loss, take-profit et trading algorithmique.",
+            "icon": "🎯"
+          }
+        }
+      },
+      "portfolioManagement": {
+        "title": "Gestion de Portefeuille",
+        "icon": "💼",
+        "items": {
+          "portfolioTracking": {
+            "title": "Suivi de Portefeuille",
+            "description": "Performance du portefeuille en temps réel avec des analyses détaillées et des métriques de risque.",
+            "icon": "📊"
+          },
+          "riskManagement": {
+            "title": "Gestion des Risques",
+            "description": "Outils d'évaluation des risques intégrés et calculateurs de taille de position.",
+            "icon": "🛡️"
+          },
+          "performanceAnalytics": {
+            "title": "Analyse de Performance",
+            "description": "Suivez votre performance de trading avec des métriques et des analyses détaillées.",
+            "icon": "📈"
+          }
+        }
+      },
+      "education": {
+        "title": "Formation & Support",
+        "icon": "🎓",
+        "items": {
+          "tradingAcademy": {
+            "title": "Académie de Trading",
+            "description": "Cours de trading complets et ressources éducatives pour tous les niveaux.",
+            "icon": "📚"
+          },
+          "webinars": {
+            "title": "Webinaires en Direct",
+            "description": "Sessions interactives avec des experts du marché et des traders professionnels.",
+            "icon": "🎥"
+          },
+          "community": {
+            "title": "Communauté de Trading",
+            "description": "Connectez-vous avec d'autres traders, partagez des stratégies et discutez des tendances du marché.",
+            "icon": "👥"
+          }
+        }
+      }
+    },
     "customAlerts": {
       "title": "Alertes de Trading Personnalisées",
       "description": "Recevez des notifications personnalisées déclenchées par des indicateurs spécifiques, des mouvements de prix ou des conditions de marché."
@@ -312,6 +396,68 @@
     {
       "headline": "Tradez les marchés de {country} avec une IA mondiale",
       "subheadline": "De {city} à Wall Street, notre IA garde un œil sur {index} pour que rien ne vous échappe."
+    },
+    {
+      "headline": "{country} en un coup d'œil — par l'IA",
+      "subheadline": "Des signaux en temps réel de {index}, sans le bruit. {city}, préparez‑vous à agir."
+    },
+    {
+      "headline": "Votre stratégie, partout — {country}",
+      "subheadline": "De {city} à Wall Street, restez aligné avec les mouvements de {index} 24/7."
     }
-  ]
+  ],
+  "personalization": {
+    "variants": {
+      "0": {
+        "headline": "Vision globale, conçue pour les marchés de {country}",
+        "subheadline": "De {city} à Wall Street, transformez les mouvements en temps réel en décisions plus intelligentes."
+      },
+      "1": {
+        "headline": "L'IA surveille les marchés de {country} — l'opportunité ne dort jamais",
+        "subheadline": "De {city} à Wall Street, suivez chaque pulsation du marché, 24/7."
+      },
+      "2": {
+        "headline": "Votre avantage sur les marchés {countryAdjective}",
+        "subheadline": "Avec l'IA qui analyse les marchés mondiaux jour et nuit, concentrez-vous sur des mouvements confiants."
+      },
+      "3": {
+        "headline": "Les marchés de {country}, redéfinis par l'intelligence",
+        "subheadline": "De {city} à Wall Street, restez connecté à chaque mouvement du marché."
+      },
+      "4": {
+        "headline": "Tradez les marchés {countryAdjective} avec la puissance de l'IA mondiale",
+        "subheadline": "De {city} à Wall Street, notre IA garde un œil sur les marchés pour que rien ne vous échappe."
+      },
+      "5": {
+        "headline": "Les marchés ouvrent bientôt — Votre avantage {countryAdjective} vous attend",
+        "subheadline": "Intelligence pré-marché pour les traders de {city}. Positionnez-vous avant l'ouverture."
+      },
+      "6": {
+        "headline": "Action de marché en direct — Opportunités {country} maintenant",
+        "subheadline": "Signaux en temps réel et insights pour les traders actifs de {city} pendant les heures de marché."
+      },
+      "7": {
+        "headline": "Les marchés sont fermés, mais votre IA ne dort jamais",
+        "subheadline": "Insights après clôture et analyse nocturne pour les traders de {city} qui ne se reposent jamais."
+      },
+      "8": {
+        "headline": "Commencez à trader plus intelligemment avec les insights de l'IA",
+        "subheadline": "Bienvenue dans l'avenir du trading. L'IA trouve les opportunités, vous prenez les décisions."
+      },
+      "9": {
+        "headline": "Bon retour — Prêt à trader plus intelligemment ?",
+        "subheadline": "Vos insights de trading personnalisés vous attendent. Reprenons là où nous nous sommes arrêtés."
+      }
+    },
+    "timeOverrides": {
+      "preMarket": {
+        "headline": "Le pré-marché se réchauffe — Préparez-vous pour l'ouverture",
+        "subheadline": "L'IA a détecté des mouvements nocturnes. Voyez ce qui se prépare avant l'ouverture des marchés."
+      },
+      "afterHours": {
+        "headline": "L'action après clôture continue — L'IA ne s'arrête jamais",
+        "subheadline": "Les heures prolongées présentent des opportunités uniques. Laissez l'IA capturer ce que les autres ratent."
+      }
+    }
+  }
 }

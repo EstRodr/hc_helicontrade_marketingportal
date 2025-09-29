@@ -49,25 +49,68 @@ interface PersonalizedContent {
   timeZoneMessage: string
 }
 
-// Location and market mapping
-const locationMarketMap: Record<string, {
-  exchange: string
-  indices: string[]
-  currency: string
-  timezone: string
-}> = {
-  'US': { exchange: 'NYSE', indices: ['SPY', 'QQQ', 'DIA'], currency: 'USD', timezone: 'America/New_York' },
-  'GB': { exchange: 'LSE', indices: ['FTSE', 'UKX'], currency: 'GBP', timezone: 'Europe/London' },
-  'DE': { exchange: 'XETRA', indices: ['DAX', 'MDAX'], currency: 'EUR', timezone: 'Europe/Berlin' },
-  'FR': { exchange: 'EPA', indices: ['CAC', 'SBF'], currency: 'EUR', timezone: 'Europe/Paris' },
-  'SE': { exchange: 'OMX', indices: ['OMXS30', 'OMXSPI'], currency: 'SEK', timezone: 'Europe/Stockholm' },
-  'JP': { exchange: 'TSE', indices: ['N225', 'TOPIX'], currency: 'JPY', timezone: 'Asia/Tokyo' },
-  'CN': { exchange: 'SSE', indices: ['SHCOMP', 'CSI300'], currency: 'CNY', timezone: 'Asia/Shanghai' },
-  'AU': { exchange: 'ASX', indices: ['XAO', 'XJO'], currency: 'AUD', timezone: 'Australia/Sydney' },
-  'CA': { exchange: 'TSX', indices: ['GSPTSE', 'TSX'], currency: 'CAD', timezone: 'America/Toronto' },
-  'IN': { exchange: 'NSE', indices: ['NIFTY', 'SENSEX'], currency: 'INR', timezone: 'Asia/Kolkata' },
-  'BR': { exchange: 'BVSP', indices: ['IBOV', 'BVSP'], currency: 'BRL', timezone: 'America/Sao_Paulo' },
-  'default': { exchange: 'NYSE', indices: ['SPY', 'QQQ', 'DIA'], currency: 'USD', timezone: 'America/New_York' }
+// Comprehensive worldwide market configuration
+const MARKET_MAP: Record<string, { name: string, indices: string[], exchange: string, hours: { open: number, close: number } }> = {
+  // North America
+  'US': { name: 'NYSE', indices: ['SPY', 'QQQ', 'DIA'], exchange: 'NYSE', hours: { open: 9.5, close: 16 } },
+  'CA': { name: 'TSX', indices: ['TSX', 'VTI'], exchange: 'TSX', hours: { open: 9.5, close: 16 } },
+  'MX': { name: 'BMV', indices: ['IPC'], exchange: 'BMV', hours: { open: 8.5, close: 15 } },
+  
+  // Europe  
+  'SE': { name: 'OMX', indices: ['OMXS30'], exchange: 'OMX', hours: { open: 9, close: 17.5 } },
+  'GB': { name: 'LSE', indices: ['FTSE', 'UKX'], exchange: 'LSE', hours: { open: 8, close: 16.5 } },
+  'DE': { name: 'XETRA', indices: ['DAX', 'MDAX'], exchange: 'XETRA', hours: { open: 9, close: 17.5 } },
+  'FR': { name: 'Euronext', indices: ['CAC', 'SBF'], exchange: 'Euronext', hours: { open: 9, close: 17.5 } },
+  'ES': { name: 'BME', indices: ['IBEX'], exchange: 'BME', hours: { open: 9, close: 17.5 } },
+  'IT': { name: 'Borsa Italiana', indices: ['FTSE MIB'], exchange: 'MIB', hours: { open: 9, close: 17.5 } },
+  'NL': { name: 'Euronext', indices: ['AEX'], exchange: 'Euronext', hours: { open: 9, close: 17.5 } },
+  'CH': { name: 'SIX', indices: ['SMI'], exchange: 'SIX', hours: { open: 9, close: 17.5 } },
+  'NO': { name: 'OSE', indices: ['OBX'], exchange: 'OSE', hours: { open: 9, close: 16.5 } },
+  'DK': { name: 'NASDAQ Copenhagen', indices: ['OMXC'], exchange: 'NASDAQ', hours: { open: 9, close: 17 } },
+  'FI': { name: 'NASDAQ Helsinki', indices: ['OMXH'], exchange: 'NASDAQ', hours: { open: 10, close: 18.5 } },
+  'AT': { name: 'Wiener Börse', indices: ['ATX'], exchange: 'WBAG', hours: { open: 9, close: 17.5 } },
+  'BE': { name: 'Euronext', indices: ['BEL20'], exchange: 'Euronext', hours: { open: 9, close: 17.5 } },
+  'PT': { name: 'Euronext', indices: ['PSI'], exchange: 'Euronext', hours: { open: 9, close: 17.5 } },
+  'GR': { name: 'ATHEX', indices: ['ASE'], exchange: 'ATHEX', hours: { open: 10, close: 17.5 } },
+  'PL': { name: 'WSE', indices: ['WIG'], exchange: 'WSE', hours: { open: 9, close: 17 } },
+  'CZ': { name: 'PSE', indices: ['PX'], exchange: 'PSE', hours: { open: 9, close: 17 } },
+  'RU': { name: 'MOEX', indices: ['RTS'], exchange: 'MOEX', hours: { open: 10, close: 18.5 } },
+  
+  // Asia-Pacific
+  'JP': { name: 'TSE', indices: ['N225', 'TOPIX'], exchange: 'TSE', hours: { open: 9, close: 15 } },
+  'CN': { name: 'SSE', indices: ['SHCOMP', 'CSI300'], exchange: 'SSE', hours: { open: 9.5, close: 15 } },
+  'HK': { name: 'HKEX', indices: ['HSI'], exchange: 'HKEX', hours: { open: 9.5, close: 16 } },
+  'KR': { name: 'KRX', indices: ['KOSPI'], exchange: 'KRX', hours: { open: 9, close: 15.5 } },
+  'TW': { name: 'TWSE', indices: ['TAIEX'], exchange: 'TWSE', hours: { open: 9, close: 13.5 } },
+  'SG': { name: 'SGX', indices: ['STI'], exchange: 'SGX', hours: { open: 9, close: 17 } },
+  'MY': { name: 'Bursa', indices: ['KLCI'], exchange: 'Bursa', hours: { open: 9, close: 17 } },
+  'TH': { name: 'SET', indices: ['SET'], exchange: 'SET', hours: { open: 10, close: 16.5 } },
+  'ID': { name: 'IDX', indices: ['JCI'], exchange: 'IDX', hours: { open: 9, close: 16 } },
+  'PH': { name: 'PSE', indices: ['PSEI'], exchange: 'PSE', hours: { open: 9.5, close: 15.5 } },
+  'VN': { name: 'HOSE', indices: ['VNI'], exchange: 'HOSE', hours: { open: 9, close: 15 } },
+  'IN': { name: 'NSE', indices: ['NIFTY', 'SENSEX'], exchange: 'NSE', hours: { open: 9.25, close: 15.5 } },
+  'AU': { name: 'ASX', indices: ['XAO', 'XJO'], exchange: 'ASX', hours: { open: 10, close: 16 } },
+  'NZ': { name: 'NZX', indices: ['NZX50'], exchange: 'NZX', hours: { open: 10, close: 16.5 } },
+  
+  // Middle East & Africa
+  'AE': { name: 'DFM', indices: ['DFMGI'], exchange: 'DFM', hours: { open: 10, close: 15 } },
+  'SA': { name: 'Tadawul', indices: ['TASI'], exchange: 'Tadawul', hours: { open: 10, close: 15 } },
+  'QA': { name: 'QSE', indices: ['QSI'], exchange: 'QSE', hours: { open: 9.5, close: 13 } },
+  'KW': { name: 'Boursa Kuwait', indices: ['KWSE'], exchange: 'Boursa', hours: { open: 9.5, close: 13 } },
+  'IL': { name: 'TASE', indices: ['TA125'], exchange: 'TASE', hours: { open: 9.5, close: 17.25 } },
+  'TR': { name: 'Borsa Istanbul', indices: ['XU100'], exchange: 'BIST', hours: { open: 10, close: 18 } },
+  'ZA': { name: 'JSE', indices: ['JSE'], exchange: 'JSE', hours: { open: 9, close: 17 } },
+  'EG': { name: 'EGX', indices: ['EGX30'], exchange: 'EGX', hours: { open: 10, close: 14.5 } },
+  'MA': { name: 'Casablanca SE', indices: ['MASI'], exchange: 'CSE', hours: { open: 9.5, close: 15.5 } },
+  'NG': { name: 'NSE', indices: ['NSE'], exchange: 'NSE', hours: { open: 10, close: 14.5 } },
+  'KE': { name: 'NSE', indices: ['NSE20'], exchange: 'NSE', hours: { open: 9.5, close: 15 } },
+  
+  // Latin America
+  'BR': { name: 'B3', indices: ['IBOV', 'BVSP'], exchange: 'B3', hours: { open: 10, close: 17 } },
+  'AR': { name: 'BYMA', indices: ['MERV'], exchange: 'BYMA', hours: { open: 11, close: 17 } },
+  'CL': { name: 'BCS', indices: ['IPSA'], exchange: 'BCS', hours: { open: 9.5, close: 16 } },
+  'CO': { name: 'BVC', indices: ['COLCAP'], exchange: 'BVC', hours: { open: 9.5, close: 16 } },
+  'PE': { name: 'BVL', indices: ['IGBVL'], exchange: 'BVL', hours: { open: 9.5, close: 15.5 } }
 }
 
 export const usePersonalization = () => {
@@ -130,118 +173,6 @@ export const usePersonalization = () => {
 
   const isLoading = ref(true)
 
-  // Get user's location and timezone
-  const detectLocation = async () => {
-    try {
-      // Use browser timezone as primary method (more reliable)
-      const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone
-      userContext.value.location.timezone = timezone
-      
-      // Infer location from timezone (more reliable than IP APIs)
-      if (timezone.includes('Stockholm') || timezone.includes('Europe/Stockholm')) {
-        userContext.value.location.countryCode = 'SE'
-        userContext.value.location.country = 'Sweden'
-        userContext.value.location.city = 'Stockholm'
-        userContext.value.location.currency = 'SEK'
-      } else if (timezone.includes('Europe/London')) {
-        userContext.value.location.countryCode = 'GB'
-        userContext.value.location.country = 'United Kingdom'
-      } else if (timezone.includes('Europe/Berlin') || timezone.includes('Europe/Amsterdam')) {
-        userContext.value.location.countryCode = 'DE'
-        userContext.value.location.country = 'Germany'
-        userContext.value.location.currency = 'EUR'
-      } else if (timezone.includes('Europe/Paris')) {
-        userContext.value.location.countryCode = 'FR'
-        userContext.value.location.country = 'France'
-        userContext.value.location.currency = 'EUR'
-      } else if (timezone.includes('America/New_York') || timezone.includes('America/Chicago')) {
-        userContext.value.location.countryCode = 'US'
-        userContext.value.location.country = 'United States'
-        userContext.value.location.currency = 'USD'
-      } else if (timezone.includes('Asia/Tokyo')) {
-        userContext.value.location.countryCode = 'JP'
-        userContext.value.location.country = 'Japan'
-        userContext.value.location.currency = 'JPY'
-      } else {
-        // Default fallback
-        userContext.value.location.countryCode = 'US'
-        userContext.value.location.country = 'United States'
-        userContext.value.location.currency = 'USD'
-      }
-      
-      // Set language from browser
-      userContext.value.location.language = navigator.language?.split('-')[0] || 'en'
-      
-    } catch (error) {
-      console.warn('Location detection failed, using defaults:', error)
-      // Fallback to US defaults
-      userContext.value.location = {
-        country: 'United States',
-        countryCode: 'US',
-        region: '',
-        city: '',
-        timezone: 'America/New_York',
-        currency: 'USD',
-        language: 'en'
-      }
-    }
-  }
-
-  // Determine market hours and session
-  const calculateMarketHours = () => {
-    const now = new Date()
-    const marketInfo = locationMarketMap[userContext.value.location.countryCode] || locationMarketMap.default
-    
-    userContext.value.market.primaryExchange = marketInfo.exchange
-    userContext.value.market.localIndices = marketInfo.indices
-    userContext.value.location.currency = marketInfo.currency
-
-    // Simplified market hours (NYSE as example)
-    const marketOpen = new Date(now)
-    marketOpen.setHours(9, 30, 0, 0) // 9:30 AM
-    const marketClose = new Date(now)
-    marketClose.setHours(16, 0, 0, 0) // 4:00 PM
-
-    const isWeekday = now.getDay() >= 1 && now.getDay() <= 5
-    const currentHour = now.getHours()
-
-    userContext.value.timing.isWeekend = !isWeekday
-    userContext.value.timing.dayOfWeek = now.toLocaleDateString('en-US', { weekday: 'long' })
-
-    if (isWeekday && now >= marketOpen && now <= marketClose) {
-      userContext.value.market.marketHours.isOpen = true
-      userContext.value.timing.marketSession = 'market'
-      userContext.value.market.marketHours.nextClose = marketClose
-    } else if (isWeekday && currentHour >= 4 && currentHour < 9.5) {
-      userContext.value.timing.marketSession = 'pre-market'
-      userContext.value.market.marketHours.nextOpen = marketOpen
-    } else if (isWeekday && currentHour >= 16 && currentHour < 20) {
-      userContext.value.timing.marketSession = 'after-hours'
-      const nextOpen = new Date(now)
-      nextOpen.setDate(nextOpen.getDate() + 1)
-      nextOpen.setHours(9, 30, 0, 0)
-      userContext.value.market.marketHours.nextOpen = nextOpen
-    } else {
-      userContext.value.timing.marketSession = 'closed'
-      const nextOpen = new Date(now)
-      if (now.getDay() === 6) { // Saturday
-        nextOpen.setDate(nextOpen.getDate() + 2) // Monday
-      } else if (now.getDay() === 0) { // Sunday
-        nextOpen.setDate(nextOpen.getDate() + 1) // Monday
-      } else {
-        nextOpen.setDate(nextOpen.getDate() + 1) // Next day
-      }
-      nextOpen.setHours(9, 30, 0, 0)
-      userContext.value.market.marketHours.nextOpen = nextOpen
-    }
-
-    userContext.value.market.marketHours.localTime = now.toLocaleTimeString('en-US', { 
-      timeZone: userContext.value.location.timezone,
-      hour12: true,
-      hour: 'numeric',
-      minute: '2-digit'
-    })
-  }
 
   // Determine time of day
   const calculateTimeOfDay = () => {
@@ -297,80 +228,125 @@ export const usePersonalization = () => {
   // Helper function to convert country names to adjectives
   const getCountryAdjective = (country: string): string => {
     const countryAdjectiveMap: Record<string, string> = {
+      // Europe
       'Sweden': 'Swedish',
-      'United States': 'US',
-      'United Kingdom': 'UK', 
+      'Spain': 'Spanish',
       'Germany': 'German',
       'France': 'French',
-      'Japan': 'Japanese',
+      'Italy': 'Italian',
+      'United Kingdom': 'UK',
+      'Netherlands': 'Dutch',
+      'Portugal': 'Portuguese',
+      'Belgium': 'Belgian',
+      'Switzerland': 'Swiss',
+      'Austria': 'Austrian',
+      'Norway': 'Norwegian',
+      'Denmark': 'Danish',
+      'Finland': 'Finnish',
+      'Poland': 'Polish',
+      'Czech Republic': 'Czech',
+      'Greece': 'Greek',
+      
+      // Americas
+      'United States': 'US',
       'Canada': 'Canadian',
-      'Australia': 'Australian',
+      'Mexico': 'Mexican',
+      'Brazil': 'Brazilian',
+      'Argentina': 'Argentine',
+      'Chile': 'Chilean',
+      'Colombia': 'Colombian',
+      'Peru': 'Peruvian',
+      
+      // Asia-Pacific
+      'Japan': 'Japanese',
+      'China': 'Chinese',
       'India': 'Indian',
-      'Brazil': 'Brazilian'
+      'Australia': 'Australian',
+      'New Zealand': 'New Zealand',
+      'South Korea': 'Korean',
+      'Singapore': 'Singaporean',
+      'Hong Kong': 'Hong Kong',
+      'Thailand': 'Thai',
+      'Malaysia': 'Malaysian',
+      'Indonesia': 'Indonesian',
+      'Philippines': 'Filipino',
+      'Vietnam': 'Vietnamese',
+      
+      // Middle East & Africa
+      'United Arab Emirates': 'UAE',
+      'Saudi Arabia': 'Saudi',
+      'Israel': 'Israeli',
+      'Turkey': 'Turkish',
+      'South Africa': 'South African',
+      'Egypt': 'Egyptian',
+      'Morocco': 'Moroccan',
+      'Nigeria': 'Nigerian',
+      'Kenya': 'Kenyan'
     }
     return countryAdjectiveMap[country] || country
   }
 
-  // Enhanced personalization options with urgency and behavioral variants
-  const personalizationOptions = [
+  // Language-agnostic personalization options using translation keys
+  // These translation keys will be available in all languages (EN, FR, AR, ES, DE, etc.)
+  const personalizationOptionKeys = [
     {
-      // Option A (empowerment frame)
-      headline: (country: string) => `Global insight, built for ${getCountryAdjective(country)} markets`,
-      subheadline: (city: string, index: string) => `From ${city} to Wall Street, turn real‑time moves in ${index} into smarter decisions.`,
+      // Option 0: Empowerment frame
+      headlineKey: 'personalization.variants.0.headline',
+      subheadlineKey: 'personalization.variants.0.subheadline', 
       type: 'empowerment'
     },
     {
-      // Option B (momentum/dynamism)
-      headline: (country: string) => `AI eyes on ${getCountryAdjective(country)} markets — opportunity never sleeps`,
-      subheadline: (city: string) => `From ${city} to Wall Street, track every market pulse, 24/7.`,
+      // Option 1: Momentum/dynamism
+      headlineKey: 'personalization.variants.1.headline',
+      subheadlineKey: 'personalization.variants.1.subheadline',
       type: 'momentum'
     },
     {
-      // Option C (user‑centric)
-      headline: (country: string) => `Your edge in ${getCountryAdjective(country)} markets`,
-      subheadline: (city: string, index: string) => `With AI scanning ${index} day and night, you focus on making confident moves.`,
+      // Option 2: User-centric
+      headlineKey: 'personalization.variants.2.headline',
+      subheadlineKey: 'personalization.variants.2.subheadline',
       type: 'user_centric'
     },
     {
-      // Option D (clean & modern)
-      headline: (country: string) => `${getCountryAdjective(country)} markets, redefined by intelligence`,
-      subheadline: (city: string, index: string) => `From ${city} to Wall Street, stay connected to every swing in ${index}.`,
+      // Option 3: Clean & modern
+      headlineKey: 'personalization.variants.3.headline', 
+      subheadlineKey: 'personalization.variants.3.subheadline',
       type: 'modern'
     },
     {
-      // Option E (short, punchy, younger feel)
-      headline: (country: string) => `Trade ${getCountryAdjective(country)} markets with global AI power`,
-      subheadline: (city: string, index: string) => `From ${city} to Wall Street, our AI keeps an eye on ${index} so you don't miss a beat.`,
+      // Option 4: Action-oriented
+      headlineKey: 'personalization.variants.4.headline',
+      subheadlineKey: 'personalization.variants.4.subheadline',
       type: 'action_oriented'
     },
     {
-      // Option F (TIME-BASED URGENCY: Pre-market)
-      headline: (country: string) => `Markets Open Soon — Your ${getCountryAdjective(country)} Edge Awaits`,
-      subheadline: (city: string, index: string) => `Our AI scanned overnight while you slept. Ready to see today's opportunities in ${index}?`,
+      // Option 5: Pre-market urgency
+      headlineKey: 'personalization.variants.5.headline',
+      subheadlineKey: 'personalization.variants.5.subheadline',
       type: 'pre_market_urgency'
     },
     {
-      // Option G (TIME-BASED URGENCY: Market hours)
-      headline: (country: string) => `Live Market Action — ${getCountryAdjective(country)} Opportunities Now`,
-      subheadline: (city: string, index: string) => `${index} is moving right now. Our AI is tracking every opportunity as it happens.`,
+      // Option 6: Market open urgency
+      headlineKey: 'personalization.variants.6.headline',
+      subheadlineKey: 'personalization.variants.6.subheadline',
       type: 'market_open_urgency'
     },
     {
-      // Option H (TIME-BASED URGENCY: After hours)
-      headline: (country: string) => `Markets Closed, But Your AI Never Sleeps`,
-      subheadline: (city: string, index: string) => `Review today's ${index} patterns and prepare for tomorrow's moves while others rest.`,
+      // Option 7: After-hours urgency
+      headlineKey: 'personalization.variants.7.headline',
+      subheadlineKey: 'personalization.variants.7.subheadline',
       type: 'after_hours_urgency'
     },
     {
-      // Option I (BEHAVIORAL: New visitors)
-      headline: (country: string) => `Start Trading Smarter with AI-Powered Insights`,
-      subheadline: (city: string) => `Join thousands of traders from ${city} and beyond using AI to make better decisions. Free to start, simple to use.`,
+      // Option 8: New visitor behavioral
+      headlineKey: 'personalization.variants.8.headline',
+      subheadlineKey: 'personalization.variants.8.subheadline', 
       type: 'new_visitor'
     },
     {
-      // Option J (BEHAVIORAL: Returning visitors)
-      headline: (country: string) => `Welcome Back — Ready to Trade Smarter?`,
-      subheadline: (city: string, index: string) => `Your AI assistant has been watching ${index} since your last visit. See what we've found for you.`,
+      // Option 9: Returning visitor behavioral
+      headlineKey: 'personalization.variants.9.headline',
+      subheadlineKey: 'personalization.variants.9.subheadline',
       type: 'returning_visitor'
     }
   ]
@@ -446,12 +422,12 @@ export const usePersonalization = () => {
         
         // Handle both numeric strings and variant keys
         if (!isNaN(parseInt(variantValue))) {
-          optionIndex = parseInt(variantValue) % personalizationOptions.length
+          optionIndex = parseInt(variantValue) % personalizationOptionKeys.length
         } else {
           // Handle variant keys like 'variant_0', 'variant_1', etc.
           const match = variantValue.match(/variant[_-]?(\d+)/i)
           if (match) {
-            optionIndex = parseInt(match[1]) % personalizationOptions.length
+            optionIndex = parseInt(match[1]) % personalizationOptionKeys.length
           } else {
             // Map variant keys to indices
             const variantMap: Record<string, number> = {
@@ -468,11 +444,11 @@ export const usePersonalization = () => {
         console.log('🎯 PostHog A/B Test - Variant:', variantValue, '→ Option:', optionIndex)
         
         // Track the variant assignment with detailed context
-        const selectedVariant = personalizationOptions[optionIndex]
+        const selectedVariantKey = personalizationOptionKeys[optionIndex]
         const eventData = {
           variant_id: optionIndex,
           variant_key: variantValue,
-          variant_type: selectedVariant.type, // NEW: Track variant category
+          variant_type: selectedVariantKey.type, // NEW: Track variant category
           flag_name: flagName,
           source: 'posthog_ab_test',
           enabled: true,
@@ -484,7 +460,8 @@ export const usePersonalization = () => {
           is_weekend: userContext.value.timing.isWeekend,
           timezone: userContext.value.location.timezone || 'Europe/Stockholm',
           primary_index: userContext.value.market.localIndices[0] || 'OMXS30',
-          headline: selectedVariant.headline(userContext.value.location.country || 'Sweden'),
+          headline_key: selectedVariantKey.headlineKey,
+          subheadline_key: selectedVariantKey.subheadlineKey,
           visit_count: userContext.value.preferences.visitCount,
           is_new_visitor: userContext.value.preferences.visitCount === 1,
           is_returning_visitor: userContext.value.preferences.visitCount > 3,
@@ -518,7 +495,7 @@ export const usePersonalization = () => {
     const runtimeOption = config.public?.personalizationOption
     if (runtimeOption && !isNaN(parseInt(runtimeOption))) {
       console.log('🔧 Using runtime config option:', runtimeOption)
-      return parseInt(runtimeOption) % personalizationOptions.length
+      return parseInt(runtimeOption) % personalizationOptionKeys.length
     }
     
     // Priority 4: Environment variable fallback removed (TS client-side)
@@ -864,31 +841,108 @@ const initializeVariant = async (): Promise<number> => {
       }
     }
 
-    // Get rotating personalization option (English-only variants)
+    // Get rotating personalization option (now language-agnostic using translation keys)
     const currentOptionIndex = await initializeVariant()
-    const currentOption = personalizationOptions[currentOptionIndex]
+    const currentOptionKey = personalizationOptionKeys[currentOptionIndex]
+    
+    // Get localized country name for translations
+    const localizedCountryName = getLocalizedCountryName()
     
     console.log('🎯 Personalization Debug:', {
       optionIndex: currentOptionIndex,
-      optionType: currentOption.type,
+      optionType: currentOptionKey.type,
       country,
       city,
       primaryIndex,
       isLoading: isLoading.value,
       marketSession: timing.marketSession,
-      selectedOption: {
-        headline: currentOption.headline(country),
-        subheadline: currentOption.subheadline(city, primaryIndex)
-      }
+      headlineKey: currentOptionKey.headlineKey,
+      subheadlineKey: currentOptionKey.subheadlineKey
     })
     
-    // Generic personalization with dynamic location injection
+    // Generic personalization with dynamic location injection using translation keys
     let headline, subheadline
     
     if (location.country && location.city) {
-      // Location detected - apply personalization with dynamic injection
-      const rawHeadline = currentOption.headline(location.country)
-      const rawSubheadline = currentOption.subheadline(location.city, market.localIndices[0] || 'SPY')
+      // Location detected - apply personalization using translated content with dynamic injection
+      // Test if translation function works with simple keys vs nested keys
+      const testSimple = t('hero.title')
+      const testNested = t('personalization.variants.0.headline')
+      const testDirectVariant = t('personalization.variants.7.headline')
+      
+      console.log('🔍 Translation Debug:', {
+        headlineKey: currentOptionKey.headlineKey,
+        subheadlineKey: currentOptionKey.subheadlineKey,
+        locale: locale.value,
+        tFunction: typeof t,
+        country: localizedCountryName,
+        countryAdjective: getCountryAdjective(location.country),
+        testSimple,
+        testNested,
+        testDirectVariant,
+        simpleWorks: testSimple !== 'hero.title',
+        nestedWorks: testNested !== 'personalization.variants.0.headline',
+        directVariantWorks: testDirectVariant !== 'personalization.variants.7.headline'
+      })
+      
+      // Try direct translation first, with fallback to manual lookup
+      let rawHeadline = t(currentOptionKey.headlineKey, { 
+        country: localizedCountryName, 
+        countryAdjective: getCountryAdjective(location.country) 
+      })
+      let rawSubheadline = t(currentOptionKey.subheadlineKey, { 
+        city: location.city, 
+        index: market.localIndices[0] || 'SPY' 
+      })
+      
+      // If translation returned the key itself (meaning it wasn't found), try manual lookup
+      if (rawHeadline === currentOptionKey.headlineKey) {
+        console.log('⚠️ Direct translation failed, trying manual lookup')
+        try {
+          // Get messages directly from locale
+          const messages = getLocaleMessage ? getLocaleMessage(locale.value) : null
+          if (messages && messages.personalization && messages.personalization.variants) {
+            const variantIndex = currentOptionKey.headlineKey.match(/\\.(\\d+)\\./)?.[1]
+            if (variantIndex && messages.personalization.variants[variantIndex]) {
+              let template = messages.personalization.variants[variantIndex].headline
+              // Manual interpolation
+              template = template.replace(/{country}/g, localizedCountryName)
+              template = template.replace(/{countryAdjective}/g, getCountryAdjective(location.country))
+              rawHeadline = template
+              console.log('✅ Manual headline lookup successful:', rawHeadline)
+            }
+          }
+        } catch (e) {
+          console.warn('Manual headline lookup failed:', e)
+        }
+      }
+      
+      if (rawSubheadline === currentOptionKey.subheadlineKey) {
+        console.log('⚠️ Direct subheadline translation failed, trying manual lookup')
+        try {
+          const messages = getLocaleMessage ? getLocaleMessage(locale.value) : null
+          if (messages && messages.personalization && messages.personalization.variants) {
+            const variantIndex = currentOptionKey.subheadlineKey.match(/\\.(\\d+)\\./)?.[1]
+            if (variantIndex && messages.personalization.variants[variantIndex]) {
+              let template = messages.personalization.variants[variantIndex].subheadline
+              // Manual interpolation
+              template = template.replace(/{city}/g, location.city)
+              template = template.replace(/{index}/g, market.localIndices[0] || 'SPY')
+              rawSubheadline = template
+              console.log('✅ Manual subheadline lookup successful:', rawSubheadline)
+            }
+          }
+        } catch (e) {
+          console.warn('Manual subheadline lookup failed:', e)
+        }
+      }
+      
+      console.log('🔍 Translation Results:', {
+        rawHeadline,
+        rawSubheadline,
+        headlineIsKey: rawHeadline === currentOptionKey.headlineKey,
+        subheadlineIsKey: rawSubheadline === currentOptionKey.subheadlineKey
+      })
       
       // Apply semantic highlighting to personalized content
       const highlightContext = getUserContextForHighlighting(userContext.value, locale.value)
@@ -917,22 +971,40 @@ const initializeVariant = async (): Promise<number> => {
     
     console.log('📝 Generated content:', { headline, subheadline })
     
-    // Only override with market-specific messages for pre-market and after-hours
-    // Keep personalized content during market hours
-    if (timing.marketSession === 'pre-market') {
-      const rawHeadline = 'Pre-market is heating up — Get ready for the open'
-      const rawSubheadline = 'AI detected overnight moves. See what\'s setting up before markets open.'
-      const highlightContext = getUserContextForHighlighting(userContext.value, locale.value)
-      headline = highlightHeroHeadline(rawHeadline, locale.value, highlightContext)
-      subheadline = highlightHeroSubheadline(rawSubheadline, locale.value, highlightContext)
-    } else if (timing.marketSession === 'after-hours') {
-      const rawHeadline = 'After-hours action continues — AI never stops'
-      const rawSubheadline = 'Extended hours present unique opportunities. Let AI catch what others miss.'
-      const highlightContext = getUserContextForHighlighting(userContext.value, locale.value)
-      headline = highlightHeroHeadline(rawHeadline, locale.value, highlightContext)
-      subheadline = highlightHeroSubheadline(rawSubheadline, locale.value, highlightContext)
+    // Override with market-specific messages only if not already using time-based personalization
+    // Time-based variants (options 5, 6, 7) already handle these scenarios
+    const isTimeBasedVariant = currentOptionKey.type.includes('urgency')
+    
+    if (!isTimeBasedVariant) {
+      if (timing.marketSession === 'pre-market') {
+        console.log('⏰ Using pre-market time override')
+        const rawHeadline = t('personalization.timeOverrides.preMarket.headline')
+        const rawSubheadline = t('personalization.timeOverrides.preMarket.subheadline')
+        console.log('🔍 Time Override Results:', {
+          rawHeadline,
+          rawSubheadline,
+          headlineIsKey: rawHeadline === 'personalization.timeOverrides.preMarket.headline',
+          subheadlineIsKey: rawSubheadline === 'personalization.timeOverrides.preMarket.subheadline'
+        })
+        const highlightContext = getUserContextForHighlighting(userContext.value, locale.value)
+        headline = highlightHeroHeadline(rawHeadline, locale.value, highlightContext)
+        subheadline = highlightHeroSubheadline(rawSubheadline, locale.value, highlightContext)
+      } else if (timing.marketSession === 'after-hours') {
+        console.log('🌙 Using after-hours time override')
+        const rawHeadline = t('personalization.timeOverrides.afterHours.headline')
+        const rawSubheadline = t('personalization.timeOverrides.afterHours.subheadline')
+        console.log('🔍 Time Override Results:', {
+          rawHeadline,
+          rawSubheadline,
+          headlineIsKey: rawHeadline === 'personalization.timeOverrides.afterHours.headline',
+          subheadlineIsKey: rawSubheadline === 'personalization.timeOverrides.afterHours.subheadline'
+        })
+        const highlightContext = getUserContextForHighlighting(userContext.value, locale.value)
+        headline = highlightHeroHeadline(rawHeadline, locale.value, highlightContext)
+        subheadline = highlightHeroSubheadline(rawSubheadline, locale.value, highlightContext)
+      }
     }
-    // Note: During market hours, we now use the personalized options instead of generic "Markets are LIVE"
+    // Note: Time-based personalization variants handle market timing contextually
     
     // CTAs based on user engagement level
     const ctas = {
@@ -979,7 +1051,7 @@ const initializeVariant = async (): Promise<number> => {
 
   // Function to rotate to next personalization option
   const rotatePersonalizationOption = async () => {
-    currentOptionIndex.value = (currentOptionIndex.value + 1) % personalizationOptions.length
+    variant.value = (variant.value + 1) % personalizationOptionKeys.length
     await generatePersonalizedContent()
   }
 
@@ -1018,34 +1090,16 @@ const initializeVariant = async (): Promise<number> => {
     return names[currencyCode] || currencyCode
   }
 
-  // Helper: get market schedule by country
-  const getMarketSchedule = (country: string) => {
-    // Defaults
-    let marketOpen = 9
-    let marketClose = 17.5
-    let marketName = 'OMX'
-    if (country === 'Sweden') {
-      marketOpen = 9
-      marketClose = 17.5
-      marketName = 'OMX'
-    } else if (country === 'United States') {
-      marketOpen = 9.5
-      marketClose = 16
-      marketName = 'NYSE'
-    } else if (country === 'United Kingdom') {
-      marketOpen = 8
-      marketClose = 16.5
-      marketName = 'LSE'
-    } else if (country === 'Germany') {
-      marketOpen = 9
-      marketClose = 17.5
-      marketName = 'XETRA'
-    } else if (country === 'France') {
-      marketOpen = 9
-      marketClose = 17.5
-      marketName = 'EPA'
+  // Helper: get market schedule by country using the centralized MARKET_MAP
+  const getMarketSchedule = (country: string, countryCode: string) => {
+    // Default to US markets if country not found
+    const marketConfig = MARKET_MAP[countryCode] || MARKET_MAP['US']
+    
+    return { 
+      marketOpen: marketConfig.hours.open, 
+      marketClose: marketConfig.hours.close, 
+      marketName: marketConfig.name 
     }
-    return { marketOpen, marketClose, marketName }
   }
 
   // Helper: format time according to locale
@@ -1064,11 +1118,21 @@ const initializeVariant = async (): Promise<number> => {
   // Helper: localize and set market status text
   const setLocalizedMarketStatus = () => {
     const country = userContext.value.location.country || 'Sweden'
-    const { marketOpen, marketClose, marketName } = getMarketSchedule(country)
+    const countryCode = userContext.value.location.countryCode || 'SE'
+    const { marketOpen, marketClose, marketName } = getMarketSchedule(country, countryCode)
     const session = userContext.value.timing.marketSession
     const isOpen = userContext.value.market.marketHours.isOpen
     const weekend = userContext.value.timing.isWeekend || session === 'market-closed'
     let msg = ''
+    
+    console.log('🏢 Market status debug:', {
+      country,
+      countryCode,
+      marketName,
+      session,
+      isOpen
+    })
+    
     if (weekend) {
       msg = t('marketStatus.closed', { market: marketName }) as string
     } else if (isOpen) {
@@ -1224,71 +1288,7 @@ const initializeVariant = async (): Promise<number> => {
       const country = userContext.value.location.country
       const countryCode = userContext.value.location.countryCode
       
-      // Comprehensive worldwide market coverage
-      const MARKET_MAP: Record<string, { name: string, indices: string[], exchange: string, hours: { open: number, close: number } }> = {
-        // North America
-        'US': { name: 'NYSE', indices: ['SPY', 'QQQ', 'DIA'], exchange: 'NYSE', hours: { open: 9.5, close: 16 } },
-        'CA': { name: 'TSX', indices: ['TSX', 'VTI'], exchange: 'TSX', hours: { open: 9.5, close: 16 } },
-        'MX': { name: 'BMV', indices: ['IPC'], exchange: 'BMV', hours: { open: 8.5, close: 15 } },
-        
-        // Europe  
-        'SE': { name: 'OMX', indices: ['OMXS30'], exchange: 'OMX', hours: { open: 9, close: 17.5 } },
-        'GB': { name: 'LSE', indices: ['FTSE', 'UKX'], exchange: 'LSE', hours: { open: 8, close: 16.5 } },
-        'DE': { name: 'XETRA', indices: ['DAX', 'MDAX'], exchange: 'XETRA', hours: { open: 9, close: 17.5 } },
-        'FR': { name: 'Euronext', indices: ['CAC', 'SBF'], exchange: 'Euronext', hours: { open: 9, close: 17.5 } },
-        'ES': { name: 'BME', indices: ['IBEX'], exchange: 'BME', hours: { open: 9, close: 17.5 } },
-        'IT': { name: 'Borsa Italiana', indices: ['FTSE MIB'], exchange: 'MIB', hours: { open: 9, close: 17.5 } },
-        'NL': { name: 'Euronext', indices: ['AEX'], exchange: 'Euronext', hours: { open: 9, close: 17.5 } },
-        'CH': { name: 'SIX', indices: ['SMI'], exchange: 'SIX', hours: { open: 9, close: 17.5 } },
-        'NO': { name: 'OSE', indices: ['OBX'], exchange: 'OSE', hours: { open: 9, close: 16.5 } },
-        'DK': { name: 'NASDAQ Copenhagen', indices: ['OMXC'], exchange: 'NASDAQ', hours: { open: 9, close: 17 } },
-        'FI': { name: 'NASDAQ Helsinki', indices: ['OMXH'], exchange: 'NASDAQ', hours: { open: 10, close: 18.5 } },
-        'AT': { name: 'Wiener Börse', indices: ['ATX'], exchange: 'WBAG', hours: { open: 9, close: 17.5 } },
-        'BE': { name: 'Euronext', indices: ['BEL20'], exchange: 'Euronext', hours: { open: 9, close: 17.5 } },
-        'PT': { name: 'Euronext', indices: ['PSI'], exchange: 'Euronext', hours: { open: 9, close: 17.5 } },
-        'GR': { name: 'ATHEX', indices: ['ASE'], exchange: 'ATHEX', hours: { open: 10, close: 17.5 } },
-        'PL': { name: 'WSE', indices: ['WIG'], exchange: 'WSE', hours: { open: 9, close: 17 } },
-        'CZ': { name: 'PSE', indices: ['PX'], exchange: 'PSE', hours: { open: 9, close: 17 } },
-        'RU': { name: 'MOEX', indices: ['RTS'], exchange: 'MOEX', hours: { open: 10, close: 18.5 } },
-        
-        // Asia-Pacific
-        'JP': { name: 'TSE', indices: ['N225', 'TOPIX'], exchange: 'TSE', hours: { open: 9, close: 15 } },
-        'CN': { name: 'SSE', indices: ['SHCOMP', 'CSI300'], exchange: 'SSE', hours: { open: 9.5, close: 15 } },
-        'HK': { name: 'HKEX', indices: ['HSI'], exchange: 'HKEX', hours: { open: 9.5, close: 16 } },
-        'KR': { name: 'KRX', indices: ['KOSPI'], exchange: 'KRX', hours: { open: 9, close: 15.5 } },
-        'TW': { name: 'TWSE', indices: ['TAIEX'], exchange: 'TWSE', hours: { open: 9, close: 13.5 } },
-        'SG': { name: 'SGX', indices: ['STI'], exchange: 'SGX', hours: { open: 9, close: 17 } },
-        'MY': { name: 'Bursa', indices: ['KLCI'], exchange: 'Bursa', hours: { open: 9, close: 17 } },
-        'TH': { name: 'SET', indices: ['SET'], exchange: 'SET', hours: { open: 10, close: 16.5 } },
-        'ID': { name: 'IDX', indices: ['JCI'], exchange: 'IDX', hours: { open: 9, close: 16 } },
-        'PH': { name: 'PSE', indices: ['PSEI'], exchange: 'PSE', hours: { open: 9.5, close: 15.5 } },
-        'VN': { name: 'HOSE', indices: ['VNI'], exchange: 'HOSE', hours: { open: 9, close: 15 } },
-        'IN': { name: 'NSE', indices: ['NIFTY', 'SENSEX'], exchange: 'NSE', hours: { open: 9.25, close: 15.5 } },
-        'AU': { name: 'ASX', indices: ['XAO', 'XJO'], exchange: 'ASX', hours: { open: 10, close: 16 } },
-        'NZ': { name: 'NZX', indices: ['NZX50'], exchange: 'NZX', hours: { open: 10, close: 16.5 } },
-        
-        // Middle East & Africa
-        'AE': { name: 'DFM', indices: ['DFMGI'], exchange: 'DFM', hours: { open: 10, close: 15 } },
-        'SA': { name: 'Tadawul', indices: ['TASI'], exchange: 'Tadawul', hours: { open: 10, close: 15 } },
-        'QA': { name: 'QSE', indices: ['QSI'], exchange: 'QSE', hours: { open: 9.5, close: 13 } },
-        'KW': { name: 'Boursa Kuwait', indices: ['KWSE'], exchange: 'Boursa', hours: { open: 9.5, close: 13 } },
-        'IL': { name: 'TASE', indices: ['TA125'], exchange: 'TASE', hours: { open: 9.5, close: 17.25 } },
-        'TR': { name: 'Borsa Istanbul', indices: ['XU100'], exchange: 'BIST', hours: { open: 10, close: 18 } },
-        'ZA': { name: 'JSE', indices: ['JSE'], exchange: 'JSE', hours: { open: 9, close: 17 } },
-        'EG': { name: 'EGX', indices: ['EGX30'], exchange: 'EGX', hours: { open: 10, close: 14.5 } },
-        'MA': { name: 'Casablanca SE', indices: ['MASI'], exchange: 'CSE', hours: { open: 9.5, close: 15.5 } },
-        'NG': { name: 'NSE', indices: ['NSE'], exchange: 'NSE', hours: { open: 10, close: 14.5 } },
-        'KE': { name: 'NSE', indices: ['NSE20'], exchange: 'NSE', hours: { open: 9.5, close: 15 } },
-        
-        // Latin America
-        'BR': { name: 'B3', indices: ['IBOV', 'BVSP'], exchange: 'B3', hours: { open: 10, close: 17 } },
-        'AR': { name: 'BYMA', indices: ['MERV'], exchange: 'BYMA', hours: { open: 11, close: 17 } },
-        'CL': { name: 'BCS', indices: ['IPSA'], exchange: 'BCS', hours: { open: 9.5, close: 16 } },
-        'CO': { name: 'BVC', indices: ['COLCAP'], exchange: 'BVC', hours: { open: 9.5, close: 16 } },
-        'PE': { name: 'BVL', indices: ['IGBVL'], exchange: 'BVL', hours: { open: 9.5, close: 15.5 } },
-      }
-      
-      // Default to US markets if country not found or location detection failed
+      // Use centralized MARKET_MAP (no duplication)
       const marketConfig = MARKET_MAP[countryCode] || MARKET_MAP['US']
       
       const marketOpen = marketConfig.hours.open

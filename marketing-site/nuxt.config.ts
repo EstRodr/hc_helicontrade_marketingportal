@@ -125,6 +125,6 @@ export default defineNuxtConfig({
     // Use different presets based on build type
     preset: isStaticBuild ? 'cloudflare-pages' : 'node-server',
     // Silence Nitro warning and lock features for this date
-    compatibilityDate: '2025-08-26',
+    compatibilityDate: '2025-09-29',
   },
 })

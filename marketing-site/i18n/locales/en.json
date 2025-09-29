@@ -13,6 +13,12 @@
   "brand": {
     "logoAlt": "HeliconTrade Logo"
   },
+  "common": {
+    "cta": {
+      "getStarted": "Get Started",
+      "createAccount": "Create Free Account"
+    }
+  },
   "hero": {
     "title": "Market Research, Alerts & Trading Insights",
     "subtitle": "Get powerful market research, custom alerts, and trading signals for stocks, crypto, indices, and commodities. Start with our free beta and be ready when trade execution launches.",
@@ -46,6 +52,84 @@
   "features": {
     "title": "Everything You Need to Trade Successfully",
     "subtitle": "Our platform combines powerful trading tools with educational resources to help you succeed in the markets.",
+    "hero": {
+      "title": "Powerful Trading Features",
+      "subtitle": "Everything you need to trade successfully, from beginner-friendly tools to advanced analytics."
+    },
+    "meta": {
+      "title": "Features - HeliconTrade Trading Platform",
+      "description": "Discover powerful trading features including advanced charts, real-time data, portfolio management, and educational resources.",
+      "keywords": "trading features, charts, portfolio, analytics, education, crypto trading, stock trading"
+    },
+    "cta": {
+      "title": "Ready to Start Trading?",
+      "subtitle": "Join thousands of traders using our platform to make better trading decisions."
+    },
+    "categories": {
+      "tradingTools": {
+        "title": "Trading Tools",
+        "icon": "📈",
+        "items": {
+          "advancedCharting": {
+            "title": "Advanced Charting",
+            "description": "Professional-grade charts with 100+ technical indicators, drawing tools, and custom timeframes.",
+            "icon": "📊"
+          },
+          "realTimeData": {
+            "title": "Real-Time Data",
+            "description": "Live market data with millisecond latency for accurate trading decisions.",
+            "icon": "⚡"
+          },
+          "orderManagement": {
+            "title": "Order Management",
+            "description": "Advanced order types including stop-loss, take-profit, and algorithmic trading.",
+            "icon": "🎯"
+          }
+        }
+      },
+      "portfolioManagement": {
+        "title": "Portfolio Management",
+        "icon": "💼",
+        "items": {
+          "portfolioTracking": {
+            "title": "Portfolio Tracking",
+            "description": "Real-time portfolio performance with detailed analytics and risk metrics.",
+            "icon": "📊"
+          },
+          "riskManagement": {
+            "title": "Risk Management",
+            "description": "Built-in risk assessment tools and position sizing calculators.",
+            "icon": "🛡️"
+          },
+          "performanceAnalytics": {
+            "title": "Performance Analytics",
+            "description": "Track your trading performance with detailed metrics and insights.",
+            "icon": "📈"
+          }
+        }
+      },
+      "education": {
+        "title": "Education & Support",
+        "icon": "🎓",
+        "items": {
+          "tradingAcademy": {
+            "title": "Trading Academy",
+            "description": "Comprehensive trading courses and educational resources for all skill levels.",
+            "icon": "📚"
+          },
+          "webinars": {
+            "title": "Live Webinars",
+            "description": "Interactive sessions with market experts and professional traders.",
+            "icon": "🎥"
+          },
+          "community": {
+            "title": "Trading Community",
+            "description": "Connect with other traders, share strategies, and discuss market trends.",
+            "icon": "👥"
+          }
+        }
+      }
+    },
     "customAlerts": {
       "title": "Custom Trading Alerts",
       "description": "Get personalized notifications triggered by specific indicators, price movements, or market conditions."
@@ -288,5 +372,81 @@
     "preMarket": "{market} opens at {time}",
     "afterHours": "{market} closed • After-hours trading",
     "closed": "{market} closed"
+  },
+  "heroVariants": [
+    {
+      "headline": "Global insight, built for {country} markets",
+      "subheadline": "From {city} to Wall Street, turn real-time moves in {index} into smarter decisions."
+    },
+    {
+      "headline": "AI eyes on {country} markets — opportunity never sleeps",
+      "subheadline": "From {city} to Wall Street, track every market pulse, 24/7."
+    },
+    {
+      "headline": "Your edge in {country}'s markets",
+      "subheadline": "With AI scanning {index} day and night, you focus on making confident moves."
+    },
+    {
+      "headline": "{country} markets, redefined by intelligence",
+      "subheadline": "From {city} to Wall Street, stay connected to every swing in {index}."
+    },
+    {
+      "headline": "Trade {country} markets with global AI power",
+      "subheadline": "From {city} to Wall Street, our AI keeps an eye on {index} so you don't miss a beat."
+    }
+  ],
+  "personalization": {
+    "variants": {
+      "0": {
+        "headline": "Global insight, built for {country} markets",
+        "subheadline": "From {city} to Wall Street, turn real-time moves into smarter decisions."
+      },
+      "1": {
+        "headline": "AI eyes on {country} markets — opportunity never sleeps",
+        "subheadline": "From {city} to Wall Street, track every market pulse, 24/7."
+      },
+      "2": {
+        "headline": "Your edge in {countryAdjective} markets",
+        "subheadline": "With AI scanning global markets day and night, you focus on making confident moves."
+      },
+      "3": {
+        "headline": "{country} markets, redefined by intelligence",
+        "subheadline": "From {city} to Wall Street, stay connected to every market swing."
+      },
+      "4": {
+        "headline": "Trade {countryAdjective} markets with global AI power",
+        "subheadline": "From {city} to Wall Street, our AI keeps an eye on markets so you don't miss a beat."
+      },
+      "5": {
+        "headline": "Markets Open Soon — Your {countryAdjective} Edge Awaits",
+        "subheadline": "Pre-market intelligence for {city} traders. Get positioned before the opening bell."
+      },
+      "6": {
+        "headline": "Live Market Action — {country} Opportunities Now",
+        "subheadline": "Real-time signals and insights for active {city} traders during market hours."
+      },
+      "7": {
+        "headline": "Markets Closed, But Your AI Never Sleeps",
+        "subheadline": "After-hours insights and overnight analysis for {city} traders who never rest."
+      },
+      "8": {
+        "headline": "Start Trading Smarter with AI-Powered Insights",
+        "subheadline": "Welcome to the future of trading. AI finds opportunities, you make the decisions."
+      },
+      "9": {
+        "headline": "Welcome Back — Ready to Trade Smarter?",
+        "subheadline": "Your personalized trading insights are waiting. Let's pick up where we left off."
+      }
+    },
+    "timeOverrides": {
+      "preMarket": {
+        "headline": "Pre-market is heating up — Get ready for the open",
+        "subheadline": "AI detected overnight moves. See what's setting up before markets open."
+      },
+      "afterHours": {
+        "headline": "After-hours action continues — AI never stops",
+        "subheadline": "Extended hours present unique opportunities. Let AI catch what others miss."
+      }
+    }
   }
 }

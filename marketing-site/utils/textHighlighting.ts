@@ -50,6 +50,33 @@ const HIGHLIGHTING_RULES: LocalizedRules = {
       /\bopportunity never sleeps\b/gi,
       /\bAI never stops\b/gi,
       /\bnever stops\b/gi,
+      
+      // Action-oriented and engagement terms
+      /\bEdge Awaits\b/gi,
+      /\bMarket Action\b/gi,
+      /\bAI-Powered\b/gi,
+      /\bReady to\b/gi,
+      /\bbuilt for\b/gi,
+      /\bredefined by\b/gi,
+      /\bYour edge\b/gi,
+      /\bTrade.*with.*AI\b/gi,
+      /\bStart.*Smarter\b/gi,
+      
+      // Time-sensitive and urgency terms
+      /\bOpen Soon\b/gi,
+      /\bAction continues\b/gi,
+      /\bheating up\b/gi,
+      /\bGet ready\b/gi,
+      
+      // Additional personalization variant terms (blue = action/technology)
+      /\bPre-market intelligence\b/gi,
+      /\bReal-time signals\b/gi,
+      /\bovernight analysis\b/gi,
+      /\bAI finds opportunities\b/gi,
+      /\bpersonalized\b/gi,
+      /\bsmarter decisions\b/gi,
+      /\bAI scanning\b/gi,
+      /\bAI keeps an eye\b/gi,
     ],
     purple: [
       // Financial instruments young traders use
@@ -66,6 +93,34 @@ const HIGHLIGHTING_RULES: LocalizedRules = {
       /\bmarkets?\b/gi,
       /\bMarkets? Closed\b/gi,
       /\bAfter[-\s]hours\b/gi,
+      /\bOpportunities\b/gi,
+      /\bMarkets Open\b/gi,
+      /\bTrading Smarter\b/gi,
+      
+      // Geographic locations and market-specific terms
+      /\bSwedish\s+markets\b/gi,
+      /\bSpanish\s+markets\b/gi,
+      /\bGerman\s+markets\b/gi,
+      /\bFrench\s+markets\b/gi,
+      /\bUS\s+markets\b/gi,
+      /\bUK\s+markets\b/gi,
+      
+      // Market indices
+      /\bOMXS30\b/gi,
+      /\bIBEX\b/gi,
+      /\bDAX\b/gi,
+      /\bCAC\b/gi,
+      /\bFTSE\b/gi,
+      /\bSPY\b/gi,
+      /\bQQQ\b/gi,
+      
+      // Additional personalization variant terms (purple = markets/trading/entities)
+      /\btraders\b/gi,
+      /\bactive.*?traders\b/gi,
+      /\btrading insights\b/gi,
+      /\bglobal markets\b/gi,
+      /\bTrading Smarter\b/gi,
+      /\bTrade\b/gi,
       
       // Will be dynamically added: countries, cities, indices
     ]
@@ -200,6 +255,12 @@ export function highlightHeroHeadline(
 ): string {
   if (!text) return ''
   
+  // Skip highlighting if text already contains highlight spans
+  if (text.includes('<span class="text-blue-') || text.includes('<span class="text-purple-')) {
+    console.log('🚫 HEADLINE already highlighted, skipping:', text.substring(0, 100) + '...')
+    return text
+  }
+  
   let result = text
   console.log('🏆 Processing HEADLINE for highlighting:', text)
   
@@ -233,6 +294,63 @@ export function highlightHeroHeadline(
     result = text.replace(/AI Never Sleeps/gi, `<span class="${BLUE_CLASS}">AI Never Sleeps</span>`)
     result = result.replace(/\bMarkets\b/gi, `<span class="${PURPLE_CLASS}">Markets</span>`)
     console.log('✅ HEADLINE: AI Never Sleeps(blue) + Markets(purple)')
+    return result
+  }
+  
+  if (text.includes('Markets Open Soon') && text.includes('Edge Awaits')) {
+    // "Markets Open Soon — Your Swedish Edge Awaits" → Edge Awaits(blue) + Markets(purple)
+    result = text.replace(/Edge Awaits/gi, `<span class="${BLUE_CLASS}">Edge Awaits</span>`)
+    result = result.replace(/\bMarkets Open\b/gi, `<span class="${PURPLE_CLASS}">Markets Open</span>`)
+    console.log('✅ HEADLINE: Edge Awaits(blue) + Markets Open(purple)')
+    return result
+  }
+  
+  if (text.includes('Live Market Action') && text.includes('Opportunities Now')) {
+    // "Live Market Action — Swedish Opportunities Now" → Market Action(blue) + Opportunities(purple)
+    result = text.replace(/Market Action/gi, `<span class="${BLUE_CLASS}">Market Action</span>`)
+    result = result.replace(/\bOpportunities\b/gi, `<span class="${PURPLE_CLASS}">Opportunities</span>`)
+    console.log('✅ HEADLINE: Market Action(blue) + Opportunities(purple)')
+    return result
+  }
+  
+  if (text.includes('Start Trading Smarter') && text.includes('AI-Powered')) {
+    // "Start Trading Smarter with AI-Powered Insights" → AI-Powered(blue) + Trading Smarter(purple)
+    result = text.replace(/AI-Powered/gi, `<span class="${BLUE_CLASS}">AI-Powered</span>`)
+    result = result.replace(/Trading Smarter/gi, `<span class="${PURPLE_CLASS}">Trading Smarter</span>`)
+    console.log('✅ HEADLINE: AI-Powered(blue) + Trading Smarter(purple)')
+    return result
+  }
+  
+  if (text.includes('Welcome Back') && text.includes('Trade Smarter')) {
+    // "Welcome Back — Ready to Trade Smarter?" → Ready to(blue) + Trade Smarter(purple) 
+    result = text.replace(/Ready to/gi, `<span class="${BLUE_CLASS}">Ready to</span>`)
+    result = result.replace(/Trade Smarter/gi, `<span class="${PURPLE_CLASS}">Trade Smarter</span>`)
+    console.log('✅ HEADLINE: Ready to(blue) + Trade Smarter(purple)')
+    return result
+  }
+  
+  // Additional personalization variant rules
+  if (text.includes('Global insight') && text.includes('built for')) {
+    // "Global insight, built for {country} markets" → Global insight(blue) + markets(purple)
+    result = text.replace(/Global insight/gi, `<span class="${BLUE_CLASS}">Global insight</span>`)
+    result = result.replace(/\bmarkets\b/gi, `<span class="${PURPLE_CLASS}">markets</span>`)
+    console.log('✅ HEADLINE: Global insight(blue) + markets(purple)')
+    return result
+  }
+  
+  if (text.includes('Your edge in') && text.includes('markets')) {
+    // "Your edge in {countryAdjective} markets" → Your edge(blue) + markets(purple)
+    result = text.replace(/Your edge/gi, `<span class="${BLUE_CLASS}">Your edge</span>`)
+    result = result.replace(/\bmarkets\b/gi, `<span class="${PURPLE_CLASS}">markets</span>`)
+    console.log('✅ HEADLINE: Your edge(blue) + markets(purple)')
+    return result
+  }
+  
+  if (text.includes('Trade') && text.includes('with global AI power')) {
+    // "Trade {countryAdjective} markets with global AI power" → AI power(blue) + Trade(purple)
+    result = text.replace(/AI power/gi, `<span class="${BLUE_CLASS}">AI power</span>`)
+    result = result.replace(/\bTrade\b/gi, `<span class="${PURPLE_CLASS}">Trade</span>`)
+    console.log('✅ HEADLINE: AI power(blue) + Trade(purple)')
     return result
   }
   
@@ -321,16 +439,60 @@ export function highlightHeroHeadline(
     // Helper to get country adjective from country name
     const getCountryAdjective = (country: string): string => {
       const countryAdjectiveMap: Record<string, string> = {
+        // Europe
         'Sweden': 'Swedish',
-        'United States': 'US', 
-        'United Kingdom': 'UK',
+        'Spain': 'Spanish',
         'Germany': 'German',
         'France': 'French',
-        'Japan': 'Japanese',
+        'Italy': 'Italian',
+        'United Kingdom': 'UK',
+        'Netherlands': 'Dutch',
+        'Portugal': 'Portuguese',
+        'Belgium': 'Belgian',
+        'Switzerland': 'Swiss',
+        'Austria': 'Austrian',
+        'Norway': 'Norwegian',
+        'Denmark': 'Danish',
+        'Finland': 'Finnish',
+        'Poland': 'Polish',
+        'Czech Republic': 'Czech',
+        'Greece': 'Greek',
+        
+        // Americas
+        'United States': 'US',
         'Canada': 'Canadian',
-        'Australia': 'Australian',
+        'Mexico': 'Mexican',
+        'Brazil': 'Brazilian',
+        'Argentina': 'Argentine',
+        'Chile': 'Chilean',
+        'Colombia': 'Colombian',
+        'Peru': 'Peruvian',
+        
+        // Asia-Pacific
+        'Japan': 'Japanese',
+        'China': 'Chinese',
         'India': 'Indian',
-        'Brazil': 'Brazilian'
+        'Australia': 'Australian',
+        'New Zealand': 'New Zealand',
+        'South Korea': 'Korean',
+        'Singapore': 'Singaporean',
+        'Hong Kong': 'Hong Kong',
+        'Thailand': 'Thai',
+        'Malaysia': 'Malaysian',
+        'Indonesia': 'Indonesian',
+        'Philippines': 'Filipino',
+        'Vietnam': 'Vietnamese',
+        
+        // Middle East & Africa
+        'United Arab Emirates': 'UAE',
+        'Saudi Arabia': 'Saudi',
+        'Israel': 'Israeli',
+        'Turkey': 'Turkish',
+        'South Africa': 'South African',
+        'Egypt': 'Egyptian',
+        'Morocco': 'Moroccan',
+        'Nigeria': 'Nigerian',
+        'Kenya': 'Kenyan'
       }
       return countryAdjectiveMap[country] || country
     }
@@ -415,6 +577,12 @@ export function highlightHeroSubheadline(
   }
 ): string {
   if (!text) return ''
+  
+  // Skip highlighting if text already contains highlight spans
+  if (text.includes('<span class="text-blue-') || text.includes('<span class="text-purple-')) {
+    console.log('🚫 SUBHEADLINE already highlighted, skipping:', text.substring(0, 100) + '...')
+    return text
+  }
   
   let result = text
   const rules = getLanguageRules(locale)
@@ -524,6 +692,71 @@ export function highlightHeroSubheadline(
     result = text.replace(/\bAI\b/gi, `<span class="${BLUE_CLASS}">AI</span>`)
     result = result.replace(/Swedish markets/gi, `<span class="${PURPLE_CLASS}">Swedish markets</span>`)
     console.log('✅ Applied specific rule: AI(blue) + Swedish markets(purple)')
+    return result
+  }
+  
+  // Additional personalization variant subheadline rules
+  if (text.includes('smarter decisions')) {
+    // "From {city} to Wall Street, turn real-time moves into smarter decisions." → smarter decisions(blue) + Wall Street(purple)
+    result = text.replace(/smarter decisions/gi, `<span class="${BLUE_CLASS}">smarter decisions</span>`)
+    result = result.replace(/Wall Street/gi, `<span class="${PURPLE_CLASS}">Wall Street</span>`)
+    console.log('✅ Applied rule: smarter decisions(blue) + Wall Street(purple)')
+    return result
+  }
+  
+  if (text.includes('AI scanning') && text.includes('confident moves')) {
+    // "With AI scanning global markets day and night, you focus on making confident moves." → AI scanning(blue) + markets(purple)
+    result = text.replace(/AI scanning/gi, `<span class="${BLUE_CLASS}">AI scanning</span>`)
+    result = result.replace(/global markets/gi, `<span class="${PURPLE_CLASS}">global markets</span>`)
+    console.log('✅ Applied rule: AI scanning(blue) + global markets(purple)')
+    return result
+  }
+  
+  if (text.includes('AI keeps an eye on') && text.includes('miss a beat')) {
+    // "From {city} to Wall Street, our AI keeps an eye on markets so you don't miss a beat." → AI keeps an eye(blue) + markets(purple)
+    result = text.replace(/AI keeps an eye/gi, `<span class="${BLUE_CLASS}">AI keeps an eye</span>`)
+    result = result.replace(/\bmarkets\b/gi, `<span class="${PURPLE_CLASS}">markets</span>`)
+    console.log('✅ Applied rule: AI keeps an eye(blue) + markets(purple)')
+    return result
+  }
+  
+  if (text.includes('Pre-market intelligence')) {
+    // "Pre-market intelligence for {city} traders. Get positioned before the opening bell." → Pre-market intelligence(blue) + traders(purple)
+    result = text.replace(/Pre-market intelligence/gi, `<span class="${BLUE_CLASS}">Pre-market intelligence</span>`)
+    result = result.replace(/\btraders\b/gi, `<span class="${PURPLE_CLASS}">traders</span>`)
+    console.log('✅ Applied rule: Pre-market intelligence(blue) + traders(purple)')
+    return result
+  }
+  
+  if (text.includes('Real-time signals') && text.includes('active')) {
+    // "Real-time signals and insights for active {city} traders during market hours." → Real-time signals(blue) + traders(purple)
+    result = text.replace(/Real-time signals/gi, `<span class="${BLUE_CLASS}">Real-time signals</span>`)
+    result = result.replace(/active.*?traders/gi, `<span class="${PURPLE_CLASS}">$&</span>`)
+    console.log('✅ Applied rule: Real-time signals(blue) + active traders(purple)')
+    return result
+  }
+  
+  if (text.includes('After-hours insights') && text.includes('overnight analysis')) {
+    // "After-hours insights and overnight analysis for {city} traders who never rest." → overnight analysis(blue) + traders(purple)
+    result = text.replace(/overnight analysis/gi, `<span class="${BLUE_CLASS}">overnight analysis</span>`)
+    result = result.replace(/\btraders\b/gi, `<span class="${PURPLE_CLASS}">traders</span>`)
+    console.log('✅ Applied rule: overnight analysis(blue) + traders(purple)')
+    return result
+  }
+  
+  if (text.includes('AI finds opportunities') && text.includes('you make the decisions')) {
+    // "Welcome to the future of trading. AI finds opportunities, you make the decisions." → AI finds opportunities(blue) + trading(purple)
+    result = text.replace(/AI finds opportunities/gi, `<span class="${BLUE_CLASS}">AI finds opportunities</span>`)
+    result = result.replace(/\btrading\b/gi, `<span class="${PURPLE_CLASS}">trading</span>`)
+    console.log('✅ Applied rule: AI finds opportunities(blue) + trading(purple)')
+    return result
+  }
+  
+  if (text.includes('personalized') && text.includes('trading insights')) {
+    // "Your personalized trading insights are waiting. Let's pick up where we left off." → personalized(blue) + trading insights(purple)
+    result = text.replace(/personalized/gi, `<span class="${BLUE_CLASS}">personalized</span>`)
+    result = result.replace(/trading insights/gi, `<span class="${PURPLE_CLASS}">trading insights</span>`)
+    console.log('✅ Applied rule: personalized(blue) + trading insights(purple)')
     return result
   }
   

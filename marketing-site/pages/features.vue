@@ -90,65 +90,56 @@ function redirectToRegister() {
     <section class="pt-20 pb-16 px-4 sm:px-6 lg:px-8">
       <div class="max-w-4xl mx-auto text-center">
         <h1 class="text-4xl sm:text-5xl font-bold text-gray-900 dark:text-white mb-6">
-          Powerful Trading Features
+          {{ $t('features.hero.title') }}
         </h1>
         <p class="text-xl text-gray-600 dark:text-gray-300 mb-8">
-          Everything you need to trade successfully, from beginner-friendly tools to advanced analytics.
+          {{ $t('features.hero.subtitle') }}
         </p>
       </div>
     </section>
 
-    <!-- Features Sections -->
-    <section class="pb-20 px-4 sm:px-6 lg:px-8">
-      <div class="max-w-7xl mx-auto">
-        <div v-for="(section, index) in features" :key="section.category" class="mb-20">
-          <!-- Section Header -->
-          <div class="text-center mb-12">
-            <div class="text-4xl mb-4">{{ section.icon }}</div>
-            <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-4">
-              {{ section.category }}
-            </h2>
-          </div>
-
-          <!-- Features Grid -->
-          <div class="grid md:grid-cols-3 gap-8">
-            <div 
-              v-for="feature in section.items" 
-              :key="feature.title"
-              class="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-lg hover:shadow-xl transition-shadow"
-            >
-              <div class="text-3xl mb-4">{{ feature.icon }}</div>
-              <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-3">
-                {{ feature.title }}
-              </h3>
-              <p class="text-gray-600 dark:text-gray-300">
-                {{ feature.description }}
-              </p>
+    <!-- Features Grid -->
+    <section class="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div v-for="(feature, index) in features" :key="index" class="feature-card">
+          <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 h-full flex flex-col">
+            <div class="text-4xl mb-4">{{ feature.icon }}</div>
+            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3">{{ feature.category }}</h3>
+            <div class="space-y-4 mt-4 flex-grow">
+              <div v-for="(item, itemIndex) in feature.items" :key="itemIndex" class="flex items-start">
+                <div class="text-2xl mr-3 mt-1">{{ item.icon }}</div>
+                <div>
+                  <h4 class="font-medium text-gray-900 dark:text-white">{{ item.title }}</h4>
+                  <p class="text-gray-600 dark:text-gray-300 text-sm">{{ item.description }}</p>
+                </div>
+              </div>
             </div>
+            <button
+              @click="redirectToRegister"
+              class="mt-6 w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors"
+            >
+              Get Started
+            </button>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- CTA Section -->
-    <section class="py-20 bg-gradient-to-r from-blue-600 to-purple-600">
-      <div class="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
-        <h2 class="text-3xl sm:text-4xl font-bold text-white mb-6">
-          Ready to Experience These Features?
-        </h2>
-        <p class="text-xl text-blue-100 mb-8">
-          Start trading today and discover why thousands choose HeliconTrade.
-        </p>
-        <button 
+    <!-- Call to Action -->
+    <section class="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-blue-600 to-purple-600 text-white">
+      <div class="max-w-4xl mx-auto text-center">
+        <h2 class="text-3xl font-bold mb-4">Ready to Start Trading?</h2>
+        <p class="text-xl mb-8">Join thousands of traders using our platform to make better trading decisions.</p>
+        <button
           @click="redirectToRegister"
-          class="bg-white text-blue-600 px-8 py-4 rounded-lg text-lg font-semibold hover:bg-gray-50 transition-colors shadow-lg"
+          class="bg-white text-blue-600 hover:bg-gray-100 font-medium py-3 px-8 rounded-lg text-lg transition-colors"
         >
-          Start Free Trial
+          Create Free Account
         </button>
       </div>
     </section>
 
-    <!-- Standardized Footer -->
+    <!-- Footer -->
     <AppFooter />
   </div>
 </template>
