@@ -6,11 +6,9 @@
     <div class="bg-white dark:bg-gray-800">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div class="text-center">
-          <h1 class="text-4xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-5xl">
-            Market News & Updates
+          <h1 class="text-4xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-5xl" v-html="formatHeadlineText($t('news.hero.title'))">
           </h1>
-          <p class="mt-6 text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-            Stay ahead with the latest market updates, company announcements, and breaking financial news.
+          <p class="mt-6 text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto" v-html="formatSubheadlineText($t('news.hero.subtitle'))">
           </p>
         </div>
       </div>
@@ -25,20 +23,20 @@
             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
           </svg>
-          Loading news...
+          {{ $t('news.states.loading') }}
         </div>
       </div>
 
       <!-- Error State -->
       <div v-else-if="error" class="text-center py-12">
         <div class="bg-red-50 dark:bg-red-900/20 rounded-lg p-6 border border-red-200 dark:border-red-800">
-          <h3 class="text-lg font-semibold text-red-900 dark:text-red-100">Unable to load news</h3>
+          <h3 class="text-lg font-semibold text-red-900 dark:text-red-100">{{ $t('news.states.error.title') }}</h3>
           <p class="text-red-700 dark:text-red-300 mt-2">{{ error }}</p>
           <button 
             @click="loadNews" 
             class="mt-4 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition-colors"
           >
-            Try Again
+            {{ $t('news.states.error.button') }}
           </button>
         </div>
       </div>
@@ -47,7 +45,7 @@
       <div v-else-if="news.length > 0">
         <!-- Featured News (if any) -->
         <div v-if="featuredNews.length > 0" class="mb-12">
-          <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">Breaking News</h2>
+          <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">{{ $t('news.sections.breaking') }}</h2>
           <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <article 
               v-for="article in featuredNews" 
@@ -58,10 +56,10 @@
                 <!-- News Meta -->
                 <div class="flex items-center gap-3 text-sm text-gray-500 dark:text-gray-400 mb-3">
                   <span class="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-2 py-1 rounded-full text-xs font-medium">
-                    {{ article.category || 'General' }}
+                    {{ article.category || $t('news.article.category.general') }}
                   </span>
                   <time :datetime="article.published_at_time || article.publishedAt">{{ formatDate(article.published_at_time || article.publishedAt) }}</time>
-                  <span v-if="article.author">by {{ article.author }}</span>
+                  <span v-if="article.author">{{ $t('news.article.by') }} {{ article.author }}</span>
                 </div>
 
                 <!-- News Title -->
@@ -76,7 +74,7 @@
 
                 <!-- News Excerpt -->
                 <p class="text-gray-600 dark:text-gray-300 mb-4 leading-relaxed">
-                  {{ article.excerpt || 'Read more...' }}
+                  {{ article.excerpt || $t('news.article.readMoreFallback') }}
                 </p>
 
                 <!-- Read More Link -->
@@ -84,7 +82,7 @@
                   :to="`/news/${article.slug}`"
                   class="inline-flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium transition-colors"
                 >
-                  Read Full Story
+                  {{ $t('news.article.readFullStory') }}
                   <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                   </svg>
@@ -96,7 +94,7 @@
 
         <!-- Regular News -->
         <div v-if="regularNews.length > 0">
-          <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">Latest Updates</h2>
+          <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">{{ $t('news.sections.latest') }}</h2>
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <article 
               v-for="article in regularNews" 
@@ -107,7 +105,7 @@
                 <!-- News Meta -->
                 <div class="flex items-center gap-3 text-sm text-gray-500 dark:text-gray-400 mb-3">
                   <span class="bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 px-2 py-1 rounded text-xs font-medium">
-                    {{ article.category || 'General' }}
+                    {{ article.category || $t('news.article.category.general') }}
                   </span>
                   <time :datetime="article.published_at_time || article.publishedAt">{{ formatDate(article.published_at_time || article.publishedAt) }}</time>
                 </div>
@@ -132,7 +130,7 @@
                   :to="`/news/${article.slug}`"
                   class="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 text-sm font-medium transition-colors"
                 >
-                  Read more →
+                  {{ $t('news.article.readMore') }}
                 </NuxtLink>
               </div>
             </article>
@@ -146,9 +144,9 @@
           <svg class="w-16 h-16 mx-auto text-gray-400 dark:text-gray-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
           </svg>
-          <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">No news available</h3>
+          <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">{{ $t('news.states.empty.title') }}</h3>
           <p class="text-gray-600 dark:text-gray-400">
-            Check back soon for the latest market updates and company news.
+            {{ $t('news.states.empty.description') }}
           </p>
         </div>
       </div>
@@ -159,22 +157,54 @@
 </template>
 
 <script setup>
+import { useI18n } from '#imports'
+import { usePersonalization } from '~/composables/usePersonalization'
+import { highlightHeroHeadline, highlightHeroSubheadline, getUserContextForHighlighting } from '~/utils/textHighlighting'
+
+const { t, locale } = useI18n()
+const { userContext } = usePersonalization()
+
+// Get highlighting context for personalization
+const highlightContext = computed(() => 
+  getUserContextForHighlighting(userContext, locale.value)
+)
+
+// Highlighting functions
+const formatHeadlineText = (text) => {
+  // Replace placeholder tokens with HTML spans
+  const highlighted = text
+    .replace(/\[HIGHLIGHT_START\]/g, '<span class="text-blue-600">')
+    .replace(/\[HIGHLIGHT_END\]/g, '</span>')
+    .replace(/\[HIGHLIGHT2_START\]/g, '<span class="text-purple-600">')
+    .replace(/\[HIGHLIGHT2_END\]/g, '</span>')
+  return highlightHeroHeadline(highlighted, locale.value, highlightContext.value)
+}
+const formatSubheadlineText = (text) => {
+  // Replace placeholder tokens with HTML spans
+  const highlighted = text
+    .replace(/\[HIGHLIGHT_START\]/g, '<span class="text-blue-600">')
+    .replace(/\[HIGHLIGHT_END\]/g, '</span>')
+    .replace(/\[HIGHLIGHT2_START\]/g, '<span class="text-purple-600">')
+    .replace(/\[HIGHLIGHT2_END\]/g, '</span>')
+  return highlightHeroSubheadline(highlighted, locale.value, highlightContext.value)
+}
+
 // SEO
 useHead({
-  title: 'Market News & Updates - HeliconTrade',
+  title: computed(() => t('news.meta.title')),
   meta: [
-    { name: 'description', content: 'Stay informed with the latest market news, trading updates, and financial announcements from HeliconTrade.' },
-    { name: 'keywords', content: 'market news, trading news, financial updates, market analysis, company announcements' },
+    { name: 'description', content: computed(() => t('news.meta.description')) },
+    { name: 'keywords', content: computed(() => t('news.meta.keywords')) },
     
     // Open Graph
-    { property: 'og:title', content: 'Market News & Updates - HeliconTrade' },
-    { property: 'og:description', content: 'Stay informed with the latest market news and trading updates.' },
+    { property: 'og:title', content: computed(() => t('news.meta.title')) },
+    { property: 'og:description', content: computed(() => t('news.meta.description')) },
     { property: 'og:type', content: 'website' },
     
     // Twitter Card
     { name: 'twitter:card', content: 'summary_large_image' },
-    { name: 'twitter:title', content: 'Market News & Updates - HeliconTrade' },
-    { name: 'twitter:description', content: 'Stay informed with the latest market news and trading updates.' }
+    { name: 'twitter:title', content: computed(() => t('news.meta.title')) },
+    { name: 'twitter:description', content: computed(() => t('news.meta.description')) }
   ]
 })
 

@@ -322,20 +322,227 @@
     "description": "AI-powered trading platform that monitors global markets 24/7 to find opportunities matching your strategy. Sleep better while AI watches the markets for you.",
     "keywords": "trading platform, market analysis, charts, real-time data, trading community, financial markets"
   },
+  "about": {
+    "meta": {
+      "title": "About Us — HeliconTrade Mission & Team",
+      "description": "Learn about HeliconTrade's mission to democratize trading education and provide powerful tools for the next generation of traders.",
+      "keywords": "about HeliconTrade, mission, team, company, trading platform, fintech"
+    },
+    "hero": {
+      "title": "Democratizing Trading for Everyone",
+      "subtitle": "We're building the future of trading education and technology, making financial markets accessible to the next generation."
+    },
+    "mission": {
+      "title": "Our Mission",
+      "description1": "Traditional trading platforms are complex, expensive, and designed for institutional investors. We're changing that by creating an intuitive, educational, and accessible platform for everyone.",
+      "description2": "Whether you're a complete beginner or an experienced trader, our platform grows with you, providing the tools and knowledge you need at every stage of your trading journey."
+    },
+    "story": {
+      "title": "Our Story",
+      "description1": "Founded in 2024, HeliconTrade emerged from a simple observation: traditional trading platforms were built for institutions, not individuals. Complex interfaces, hidden fees, and poor educational resources created barriers for everyday people wanting to participate in financial markets.",
+      "description2": "We set out to change this by building a platform that puts education first, maintains transparency in pricing, and provides institutional-grade tools in an intuitive interface. Today, we're proud to serve thousands of traders worldwide.",
+      "description3": "Our team combines decades of experience in finance, technology, and education to create a platform that truly serves our users' needs. We're not just building software – we're building the future of financial education."
+    },
+    "values": {
+      "title": "Our Values",
+      "subtitle": "The principles that guide everything we do",
+      "missionDriven": {
+        "title": "Mission Driven",
+        "description": "We believe everyone deserves access to quality financial education and trading tools."
+      },
+      "securityFirst": {
+        "title": "Security First",
+        "description": "Your funds and data are protected with bank-grade security and encryption."
+      },
+      "innovation": {
+        "title": "Innovation",
+        "description": "We continuously evolve our platform with cutting-edge technology and user feedback."
+      },
+      "community": {
+        "title": "Community",
+        "description": "Building a supportive community where traders learn, grow, and succeed together."
+      }
+    },
+    "stats": {
+      "founded": "Founded",
+      "foundedValue": "2024",
+      "activeUsers": "Active Users",
+      "activeUsersValue": "2,500+",
+      "countries": "Countries",
+      "countriesValue": "25+",
+      "supportRating": "Support Rating",
+      "supportRatingValue": "4.9/5"
+    },
+    "cta": {
+      "title": "Join Our Mission",
+      "subtitle": "Be part of the trading revolution. Start your journey with us today.",
+      "button": "Start Trading Free"
+    }
+  },
+  "contact": {
+    "meta": {
+      "title": "Contact Us - HeliconTrade Support",
+      "description": "Get in touch with HeliconTrade. Contact our support team, sales, or partnerships department.",
+      "keywords": "contact, support, help, customer service, sales, partnerships"
+    },
+    "hero": {
+      "title": "Get in Touch",
+      "subtitle": "Have questions? We're here to help. Reach out to our team anytime."
+    },
+    "form": {
+      "title": "Send us a Message",
+      "fields": {
+        "fullName": "Full Name",
+        "fullNamePlaceholder": "Your full name",
+        "email": "Email Address",
+        "emailPlaceholder": "your{'@'}email.com",
+        "subject": "Subject",
+        "subjectPlaceholder": "How can we help?",
+        "message": "Message",
+        "messagePlaceholder": "Tell us more about your inquiry..."
+      },
+      "submit": {
+        "button": "Send Message",
+        "sending": "Sending...",
+        "success": "\u2705 Message sent successfully! We'll get back to you within 24 hours.",
+        "error": "\u274c There was an error sending your message. Please try again."
+      }
+    },
+    "info": {
+      "title": "Contact Information",
+      "email": {
+        "label": "Email",
+        "value": "support{'@'}helicontrade.com"
+      },
+      "office": {
+        "label": "Office",
+        "value": "New York, NY"
+      },
+      "support": {
+        "label": "Support",
+        "value": "24/7 Live Chat Available"
+      }
+    },
+    "quickHelp": {
+      "title": "Quick Help",
+      "helpCenter": {
+        "title": "Help Center",
+        "description": "Browse our knowledge base"
+      },
+      "liveChat": {
+        "title": "Live Chat",
+        "description": "Chat with our support team"
+      },
+      "documentation": {
+        "title": "Documentation",
+        "description": "API and platform docs"
+      }
+    }
+  },
+  "blog": {
+    "meta": {
+      "title": "Trading Blog & Insights - HeliconTrade",
+      "description": "Expert trading insights, market analysis, and educational content to help you master financial markets with HeliconTrade.",
+      "keywords": "trading blog, market analysis, trading education, financial insights, investment strategies"
+    },
+    "hero": {
+      "title": "Trading Insights & Education",
+      "subtitle": "Stay informed with expert analysis, trading strategies, and educational content to help you master the financial markets."
+    },
+    "states": {
+      "loading": "Loading articles...",
+      "error": {
+        "title": "Unable to load articles",
+        "button": "Try Again"
+      },
+      "empty": {
+        "title": "No articles yet",
+        "description": "Check back soon for expert trading insights and educational content."
+      }
+    },
+    "article": {
+      "readMore": "Read Article",
+      "noExcerpt": "No excerpt available",
+      "loadingArticle": "Loading article...",
+      "notFound": {
+        "title": "Article Not Found",
+        "button": "Back to Blog"
+      },
+      "minRead": "min read",
+      "backToAll": "Back to All Articles",
+      "contentUpdating": "This article's content is being updated. Please check back soon for the full article.",
+      "noDate": "No date",
+      "invalidDate": "Invalid date"
+    },
+    "breadcrumbs": {
+      "home": "Home",
+      "blog": "Blog"
+    }
+  },
+  "news": {
+    "meta": {
+      "title": "Market News & Updates - HeliconTrade",
+      "description": "Stay informed with the latest market news, trading updates, and financial announcements from HeliconTrade.",
+      "keywords": "market news, trading news, financial updates, market analysis, company announcements"
+    },
+    "hero": {
+      "title": "Stay Informed with [HIGHLIGHT_START]Market News[HIGHLIGHT_END]",
+      "subtitle": "Get the latest [HIGHLIGHT2_START]market insights[HIGHLIGHT2_END] and company updates"
+    },
+    "sections": {
+      "breaking": "Breaking News",
+      "latest": "Latest Updates"
+    },
+    "states": {
+      "loading": "Loading news...",
+      "error": {
+        "title": "Unable to load news",
+        "button": "Try Again"
+      },
+      "empty": {
+        "title": "No news available",
+        "description": "Check back soon for the latest market updates and company news."
+      }
+    },
+    "article": {
+      "readFullStory": "Read Full Story",
+      "readMore": "Read more →",
+      "readMoreFallback": "Read more...",
+      "loadingArticle": "Loading news article...",
+      "notFound": {
+        "title": "News Article Not Found",
+        "button": "Back to News"
+      },
+      "backToAll": "Back to All News",
+      "contentUpdating": "This news article's content is being updated. Please check back soon for the full story.",
+      "category": {
+        "general": "General"
+      },
+      "priority": {
+        "critical": "🔴 Breaking News Alert",
+        "high": "⚡ Urgent Market Update"
+      },
+      "updatedUntil": "Updated until",
+      "by": "by"
+    },
+    "breadcrumbs": {
+      "home": "Home",
+      "news": "News"
+    }
+  },
   "search": {
     "placeholder": "Try: AAPL, BTC, TSLA, SPY...",
     "popularLabel": "Popular:"
   },
   "markets": {
     "all": "All Markets",
-    "indices": "Indices",
+    "indices": "Indices", 
     "stocks": "Stocks",
     "crypto": "Crypto"
   },
   "dashboard": {
     "windowTitle": "HeliconTrade Platform",
-    "liveTrading": "LIVE TRADING",
-    "liveIndicator": "● LIVE",
+    "sectionTitle": "My Dashboard",
     "timeframes": {
       "1D": "1D",
       "1W": "1W",

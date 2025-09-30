@@ -406,6 +406,214 @@
       "subheadline": "De {city} à Wall Street, restez aligné avec les mouvements de {index} 24/7."
     }
   ],
+  "about": {
+    "meta": {
+      "title": "À Propos — Mission & Équipe HeliconTrade",
+      "description": "Découvrez la mission d'HeliconTrade de démocratiser l'éducation au trading et fournir des outils puissants pour la nouvelle génération de traders.",
+      "keywords": "à propos HeliconTrade, mission, équipe, société, plateforme de trading, fintech"
+    },
+    "hero": {
+      "title": "Démocratiser le Trading pour Tous",
+      "subtitle": "Nous construisons l'avenir de l'éducation au trading et de la technologie, rendant les marchés financiers accessibles à la nouvelle génération."
+    },
+    "mission": {
+      "title": "Notre Mission",
+      "description1": "Les plateformes de trading traditionnelles sont complexes, coûteuses et conçues pour les investisseurs institutionnels. Nous changeons cela en créant une plateforme intuitive, éducative et accessible pour tous.",
+      "description2": "Que vous soyez débutant complet ou trader expérimenté, notre plateforme grandit avec vous, fournissant les outils et connaissances dont vous avez besoin à chaque étape de votre parcours de trading."
+    },
+    "story": {
+      "title": "Notre Histoire",
+      "description1": "Fondée en 2024, HeliconTrade est née d'une observation simple : les plateformes de trading traditionnelles étaient conçues pour les institutions, pas pour les individus. Des interfaces complexes, des frais cachés et de mauvaises ressources éducatives créaient des barrières pour les gens ordinaires voulant participer aux marchés financiers.",
+      "description2": "Nous nous sommes fixés de changer cela en construisant une plateforme qui met l'éducation en premier, maintient la transparence des prix et fournit des outils de niveau institutionnel dans une interface intuitive. Aujourd'hui, nous sommes fiers de servir des milliers de traders dans le monde.",
+      "description3": "Notre équipe combine des décennies d'expérience en finance, technologie et éducation pour créer une plateforme qui sert vraiment les besoins de nos utilisateurs. Nous ne construisons pas seulement un logiciel – nous construisons l'avenir de l'éducation financière."
+    },
+    "values": {
+      "title": "Nos Valeurs",
+      "subtitle": "Les principes qui guident tout ce que nous faisons",
+      "missionDriven": {
+        "title": "Orienté Mission",
+        "description": "Nous croyons que chacun mérite l'accès à une éducation financière de qualité et aux outils de trading."
+      },
+      "securityFirst": {
+        "title": "Sécurité d'Abord",
+        "description": "Vos fonds et données sont protégés avec une sécurité et un cryptage de niveau bancaire."
+      },
+      "innovation": {
+        "title": "Innovation",
+        "description": "Nous faisons continuellement évoluer notre plateforme avec une technologie de pointe et les retours utilisateurs."
+      },
+      "community": {
+        "title": "Communauté",
+        "description": "Construire une communauté bienveillante où les traders apprennent, grandissent et réussissent ensemble."
+      }
+    },
+    "stats": {
+      "founded": "Fondée",
+      "foundedValue": "2025",
+      "activeUsers": "Utilisateurs Actifs",
+      "activeUsersValue": "2 500+",
+      "countries": "Pays",
+      "countriesValue": "25+",
+      "supportRating": "Note Support",
+      "supportRatingValue": "4,9/5"
+    },
+    "cta": {
+      "title": "Rejoignez Notre Mission",
+      "subtitle": "Faites partie de la révolution du trading. Commencez votre parcours avec nous aujourd'hui.",
+      "button": "Commencer à Trader Gratuitement"
+    }
+  },
+  "contact": {
+    "meta": {
+      "title": "Nous Contacter - Support HeliconTrade",
+      "description": "Entrez en contact avec HeliconTrade. Contactez notre équipe de support, ventes ou partenariats.",
+      "keywords": "contact, support, aide, service client, ventes, partenariats"
+    },
+    "hero": {
+      "title": "Restons en Contact",
+      "subtitle": "Des questions ? Nous sommes là pour vous aider. Contactez notre équipe à tout moment."
+    },
+    "form": {
+      "title": "Envoyez-nous un Message",
+      "fields": {
+        "fullName": "Nom Complet",
+        "fullNamePlaceholder": "Votre nom complet",
+        "email": "Adresse E-mail",
+        "emailPlaceholder": "votre{'@'}email.com",
+        "subject": "Sujet",
+        "subjectPlaceholder": "Comment pouvons-nous vous aider ?",
+        "message": "Message",
+        "messagePlaceholder": "Parlez-nous de votre demande..."
+      },
+      "submit": {
+        "button": "Envoyer le Message",
+        "sending": "Envoi en cours...",
+        "success": "\u2705 Message envoyé avec succès ! Nous vous répondrons dans les 24 heures.",
+        "error": "\u274c Une erreur s'est produite lors de l'envoi de votre message. Veuillez réessayer."
+      }
+    },
+    "info": {
+      "title": "Informations de Contact",
+      "email": {
+        "label": "E-mail",
+        "value": "support{'@'}helicontrade.com"
+      },
+      "office": {
+        "label": "Bureau",
+        "value": "New York, NY"
+      },
+      "support": {
+        "label": "Support",
+        "value": "Chat en Direct 24/7 Disponible"
+      }
+    },
+    "quickHelp": {
+      "title": "Aide Rapide",
+      "helpCenter": {
+        "title": "Centre d'Aide",
+        "description": "Parcourez notre base de connaissances"
+      },
+      "liveChat": {
+        "title": "Chat en Direct",
+        "description": "Discutez avec notre équipe de support"
+      },
+      "documentation": {
+        "title": "Documentation",
+        "description": "Documentation API et plateforme"
+      }
+    }
+  },
+  "blog": {
+    "meta": {
+      "title": "Blog Trading & Analyses - HeliconTrade",
+      "description": "Analyses d'experts, insights de marché et contenu éducatif pour maîtriser les marchés financiers avec HeliconTrade.",
+      "keywords": "blog trading, analyse de marché, éducation trading, insights financiers, stratégies d'investissement"
+    },
+    "hero": {
+      "title": "Analyses & Éducation Trading",
+      "subtitle": "Restez informé avec des analyses d'experts, des stratégies de trading et du contenu éducatif pour maîtriser les marchés financiers."
+    },
+    "states": {
+      "loading": "Chargement des articles...",
+      "error": {
+        "title": "Impossible de charger les articles",
+        "button": "Réessayer"
+      },
+      "empty": {
+        "title": "Aucun article pour le moment",
+        "description": "Revenez bientôt pour des analyses d'experts et du contenu éducatif sur le trading."
+      }
+    },
+    "article": {
+      "readMore": "Lire l'Article",
+      "noExcerpt": "Aucun extrait disponible",
+      "loadingArticle": "Chargement de l'article...",
+      "notFound": {
+        "title": "Article Non Trouvé",
+        "button": "Retour au Blog"
+      },
+      "minRead": "min de lecture",
+      "backToAll": "Retour à Tous les Articles",
+      "contentUpdating": "Le contenu de cet article est en cours de mise à jour. Revenez bientôt pour l'article complet.",
+      "noDate": "Aucune date",
+      "invalidDate": "Date invalide"
+    },
+    "breadcrumbs": {
+      "home": "Accueil",
+      "blog": "Blog"
+    }
+  },
+  "news": {
+    "meta": {
+      "title": "Actualités & Mises à Jour - HeliconTrade",
+      "description": "Restez informé des dernières actualités du marché, mises à jour trading et annonces financières de HeliconTrade.",
+      "keywords": "actualités marché, nouvelles trading, mises à jour financières, analyse marché, annonces entreprise"
+    },
+    "hero": {
+      "title": "Restez Informé avec les [HIGHLIGHT_START]Actualités du Marché[HIGHLIGHT_END]",
+      "subtitle": "Obtenez les dernières [HIGHLIGHT2_START]perspectives du marché[HIGHLIGHT2_END] et mises à jour de l'entreprise"
+    },
+    "sections": {
+      "breaking": "Actualités de Dernière Minute",
+      "latest": "Dernières Mises à Jour"
+    },
+    "states": {
+      "loading": "Chargement des actualités...",
+      "error": {
+        "title": "Impossible de charger les actualités",
+        "button": "Réessayer"
+      },
+      "empty": {
+        "title": "Aucune actualité disponible",
+        "description": "Revenez bientôt pour les dernières mises à jour du marché et actualités d'entreprise."
+      }
+    },
+    "article": {
+      "readFullStory": "Lire l'Histoire Complète",
+      "readMore": "Lire plus →",
+      "readMoreFallback": "Lire plus...",
+      "loadingArticle": "Chargement de l'actualité...",
+      "notFound": {
+        "title": "Article d'Actualité Non Trouvé",
+        "button": "Retour aux Actualités"
+      },
+      "backToAll": "Retour à Toutes les Actualités",
+      "contentUpdating": "Le contenu de cette actualité est en cours de mise à jour. Revenez bientôt pour l'histoire complète.",
+      "category": {
+        "general": "Général"
+      },
+      "priority": {
+        "critical": "🔴 Alerte Actualité de Dernière Minute",
+        "high": "⚡ Mise à Jour Urgente du Marché"
+      },
+      "updatedUntil": "Mis à jour jusqu'au",
+      "by": "par"
+    },
+    "breadcrumbs": {
+      "home": "Accueil",
+      "news": "Actualités"
+    }
+  },
   "personalization": {
     "variants": {
       "0": {

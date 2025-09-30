@@ -10,7 +10,7 @@
             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
           </svg>
-          Loading article...
+          {{ $t('blog.article.loadingArticle') }}
         </div>
       </div>
     </div>
@@ -19,7 +19,7 @@
     <div v-else-if="error" class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
       <div class="text-center">
         <div class="bg-red-50 dark:bg-red-900/20 rounded-lg p-8 border border-red-200 dark:border-red-800">
-          <h1 class="text-2xl font-bold text-red-900 dark:text-red-100 mb-4">Article Not Found</h1>
+          <h1 class="text-2xl font-bold text-red-900 dark:text-red-100 mb-4">{{ $t('blog.article.notFound.title') }}</h1>
           <p class="text-red-700 dark:text-red-300 mb-6">{{ error }}</p>
           <NuxtLink 
             to="/blog"
@@ -28,7 +28,7 @@
             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
             </svg>
-            Back to Blog
+            {{ $t('blog.article.notFound.button') }}
           </NuxtLink>
         </div>
       </div>
@@ -38,11 +38,11 @@
     <article v-else-if="article" class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
       <!-- Breadcrumb -->
       <nav class="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400 mb-8">
-        <NuxtLink to="/" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Home</NuxtLink>
+        <NuxtLink to="/" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">{{ $t('blog.breadcrumbs.home') }}</NuxtLink>
         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
           <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
         </svg>
-        <NuxtLink to="/blog" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Blog</NuxtLink>
+        <NuxtLink to="/blog" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">{{ $t('blog.breadcrumbs.blog') }}</NuxtLink>
         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
           <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
         </svg>
@@ -75,7 +75,7 @@
             <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
               <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd" />
             </svg>
-            <span>{{ readingTime }} min read</span>
+            <span>{{ readingTime }} {{ $t('blog.article.minRead') }}</span>
           </div>
         </div>
 
@@ -93,7 +93,7 @@
         <!-- Fallback if no content -->
         <div v-else class="bg-yellow-50 dark:bg-yellow-900/20 rounded-lg p-6 border border-yellow-200 dark:border-yellow-800">
           <p class="text-yellow-800 dark:text-yellow-200">
-            This article's content is being updated. Please check back soon for the full article.
+            {{ $t('blog.article.contentUpdating') }}
           </p>
         </div>
       </div>
@@ -107,7 +107,7 @@
           <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
           </svg>
-          Back to All Articles
+          {{ $t('blog.article.backToAll') }}
         </NuxtLink>
       </div>
     </article>
@@ -118,9 +118,11 @@
 
 <script setup>
 import { marked } from 'marked'
+import { useI18n } from '#imports'
 
 const route = useRoute()
 const slug = route.params.slug
+const { t, locale } = useI18n()
 
 // Reactive state
 const article = ref(null)
@@ -157,15 +159,15 @@ const loadArticle = async () => {
 
 // Format date helper
 const formatDate = (dateString) => {
-  if (!dateString) return 'No date'
+  if (!dateString) return t('blog.article.noDate')
   try {
-    return new Date(dateString).toLocaleDateString('en-US', {
+    return new Date(dateString).toLocaleDateString(locale.value === 'ar' ? 'ar-SA' : locale.value === 'fr' ? 'fr-FR' : 'en-US', {
       year: 'numeric',
       month: 'long',
       day: 'numeric'
     })
   } catch {
-    return 'Invalid date'
+    return t('blog.article.invalidDate')
   }
 }
 
@@ -190,14 +192,14 @@ const renderMarkdown = (content) => {
 watchEffect(() => {
   if (article.value) {
     useHead({
-      title: `${article.value.title} - HeliconTrade Blog`,
+      title: `${article.value.title} - ${t('blog.meta.title')}`,
       meta: [
-        { name: 'description', content: article.value.excerpt || 'Read this insightful article on HeliconTrade blog.' },
-        { name: 'keywords', content: 'trading, finance, education, blog, investment, market analysis' },
+        { name: 'description', content: article.value.excerpt || t('blog.meta.description') },
+        { name: 'keywords', content: t('blog.meta.keywords') },
         
         // Open Graph
         { property: 'og:title', content: `${article.value.title} - HeliconTrade` },
-        { property: 'og:description', content: article.value.excerpt || 'Read this insightful article on HeliconTrade blog.' },
+        { property: 'og:description', content: article.value.excerpt || t('blog.meta.description') },
         { property: 'og:type', content: 'article' },
         { property: 'article:author', content: article.value.author || 'HeliconTrade Team' },
         { property: 'article:published_time', content: article.value.publishedAt },

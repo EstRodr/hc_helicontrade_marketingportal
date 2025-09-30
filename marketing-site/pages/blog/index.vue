@@ -6,12 +6,9 @@
     <div class="bg-white dark:bg-gray-800">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div class="text-center">
-          <h1 class="text-4xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-5xl">
-            Trading Insights & Education
+          <h1 class="text-4xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-5xl" v-html="formatHeadlineText($t('blog.hero.title'))">
           </h1>
-          <p class="mt-6 text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-            Stay informed with expert analysis, trading strategies, and educational content 
-            to help you master the financial markets.
+          <p class="mt-6 text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto" v-html="formatSubheadlineText($t('blog.hero.subtitle'))">
           </p>
         </div>
       </div>
@@ -26,20 +23,20 @@
             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
           </svg>
-          Loading articles...
+          {{ $t('blog.states.loading') }}
         </div>
       </div>
 
       <!-- Error State -->
       <div v-else-if="error" class="text-center py-12">
         <div class="bg-red-50 dark:bg-red-900/20 rounded-lg p-6 border border-red-200 dark:border-red-800">
-          <h3 class="text-lg font-semibold text-red-900 dark:text-red-100">Unable to load articles</h3>
+          <h3 class="text-lg font-semibold text-red-900 dark:text-red-100">{{ $t('blog.states.error.title') }}</h3>
           <p class="text-red-700 dark:text-red-300 mt-2">{{ error }}</p>
           <button 
             @click="loadArticles" 
             class="mt-4 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition-colors"
           >
-            Try Again
+            {{ $t('blog.states.error.button') }}
           </button>
         </div>
       </div>
@@ -78,7 +75,7 @@
 
             <!-- Article Excerpt -->
             <p class="text-gray-600 dark:text-gray-300 mb-4 leading-relaxed">
-              {{ article.excerpt || 'No excerpt available' }}
+              {{ article.excerpt || $t('blog.article.noExcerpt') }}
             </p>
 
             <!-- Read More Link -->
@@ -86,7 +83,7 @@
               :to="`/blog/${article.slug}`"
               class="inline-flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium transition-colors"
             >
-              Read Article
+              {{ $t('blog.article.readMore') }}
               <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
               </svg>
@@ -101,9 +98,9 @@
           <svg class="w-16 h-16 mx-auto text-gray-400 dark:text-gray-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
           </svg>
-          <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">No articles yet</h3>
+          <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">{{ $t('blog.states.empty.title') }}</h3>
           <p class="text-gray-600 dark:text-gray-400">
-            Check back soon for expert trading insights and educational content.
+            {{ $t('blog.states.empty.description') }}
           </p>
         </div>
       </div>
@@ -114,22 +111,38 @@
 </template>
 
 <script setup>
+import { useI18n } from '#imports'
+import { usePersonalization } from '~/composables/usePersonalization'
+import { highlightHeroHeadline, highlightHeroSubheadline, getUserContextForHighlighting } from '~/utils/textHighlighting'
+
+const { t, locale } = useI18n()
+const { userContext } = usePersonalization()
+
+// Get highlighting context for personalization
+const highlightContext = computed(() => 
+  getUserContextForHighlighting(userContext, locale.value)
+)
+
+// Highlighting functions
+const formatHeadlineText = (text) => highlightHeroHeadline(text, locale.value, highlightContext.value)
+const formatSubheadlineText = (text) => highlightHeroSubheadline(text, locale.value, highlightContext.value)
+
 // SEO
 useHead({
-  title: 'Trading Blog & Insights - HeliconTrade',
+  title: computed(() => t('blog.meta.title')),
   meta: [
-    { name: 'description', content: 'Expert trading insights, market analysis, and educational content to help you master financial markets with HeliconTrade.' },
-    { name: 'keywords', content: 'trading blog, market analysis, trading education, financial insights, investment strategies' },
+    { name: 'description', content: computed(() => t('blog.meta.description')) },
+    { name: 'keywords', content: computed(() => t('blog.meta.keywords')) },
     
     // Open Graph
-    { property: 'og:title', content: 'Trading Blog & Insights - HeliconTrade' },
-    { property: 'og:description', content: 'Expert trading insights, market analysis, and educational content.' },
+    { property: 'og:title', content: computed(() => t('blog.meta.title')) },
+    { property: 'og:description', content: computed(() => t('blog.meta.description')) },
     { property: 'og:type', content: 'website' },
     
     // Twitter Card
     { name: 'twitter:card', content: 'summary_large_image' },
-    { name: 'twitter:title', content: 'Trading Blog & Insights - HeliconTrade' },
-    { name: 'twitter:description', content: 'Expert trading insights, market analysis, and educational content.' }
+    { name: 'twitter:title', content: computed(() => t('blog.meta.title')) },
+    { name: 'twitter:description', content: computed(() => t('blog.meta.description')) }
   ]
 })
 
@@ -157,15 +170,15 @@ const loadArticles = async () => {
 
 // Format date helper
 const formatDate = (dateString) => {
-  if (!dateString) return 'No date'
+  if (!dateString) return t('blog.article.noDate')
   try {
-    return new Date(dateString).toLocaleDateString('en-US', {
+    return new Date(dateString).toLocaleDateString(locale.value === 'ar' ? 'ar-SA' : locale.value === 'fr' ? 'fr-FR' : 'en-US', {
       year: 'numeric',
       month: 'long',
       day: 'numeric'
     })
   } catch {
-    return 'Invalid date'
+    return t('blog.article.invalidDate')
   }
 }
 

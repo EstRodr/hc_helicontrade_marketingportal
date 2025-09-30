@@ -1,12 +1,27 @@
 <script setup lang="ts">
+import { useI18n } from '#imports'
+import { usePersonalization } from '~/composables/usePersonalization'
+import { highlightHeroHeadline, highlightHeroSubheadline, getUserContextForHighlighting } from '~/utils/textHighlighting'
+
 const config = useRuntimeConfig()
+const { t, locale } = useI18n()
+const { userContext } = usePersonalization()
+
+// Get highlighting context for personalization
+const highlightContext = computed(() => 
+  getUserContextForHighlighting(userContext, locale.value)
+)
+
+// Highlighting functions
+const formatHeadlineText = (text) => highlightHeroHeadline(text, locale.value, highlightContext.value)
+const formatSubheadlineText = (text) => highlightHeroSubheadline(text, locale.value, highlightContext.value)
 
 // SEO configuration
 useHead({
-  title: 'Contact Us - HeliconTrade Support',
+  title: computed(() => t('contact.meta.title')),
   meta: [
-    { name: 'description', content: 'Get in touch with HeliconTrade. Contact our support team, sales, or partnerships department.' },
-    { name: 'keywords', content: 'contact, support, help, customer service, sales, partnerships' }
+    { name: 'description', content: computed(() => t('contact.meta.description')) },
+    { name: 'keywords', content: computed(() => t('contact.meta.keywords')) }
   ]
 })
 
@@ -27,7 +42,7 @@ onMounted(() => {
   const route = useRoute()
   if (route.query.plan) {
     form.value.plan = route.query.plan as string
-    form.value.subject = `Inquiry about ${route.query.plan} plan`
+    form.value.subject = `${t('contact.form.fields.subjectPlaceholder')} ${route.query.plan}`
   }
 })
 
@@ -55,9 +70,8 @@ async function submitForm() {
   }
 }
 
-function redirectToRegister() {
-  window.location.href = `${config.public.appUrl}/auth/register`
-}
+// Use centralized redirect utilities
+const { redirectToRegister } = useAppRedirects()
 </script>
 
 <template>
@@ -68,11 +82,9 @@ function redirectToRegister() {
     <!-- Hero Section -->
     <section class="pt-20 pb-16 px-4 sm:px-6 lg:px-8">
       <div class="max-w-4xl mx-auto text-center">
-        <h1 class="text-4xl sm:text-5xl font-bold text-gray-900 dark:text-white mb-6">
-          Get in Touch
+        <h1 class="text-4xl sm:text-5xl font-bold text-gray-900 dark:text-white mb-6" v-html="formatHeadlineText($t('contact.hero.title'))">
         </h1>
-        <p class="text-xl text-gray-600 dark:text-gray-300 mb-8">
-          Have questions? We're here to help. Reach out to our team anytime.
+        <p class="text-xl text-gray-600 dark:text-gray-300 mb-8" v-html="formatSubheadlineText($t('contact.hero.subtitle'))">
         </p>
       </div>
     </section>
@@ -84,13 +96,13 @@ function redirectToRegister() {
           <!-- Contact Form -->
           <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8">
             <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">
-              Send us a Message
+              {{ $t('contact.form.title') }}
             </h2>
 
             <form @submit.prevent="submitForm" class="space-y-6">
               <div>
                 <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  Full Name
+                  {{ $t('contact.form.fields.fullName') }}
                 </label>
                 <input
                   id="name"
@@ -98,13 +110,13 @@ function redirectToRegister() {
                   type="text"
                   required
                   class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white transition-colors"
-                  placeholder="Your full name"
+                  :placeholder="$t('contact.form.fields.fullNamePlaceholder')"
                 >
               </div>
 
               <div>
                 <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  Email Address
+                  {{ $t('contact.form.fields.email') }}
                 </label>
                 <input
                   id="email"
@@ -112,13 +124,13 @@ function redirectToRegister() {
                   type="email"
                   required
                   class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white transition-colors"
-                  placeholder="your@email.com"
+                  :placeholder="$t('contact.form.fields.emailPlaceholder')"
                 >
               </div>
 
               <div>
                 <label for="subject" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  Subject
+                  {{ $t('contact.form.fields.subject') }}
                 </label>
                 <input
                   id="subject"
@@ -126,13 +138,13 @@ function redirectToRegister() {
                   type="text"
                   required
                   class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white transition-colors"
-                  placeholder="How can we help?"
+                  :placeholder="$t('contact.form.fields.subjectPlaceholder')"
                 >
               </div>
 
               <div>
                 <label for="message" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  Message
+                  {{ $t('contact.form.fields.message') }}
                 </label>
                 <textarea
                   id="message"
@@ -140,20 +152,20 @@ function redirectToRegister() {
                   rows="5"
                   required
                   class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white transition-colors resize-none"
-                  placeholder="Tell us more about your inquiry..."
+                  :placeholder="$t('contact.form.fields.messagePlaceholder')"
                 ></textarea>
               </div>
 
               <!-- Success/Error Messages -->
               <div v-if="submitStatus === 'success'" class="p-4 bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800 rounded-lg">
                 <p class="text-green-700 dark:text-green-300">
-                  ✅ Message sent successfully! We'll get back to you within 24 hours.
+                  {{ $t('contact.form.submit.success') }}
                 </p>
               </div>
 
               <div v-if="submitStatus === 'error'" class="p-4 bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg">
                 <p class="text-red-700 dark:text-red-300">
-                  ❌ There was an error sending your message. Please try again.
+                  {{ $t('contact.form.submit.error') }}
                 </p>
               </div>
 
@@ -162,7 +174,7 @@ function redirectToRegister() {
                 :disabled="isSubmitting"
                 class="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white py-3 px-6 rounded-lg font-semibold transition-colors"
               >
-                {{ isSubmitting ? 'Sending...' : 'Send Message' }}
+                {{ isSubmitting ? $t('contact.form.submit.sending') : $t('contact.form.submit.button') }}
               </button>
             </form>
           </div>
@@ -171,7 +183,7 @@ function redirectToRegister() {
           <div class="space-y-8">
             <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8">
               <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-6">
-                Contact Information
+                {{ $t('contact.info.title') }}
               </h3>
               
               <div class="space-y-4">
@@ -183,8 +195,8 @@ function redirectToRegister() {
                     </svg>
                   </div>
                   <div>
-                    <p class="text-sm text-gray-500 dark:text-gray-400">Email</p>
-                    <p class="text-gray-900 dark:text-white">support@helicontrade.com</p>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">{{ $t('contact.info.email.label') }}</p>
+                    <p class="text-gray-900 dark:text-white">{{ $t('contact.info.email.value') }}</p>
                   </div>
                 </div>
 
@@ -195,8 +207,8 @@ function redirectToRegister() {
                     </svg>
                   </div>
                   <div>
-                    <p class="text-sm text-gray-500 dark:text-gray-400">Office</p>
-                    <p class="text-gray-900 dark:text-white">New York, NY</p>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">{{ $t('contact.info.office.label') }}</p>
+                    <p class="text-gray-900 dark:text-white">{{ $t('contact.info.office.value') }}</p>
                   </div>
                 </div>
 
@@ -207,8 +219,8 @@ function redirectToRegister() {
                     </svg>
                   </div>
                   <div>
-                    <p class="text-sm text-gray-500 dark:text-gray-400">Support</p>
-                    <p class="text-gray-900 dark:text-white">24/7 Live Chat Available</p>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">{{ $t('contact.info.support.label') }}</p>
+                    <p class="text-gray-900 dark:text-white">{{ $t('contact.info.support.value') }}</p>
                   </div>
                 </div>
               </div>
@@ -217,7 +229,7 @@ function redirectToRegister() {
             <!-- Quick Links -->
             <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8">
               <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-6">
-                Quick Help
+                {{ $t('contact.quickHelp.title') }}
               </h3>
               
               <div class="space-y-4">
@@ -226,8 +238,8 @@ function redirectToRegister() {
                     <span class="text-sm">📚</span>
                   </div>
                   <div>
-                    <p class="font-medium text-gray-900 dark:text-white">Help Center</p>
-                    <p class="text-sm text-gray-500 dark:text-gray-400">Browse our knowledge base</p>
+                    <p class="font-medium text-gray-900 dark:text-white">{{ $t('contact.quickHelp.helpCenter.title') }}</p>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">{{ $t('contact.quickHelp.helpCenter.description') }}</p>
                   </div>
                 </a>
 
@@ -236,8 +248,8 @@ function redirectToRegister() {
                     <span class="text-sm">💬</span>
                   </div>
                   <div>
-                    <p class="font-medium text-gray-900 dark:text-white">Live Chat</p>
-                    <p class="text-sm text-gray-500 dark:text-gray-400">Chat with our support team</p>
+                    <p class="font-medium text-gray-900 dark:text-white">{{ $t('contact.quickHelp.liveChat.title') }}</p>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">{{ $t('contact.quickHelp.liveChat.description') }}</p>
                   </div>
                 </a>
 
@@ -246,8 +258,8 @@ function redirectToRegister() {
                     <span class="text-sm">📖</span>
                   </div>
                   <div>
-                    <p class="font-medium text-gray-900 dark:text-white">Documentation</p>
-                    <p class="text-sm text-gray-500 dark:text-gray-400">API and platform docs</p>
+                    <p class="font-medium text-gray-900 dark:text-white">{{ $t('contact.quickHelp.documentation.title') }}</p>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">{{ $t('contact.quickHelp.documentation.description') }}</p>
                   </div>
                 </a>
               </div>

@@ -10,7 +10,7 @@
             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
           </svg>
-          Loading news article...
+          {{ $t('news.article.loadingArticle') }}
         </div>
       </div>
     </div>
@@ -19,7 +19,7 @@
     <div v-else-if="error" class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
       <div class="text-center">
         <div class="bg-red-50 dark:bg-red-900/20 rounded-lg p-8 border border-red-200 dark:border-red-800">
-          <h1 class="text-2xl font-bold text-red-900 dark:text-red-100 mb-4">News Article Not Found</h1>
+          <h1 class="text-2xl font-bold text-red-900 dark:text-red-100 mb-4">{{ $t('news.article.notFound.title') }}</h1>
           <p class="text-red-700 dark:text-red-300 mb-6">{{ error }}</p>
           <NuxtLink 
             to="/news"
@@ -28,7 +28,7 @@
             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
             </svg>
-            Back to News
+            {{ $t('news.article.notFound.button') }}
           </NuxtLink>
         </div>
       </div>
@@ -38,11 +38,11 @@
     <article v-else-if="article" class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
       <!-- Breadcrumb -->
       <nav class="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400 mb-8">
-        <NuxtLink to="/" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Home</NuxtLink>
+        <NuxtLink to="/" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">{{ $t('news.breadcrumbs.home') }}</NuxtLink>
         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
           <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
         </svg>
-        <NuxtLink to="/news" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">News</NuxtLink>
+        <NuxtLink to="/news" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">{{ $t('news.breadcrumbs.news') }}</NuxtLink>
         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
           <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
         </svg>
@@ -55,7 +55,7 @@
           <svg class="w-5 h-5 text-red-600 dark:text-red-400 mr-2" fill="currentColor" viewBox="0 0 20 20">
             <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
           </svg>
-          <span class="text-red-800 dark:text-red-200 font-semibold">🔴 Breaking News Alert</span>
+          <span class="text-red-800 dark:text-red-200 font-semibold">{{ $t('news.article.priority.critical') }}</span>
         </div>
       </div>
       <div v-else-if="article.priority === 'High'" class="bg-orange-100 dark:bg-orange-900/20 border border-orange-300 dark:border-orange-800 rounded-lg p-4 mb-6">
@@ -63,7 +63,7 @@
           <svg class="w-5 h-5 text-orange-600 dark:text-orange-400 mr-2" fill="currentColor" viewBox="0 0 20 20">
             <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
           </svg>
-          <span class="text-orange-800 dark:text-orange-200 font-semibold">⚡ Urgent Market Update</span>
+          <span class="text-orange-800 dark:text-orange-200 font-semibold">{{ $t('news.article.priority.high') }}</span>
         </div>
       </div>
 
@@ -102,7 +102,7 @@
             <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
               <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd" />
             </svg>
-            <span class="text-sm">Updated until {{ formatDate(article.expires_at) }}</span>
+            <span class="text-sm">{{ $t('news.article.updatedUntil') }} {{ formatDate(article.expires_at) }}</span>
           </div>
         </div>
 
@@ -120,7 +120,7 @@
         <!-- Fallback if no content -->
         <div v-else class="bg-yellow-50 dark:bg-yellow-900/20 rounded-lg p-6 border border-yellow-200 dark:border-yellow-800">
           <p class="text-yellow-800 dark:text-yellow-200">
-            This news article's content is being updated. Please check back soon for the full story.
+            {{ $t('news.article.contentUpdating') }}
           </p>
         </div>
       </div>
@@ -134,7 +134,7 @@
           <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
           </svg>
-          Back to All News
+          {{ $t('news.article.backToAll') }}
         </NuxtLink>
       </div>
     </article>
@@ -145,7 +145,9 @@
 
 <script setup>
 import { marked } from 'marked'
+import { useI18n } from '#imports'
 
+const { t, locale } = useI18n()
 const route = useRoute()
 const slug = route.params.slug
 
@@ -208,27 +210,30 @@ const renderMarkdown = (content) => {
   }
 }
 
-// Dynamic SEO
+// Dynamic SEO with i18n support
 watchEffect(() => {
   if (article.value) {
+    const defaultDescription = t('news.meta.description')
+    const articleDescription = article.value.excerpt || defaultDescription
+    
     useHead({
-      title: `${article.value.title} - HeliconTrade News`,
+      title: `${article.value.title} - ${t('news.meta.title')}`,
       meta: [
-        { name: 'description', content: article.value.excerpt || 'Latest news update from HeliconTrade.' },
-        { name: 'keywords', content: `news, ${article.value.category || 'market'}, trading, finance, updates` },
+        { name: 'description', content: articleDescription },
+        { name: 'keywords', content: `${t('news.meta.keywords')}, ${article.value.category || t('news.article.category.general')}` },
         
         // Open Graph
         { property: 'og:title', content: `${article.value.title} - HeliconTrade` },
-        { property: 'og:description', content: article.value.excerpt || 'Latest news update from HeliconTrade.' },
+        { property: 'og:description', content: articleDescription },
         { property: 'og:type', content: 'article' },
         { property: 'article:author', content: article.value.author || 'HeliconTrade Team' },
         { property: 'article:published_time', content: article.value.publishedAt },
-        { property: 'article:section', content: article.value.category || 'News' },
+        { property: 'article:section', content: article.value.category || t('news.article.category.general') },
         
         // Twitter Card
         { name: 'twitter:card', content: 'summary_large_image' },
         { name: 'twitter:title', content: `${article.value.title} - HeliconTrade` },
-        { name: 'twitter:description', content: article.value.excerpt || 'Latest news update from HeliconTrade.' }
+        { name: 'twitter:description', content: articleDescription }
       ]
     })
   }
