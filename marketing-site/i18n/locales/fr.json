@@ -194,6 +194,149 @@
     "comingSoon": "Bientôt Disponible", 
     "roadmap": "Feuille de Route"
   },
+  "pricing": {
+    "meta": {
+      "title": "Tarification — Intelligence de Trading Basée sur les Jetons",
+      "description": "Tarification simple et transparente avec un niveau gratuit généreux. Payez seulement ce que vous utilisez avec notre système de jetons pour la recherche, les alertes et les backtests.",
+      "keywords": "tarification, plans de trading, prix des jetons, paiement à l'usage, crédits de recherche, prix des alertes, coûts des backtests"
+    },
+    "hero": {
+      "title": "Tarification Simple Basée sur les Jetons",
+      "subtitle": "Accès complet à toutes les fonctionnalités. Payez seulement l'usage. Commencez gratuitement, évoluez à votre rythme.",
+      "tokenBased": "Système de Jetons :",
+      "tokenDescription": "Tous les plans incluent l'accès aux rapports de recherche, alertes personnalisées et backtesting. Seule votre allocation mensuelle de jetons diffère entre les plans."
+    },
+    "mostPopular": "Plus Populaire",
+    "tokensIncluded": "jetons/mois inclus",
+    "plans": {
+      "starter": {
+        "name": "Démarrage",
+        "price": "Gratuit",
+        "period": "À vie",
+        "description": "Accès complet à toutes les fonctionnalités avec 100 jetons mensuels",
+        "features": {
+          "allFeatures": "Accès complet à toutes les fonctionnalités de la plateforme",
+          "research": "Rapports de recherche IA (2 jetons chacun)",
+          "alerts": "Alertes intelligentes personnalisées (1 jeton chacune)",
+          "backtesting": "Backtesting de stratégies (5 jetons chacun)",
+          "charting": "Graphiques avancés et données de marché",
+          "emailSupport": "Support par e-mail"
+        },
+        "cta": "Commencer Gratuitement"
+      },
+      "trader": {
+        "name": "Trader",
+        "price": "19€",
+        "period": "par mois",
+        "description": "Mêmes fonctionnalités que Démarrage avec 1000 jetons mensuels",
+        "features": {
+          "allFeatures": "Tout du plan Démarrage",
+          "moreTokens": "10x plus de jetons (1000 mensuels)",
+          "portfolioTracking": "Suivi et analyses de portefeuille",
+          "prioritySupport": "Support prioritaire par e-mail",
+          "tokenBundles": "Achetez des packs de 1000 jetons pour 10€",
+          "mobileApp": "Application mobile avec notifications"
+        },
+        "cta": "Commencer"
+      },
+      "pro": {
+        "name": "Professionnel",
+        "price": "99€",
+        "period": "par mois",
+        "description": "Toutes les fonctionnalités plus accès bêta avec 10000 jetons mensuels",
+        "features": {
+          "allFeatures": "Tout du plan Trader",
+          "moreTokens": "10x plus de jetons (10000 mensuels)",
+          "betaAccess": "Accès anticipé aux fonctionnalités bêta",
+          "apiAccess": "Accès API et intégrations",
+          "advancedAI": "Accès aux modèles IA avancés",
+          "tokenBundles": "Achetez des packs de 1000 jetons pour 10€"
+        },
+        "cta": "Commencer"
+      },
+      "enterprise": {
+        "name": "Entreprise",
+        "price": "Personnalisé",
+        "period": "Nous contacter",
+        "description": "Pour les institutions et intégrations personnalisées",
+        "features": {
+          "everything": "Tout de Professionnel",
+          "customIntegrations": "Intégrations de courtiers personnalisées",
+          "whiteLabel": "Solutions marque blanche",
+          "dedicatedSupport": "Gestionnaire de compte dédié",
+          "slaGuarantees": "Garanties SLA",
+          "customTraining": "Formation et intégration personnalisées"
+        },
+        "cta": "Contacter les Ventes"
+      }
+    },
+    "tokenPricing": {
+      "title": "Comment Fonctionnent les Jetons",
+      "description": "Chaque fonctionnalité utilise un nombre spécifique de jetons. Achetez des jetons supplémentaires si nécessaire, ou passez à un plan supérieur."
+    },
+    "tokens": {
+      "research": {
+        "title": "Rapports de Recherche IA",
+        "description": "Analyses de marché approfondies et opportunités de trading",
+        "cost": "2 jetons chacun"
+      },
+      "alerts": {
+        "title": "Alertes Intelligentes Personnalisées",
+        "description": "Notifications personnalisées pour vos stratégies",
+        "cost": "1 jeton chacune"
+      },
+      "backtesting": {
+        "title": "Backtesting de Stratégies",
+        "description": "Testez vos stratégies sur des données historiques",
+        "cost": "5 jetons par test"
+      }
+    },
+    "additionalTokens": {
+      "title": "Besoin de Plus de Jetons ?",
+      "description": "Disponible pour les plans Trader et Professionnel. Achetez des packs de jetons selon vos besoins.",
+      "bundlePrice": "10€ pour 1000 jetons",
+      "note": "Pas d'expiration • Disponible uniquement pour les plans payants"
+    },
+    "calculator": {
+      "title": "Calculateur de Packs de Jetons",
+      "description": "Estimez combien de packs de jetons vous pourriez avoir besoin pour un usage supplémentaire au-delà de votre plan.",
+      "researchPerMonth": "Rapports de Recherche Supplémentaires par Mois",
+      "alertsPerMonth": "Alertes Supplémentaires par Mois",
+      "backtestsPerMonth": "Backtests Supplémentaires par Mois",
+      "tokens": "jetons",
+      "totalTokens": "jetons supplémentaires nécessaires",
+      "bundlesNeeded": "Packs de jetons nécessaires",
+      "monthlyCost": "Coût mensuel supplémentaire",
+      "buyBundles": "Acheter des Packs de Jetons"
+    },
+    "faq": {
+      "title": "Questions Fréquemment Posées",
+      "whatAreTokens": {
+        "question": "Qu'est-ce que les jetons et comment fonctionnent-ils ?",
+        "answer": "Les jetons sont des crédits que vous utilisez pour accéder aux fonctionnalités premium. Les rapports de recherche coûtent 2 jetons chacun, les alertes coûtent 1 jeton chacune, et les backtests coûtent 5 jetons chacun. Vous pouvez utiliser votre allocation mensuelle de jetons dans n'importe quelle combinaison de fonctionnalités – il n'y a pas de restrictions par catégorie."
+      },
+      "tokenExpiry": {
+        "question": "Les jetons expirent-ils ?",
+        "answer": "Non, les jetons non utilisés n'expirent jamais. Votre plan mensuel reconstitue votre solde de jetons, et tous les jetons supplémentaires que vous achetez restent dans votre compte jusqu'à utilisation."
+      },
+      "changePlans": {
+        "question": "Puis-je changer de plan à tout moment ?",
+        "answer": "Oui, vous pouvez mettre à niveau ou rétrograder votre plan à tout moment. Les changements prennent effet immédiatement, et nous calculerons les frais au prorata. Vos jetons restent dans votre compte lors du changement de plan."
+      },
+      "freeTrial": {
+        "question": "Y a-t-il un plan gratuit ?",
+        "answer": "Oui ! Le plan Démarrage est complètement gratuit à vie avec 100 jetons mensuels. Vous obtenez un accès complet à toutes les fonctionnalités y compris les rapports de recherche, alertes et backtesting – juste avec une limite mensuelle de jetons. Aucune carte de crédit requise."
+      },
+      "paymentMethods": {
+        "question": "Quels moyens de paiement acceptez-vous ?",
+        "answer": "Nous acceptons toutes les cartes de crédit principales, PayPal et virements bancaires. Les clients professionnels peuvent organiser des conditions de paiement personnalisées et une facturation."
+      },
+      "additionalTokens": {
+        "question": "Comment acheter des jetons supplémentaires ?",
+        "answer": "Les membres des plans Trader et Professionnel peuvent acheter des packs de 1000 jetons pour 10€ chacun directement depuis leur tableau de bord. Les jetons n'expirent jamais et peuvent être utilisés pour toutes les fonctionnalités premium. Les utilisateurs du plan Démarrage doivent passer à un plan supérieur pour acheter des jetons supplémentaires."
+      }
+    }
+  },
   "homepage": {
     "marketSummary": "Résumé du marché",
     "liveData": "Données en direct • Mise à jour chaque seconde",
